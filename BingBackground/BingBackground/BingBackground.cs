@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace BingBackground {
 
-    class BingBackground {
+    public class BingBackground {
 
         private static void Main(string[] args) {
             string urlBase = GetBackgroundUrlBase();

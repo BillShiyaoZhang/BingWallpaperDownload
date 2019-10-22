@@ -46,8 +46,6 @@ C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\bin
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\bin\Debug\BingBackground.pdb
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\bin\Debug\Newtonsoft.Json.dll
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\bin\Debug\Newtonsoft.Json.xml
-C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.csprojAssemblyReference.cache
-C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.csproj.CoreCompileInputs.cache
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.csproj.CopyComplete
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.exe
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.pdb
