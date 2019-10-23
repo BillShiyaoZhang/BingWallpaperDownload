@@ -9,8 +9,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Button Content="Download" HorizontalAlignment="Center" Click="DownloadButton_Click"/>
-        <TextBlock x:Name="Hint" HorizontalAlignment="Center" Margin="0,548,0,0" Text="Waiting" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
-        <Button Content="Folder" Margin="822,0,0,0" Click="FolderButton_Click"/>
+        <Button Content="Download" Click="DownloadButton_Click" Margin="300,0,0,0"/>
+        <TextBlock x:Name="Hint" HorizontalAlignment="Left" Margin="318,550,0,0" Text="Waiting" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
+        <Button Content="Folder" Margin="400,0,0,0" Click="FolderButton_Click"/>
+        <Button Content="Set Folder" Click="SetFolderButton_Click" Margin="200,0,0,0"/>
     </Grid>
 </Page>

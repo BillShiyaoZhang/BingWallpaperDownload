@@ -24,14 +24,15 @@ namespace BingBackgroundUWP
         public MainPage()
         {
             this.InitializeComponent();
-            // TODO Check if need to download today's wallpaper
+            
+            // Check if need to download today's wallpaper
             // if have done today    
             // if file exist
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             var lastDate = (string) localSettings.Values["lastDate"];
             if (lastDate != GetDateString())
             {
-                RunFunction();
+                RunFunctionAsync();
             }
             else
             {
@@ -43,16 +44,21 @@ namespace BingBackgroundUWP
 
         private void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
-            RunFunction();
+            RunFunctionAsync();
         }
 
         private async void FolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var folder = await GetFolder();
+            var folder = await GetFolderAsync();
             await Windows.System.Launcher.LaunchFolderAsync(folder);
         }
 
-        async void RunFunction()
+        private async void SetFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            _ = await SetFolderAsync();
+        }
+
+        async void RunFunctionAsync()
         {
             var text = (TextBlock)FindName("Hint");
             try
@@ -79,10 +85,10 @@ namespace BingBackgroundUWP
             {
                 text.Text = "Find Internet connection problem!";
             }
-            catch (Exception)
-            {
-                text.Text = "Unexpected Exception!";
-            }
+            //catch (Exception)
+            //{
+            //    text.Text = "Unexpected Exception!";
+            //}
             finally
             {
                 text.Visibility = Visibility.Visible;
@@ -149,15 +155,46 @@ namespace BingBackgroundUWP
             return DateTime.Now.ToString("M-d-yyyy");
         }
 
-        async Task<StorageFolder> GetFolder()
+        async Task<StorageFolder> GetFolderAsync()
         {
-            var rootFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
-            return rootFolder;
+            StorageFolder folder;
+            try
+            {
+                folder = await Windows.Storage.AccessCache.StorageApplicationPermissions.
+                    FutureAccessList.GetFolderAsync("PickedFolderToken");
+            }
+            catch (ArgumentException)
+            {
+                folder = await SetFolderAsync();
+            }
+            return folder;
+        }
+
+        async Task<StorageFolder> SetFolderAsync()
+        {
+            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+            folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
+            folderPicker.FileTypeFilter.Add("*");
+
+            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                // Application now has read/write access to all contents in the picked folder
+                // (including other sub-folder contents)
+                Windows.Storage.AccessCache.StorageApplicationPermissions.
+                FutureAccessList.AddOrReplace("PickedFolderToken", folder);
+                //this.textBlock.Text = "Picked folder: " + folder.Name;
+            }
+            else
+            {
+                //this.textBlock.Text = "Operation cancelled.";
+            }
+            return folder;
         }
 
         async Task<string> DownloadWallpaperAsync(string url, string fileName)
         {
-            var rootFolder = await GetFolder();
+            var rootFolder = await GetFolderAsync();
 
             var storageFile = await rootFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
 
@@ -170,6 +207,8 @@ namespace BingBackgroundUWP
 
             // Use this path to load image
             string newPath = string.Format("ms-appdata:///local/{0}/{1}", ImagesSubdirectory, fileName);
+            var file = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
+            await storageFile.CopyAsync(file);
             return newPath;
         }
 
