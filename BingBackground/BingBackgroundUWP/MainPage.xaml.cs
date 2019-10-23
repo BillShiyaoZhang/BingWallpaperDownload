@@ -1,17 +1,12 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Net;
-using System.Runtime.InteropServices;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.System.UserProfile;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.ViewManagement;
 using Windows.Graphics.Display;
 using System.Net.Http;
 
@@ -24,26 +19,74 @@ namespace BingBackgroundUWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        const string ImagesSubdirectory = "DownloadedImages";
+
         public MainPage()
         {
             this.InitializeComponent();
+            // TODO Check if need to download today's wallpaper
+            // if have done today    
+            // if file exist
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            var lastDate = (string) localSettings.Values["lastDate"];
+            if (lastDate != GetDateString())
+            {
+                RunFunction();
+            }
+            else
+            {
+                var text = (TextBlock)FindName("Hint");
+                text.Text = "The image has already been there!";
+                text.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void DownloadButton_Click(object sender, RoutedEventArgs e)
+        {
             RunFunction();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void FolderButton_Click(object sender, RoutedEventArgs e)
         {
-            RunFunction();
+            var folder = await GetFolder();
+            await Windows.System.Launcher.LaunchFolderAsync(folder);
         }
 
         async void RunFunction()
         {
-            string urlBase = GetBackgroundUrlBase();
-            var resolutionExtension = GetResolutionExtension(urlBase);
-            string address = await DownloadWallpaperAsync(urlBase + resolutionExtension, GetFileName());
-            var result = await SetWallpaperAsync(address);
             var text = (TextBlock)FindName("Hint");
-            text.Text = result.ToString();
-            text.Visibility = Visibility.Visible;
+            try
+            {
+                string urlBase = GetBackgroundUrlBase();
+                var resolutionExtension = GetResolutionExtension(urlBase);
+                string address = await DownloadWallpaperAsync(urlBase + resolutionExtension, GetFileName());
+                var result = await SetWallpaperAsync(address);
+                if (result == true)
+                {
+                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                    localSettings.Values["lastDate"] = GetDateString();
+                }
+                if (result)
+                {
+                    text.Text = "Wallpaper set successful!";
+                }
+                else
+                {
+                    text.Text = "Wallpaper set failed!";
+                }
+            }
+            catch (WebException)
+            {
+                text.Text = "Find Internet connection problem!";
+            }
+            catch (Exception)
+            {
+                text.Text = "Unexpected Exception!";
+            }
+            finally
+            {
+                text.Visibility = Visibility.Visible;
+            }
         }
 
         private static dynamic DownloadJson()
@@ -98,13 +141,23 @@ namespace BingBackgroundUWP
 
         string GetFileName()
         {
-            return DateTime.Now.ToString("M-d-yyyy") + ".bmp";
+            return GetDateString() + ".bmp";
+        }
+
+        string GetDateString()
+        {
+            return DateTime.Now.ToString("M-d-yyyy");
+        }
+
+        async Task<StorageFolder> GetFolder()
+        {
+            var rootFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
+            return rootFolder;
         }
 
         async Task<string> DownloadWallpaperAsync(string url, string fileName)
         {
-            const string imagesSubdirectory = "DownloadedImages";
-            var rootFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(imagesSubdirectory, CreationCollisionOption.OpenIfExists);
+            var rootFolder = await GetFolder();
 
             var storageFile = await rootFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
 
@@ -116,7 +169,7 @@ namespace BingBackgroundUWP
             }
 
             // Use this path to load image
-            string newPath = string.Format("ms-appdata:///local/{0}/{1}", imagesSubdirectory, fileName);
+            string newPath = string.Format("ms-appdata:///local/{0}/{1}", ImagesSubdirectory, fileName);
             return newPath;
         }
 
@@ -133,7 +186,6 @@ namespace BingBackgroundUWP
             }
             return success;
         }
-
     }
 }
 

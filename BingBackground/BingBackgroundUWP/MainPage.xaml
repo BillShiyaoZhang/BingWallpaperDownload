@@ -8,8 +8,9 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-	<Grid>
-		<Button Content="Download" HorizontalAlignment="Center" Click="Button_Click"/>
-		<TextBlock x:Name="Hint" HorizontalAlignment="Center" Margin="0,548,0,0" Text="Waiting" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
-	</Grid>
+    <Grid>
+        <Button Content="Download" HorizontalAlignment="Center" Click="DownloadButton_Click"/>
+        <TextBlock x:Name="Hint" HorizontalAlignment="Center" Margin="0,548,0,0" Text="Waiting" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed"/>
+        <Button Content="Folder" Margin="822,0,0,0" Click="FolderButton_Click"/>
+    </Grid>
 </Page>
