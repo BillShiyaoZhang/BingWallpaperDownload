@@ -30,36 +30,8 @@ namespace BingBackgroundUWP
             this.InitializeComponent();
 
             SetStartupTask();
+            SetBackgroundTasks();
 
-            var taskRegistered = false;
-            var exampleTaskName = "BingBackgroundBackgroundTask";
-
-            foreach (var task in BackgroundTaskRegistration.AllTasks)
-            {
-                if (task.Value.Name == exampleTaskName)
-                {
-                    taskRegistered = true;
-                    break;
-                }
-            }
-
-            if (!taskRegistered)
-            {
-                var builder = new BackgroundTaskBuilder();
-
-                builder.Name = exampleTaskName;
-                builder.TaskEntryPoint = "BingBackgroundBackgroundTask.BingBackgroundBackgroundTask";
-                builder.SetTrigger(new SystemTrigger(SystemTriggerType.UserPresent, false));
-                //builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
-                builder.IsNetworkRequested = true;
-                BackgroundTaskRegistration task = builder.Register();
-            }
-
-
-
-            // Check if need to download today's wallpaper
-            // if have done today    
-            // if file exist
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             var lastDate = (string)localSettings.Values["lastDate"];
             if (lastDate != GetDateString())
@@ -101,6 +73,45 @@ namespace BingBackgroundUWP
                     break;
             }
         }
+
+        void SetBackgroundTasks()
+        {
+            var userPresentBTName = "BingBackgroundBTUserPresent";
+            var timeBTName = "BingBackgroundBTTimer";
+            var BTEntryPoint = "BingBackgroundBackgroundTask.BingBackgroundBackgroundTask";
+            SetBackgroundTask(userPresentBTName, BTEntryPoint,
+                new SystemTrigger(SystemTriggerType.UserPresent, false));
+            SetBackgroundTask(timeBTName, BTEntryPoint, new TimeTrigger(90, false));
+        }
+
+        IBackgroundTaskRegistration SetBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)
+        {
+            var taskRegistered = false;
+
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+            {
+                if (task.Value.Name == taskName)
+                {
+                    taskRegistered = true;
+                    return task.Value;
+                }
+            }
+
+            if (!taskRegistered)
+            {
+                var builder = new BackgroundTaskBuilder();
+
+                builder.Name = taskName;
+                builder.TaskEntryPoint = taskEntryPoint;
+                builder.SetTrigger(trigger);
+                //builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                builder.IsNetworkRequested = true;
+                BackgroundTaskRegistration task = builder.Register();
+                return task;
+            }
+            return null;
+        }
+
 
         private void DownloadButton_Click(object sender, RoutedEventArgs e)
         {

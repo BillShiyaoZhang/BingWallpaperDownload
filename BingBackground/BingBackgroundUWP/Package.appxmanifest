@@ -51,6 +51,7 @@
         <Extension Category="windows.backgroundTasks" EntryPoint="BingBackgroundBackgroundTask.BingBackgroundBackgroundTask">
           <BackgroundTasks>
             <Task Type="systemEvent"/>
+            <Task Type="timer"/>
           </BackgroundTasks>
         </Extension>
         <uap5:Extension Category="windows.startupTask">
