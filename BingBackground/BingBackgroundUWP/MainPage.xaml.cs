@@ -11,6 +11,9 @@ using Windows.Graphics.Display;
 using System.Net.Http;
 using BingBackgroundBackgroundTask;
 using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel;
+using System.Diagnostics;
+using Windows.UI.Popups;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -26,6 +29,8 @@ namespace BingBackgroundUWP
         public MainPage()
         {
             this.InitializeComponent();
+
+            SetStartupTask();
 
             var taskRegistered = false;
             var exampleTaskName = "BingBackgroundBackgroundTask";
@@ -67,6 +72,34 @@ namespace BingBackgroundUWP
                 var text = (TextBlock)FindName("Hint");
                 text.Text = "The image has already been there!";
                 text.Visibility = Visibility.Visible;
+            }
+        }
+
+        async void SetStartupTask()
+        {
+            StartupTask startupTask = await StartupTask.GetAsync("MyStartupId"); // Pass the task ID you specified in the appxmanifest file
+            switch (startupTask.State)
+            {
+                case StartupTaskState.Disabled:
+                    // Task is disabled but can be enabled.
+                    StartupTaskState newState = await startupTask.RequestEnableAsync(); // ensure that you are on a UI thread when you call RequestEnableAsync()
+                    Debug.WriteLine("Request to enable startup, result = {0}", newState);
+                    break;
+                case StartupTaskState.DisabledByUser:
+                    // Task is disabled and user must enable it manually.
+                    MessageDialog dialog = new MessageDialog(
+                        "You have disabled this app's ability to run " +
+                        "as soon as you sign in, but if you change your mind, " +
+                        "you can enable this in the Startup tab in Task Manager.",
+                        "TestStartup");
+                    await dialog.ShowAsync();
+                    break;
+                case StartupTaskState.DisabledByPolicy:
+                    Debug.WriteLine("Startup disabled by group policy, or not supported on this device");
+                    break;
+                case StartupTaskState.Enabled:
+                    Debug.WriteLine("Startup is enabled.");
+                    break;
             }
         }
 
