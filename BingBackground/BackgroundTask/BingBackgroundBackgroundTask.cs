@@ -1,94 +1,31 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using System;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Background;
 using Newtonsoft.Json;
-using System;
 using System.IO;
 using System.Net;
 using Windows.System.UserProfile;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Graphics.Display;
 using System.Net.Http;
-using BingBackgroundBackgroundTask;
-using Windows.ApplicationModel.Background;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
-namespace BingBackgroundUWP
+namespace BingBackgroundBackgroundTask
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed class BingBackgroundBackgroundTask : IBackgroundTask
     {
         const string ImagesSubdirectory = "DownloadedImages";
+        BackgroundTaskDeferral _deferral;
 
-        public MainPage()
+        void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance)
         {
-            this.InitializeComponent();
-
-            var taskRegistered = false;
-            var exampleTaskName = "BingBackgroundBackgroundTask";
-
-            foreach (var task in BackgroundTaskRegistration.AllTasks)
-            {
-                if (task.Value.Name == exampleTaskName)
-                {
-                    taskRegistered = true;
-                    break;
-                }
-            }
-
-            if (!taskRegistered)
-            {
-                var builder = new BackgroundTaskBuilder();
-
-                builder.Name = exampleTaskName;
-                builder.TaskEntryPoint = "BingBackgroundBackgroundTask.BingBackgroundBackgroundTask";
-                builder.SetTrigger(new SystemTrigger(SystemTriggerType.UserPresent, false));
-                builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
-                builder.IsNetworkRequested = true;
-                BackgroundTaskRegistration task = builder.Register();
-            }
-
-
-
-            // Check if need to download today's wallpaper
-            // if have done today    
-            // if file exist
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            var lastDate = (string)localSettings.Values["lastDate"];
-            if (lastDate != GetDateString())
-            {
-                RunFunctionAsync();
-            }
-            else
-            {
-                var text = (TextBlock)FindName("Hint");
-                text.Text = "The image has already been there!";
-                text.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void DownloadButton_Click(object sender, RoutedEventArgs e)
-        {
+            _deferral = taskInstance.GetDeferral();
             RunFunctionAsync();
-        }
-
-        private async void FolderButton_Click(object sender, RoutedEventArgs e)
-        {
-            var folder = await GetFolderAsync();
-            await Windows.System.Launcher.LaunchFolderAsync(folder);
-        }
-
-        private async void SetFolderButton_Click(object sender, RoutedEventArgs e)
-        {
-            _ = await SetFolderAsync();
+            _deferral.Complete();
         }
 
         async void RunFunctionAsync()
         {
-            var text = (TextBlock)FindName("Hint");
+            //var text = (TextBlock)FindName("Hint");
             try
             {
                 string urlBase = GetBackgroundUrlBase();
@@ -102,16 +39,16 @@ namespace BingBackgroundUWP
                 }
                 if (result)
                 {
-                    text.Text = "Wallpaper set successful!";
+                    //text.Text = "Wallpaper set successful!";
                 }
                 else
                 {
-                    text.Text = "Wallpaper set failed!";
+                    //text.Text = "Wallpaper set failed!";
                 }
             }
             catch (WebException)
             {
-                text.Text = "Find Internet connection problem!";
+                //text.Text = "Find Internet connection problem!";
             }
             //catch (Exception)
             //{
@@ -119,7 +56,7 @@ namespace BingBackgroundUWP
             //}
             finally
             {
-                text.Visibility = Visibility.Visible;
+                //text.Visibility = Visibility.Visible;
             }
         }
 
@@ -158,19 +95,19 @@ namespace BingBackgroundUWP
         private static string GetResolutionExtension(string url)
         {
             //Rectangle resolution = Screen.PrimaryScreen.Bounds;
-            string widthByHeight = DisplayInformation.GetForCurrentView().ScreenWidthInRawPixels + "x" + DisplayInformation.GetForCurrentView().ScreenHeightInRawPixels;
-            string potentialExtension = "_" + widthByHeight + ".jpg";
-            if (WebsiteExists(url + potentialExtension))
-            {
-                Console.WriteLine("Background for " + widthByHeight + " found.");
-                return potentialExtension;
-            }
-            else
-            {
-                Console.WriteLine("No background for " + widthByHeight + " was found.");
-                Console.WriteLine("Using 1920x1080 instead.");
+            //string widthByHeight = DisplayInformation.GetForCurrentView().ScreenWidthInRawPixels + "x" + DisplayInformation.GetForCurrentView().ScreenHeightInRawPixels;
+            //string potentialExtension = "_" + widthByHeight + ".jpg";
+            //if (WebsiteExists(url + potentialExtension))
+            //{
+            //    Console.WriteLine("Background for " + widthByHeight + " found.");
+            //    return potentialExtension;
+            //}
+            //else
+            //{
+            //    Console.WriteLine("No background for " + widthByHeight + " was found.");
+            //    Console.WriteLine("Using 1920x1080 instead.");
                 return "_1920x1080.jpg";
-            }
+            //}
         }
 
         string GetFileName()
@@ -269,4 +206,3 @@ namespace BingBackgroundUWP
         }
     }
 }
-

@@ -204,6 +204,12 @@
       <Version>12.0.2</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BackgroundTask\BingBackgroundBackgroundTask.csproj">
+      <Project>{d29bfe0a-3ecf-4429-8a95-2cd098989a62}</Project>
+      <Name>BingBackgroundBackgroundTask</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
