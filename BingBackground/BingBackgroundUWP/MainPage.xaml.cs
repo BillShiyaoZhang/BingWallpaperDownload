@@ -46,7 +46,7 @@ namespace BingBackgroundUWP
                 builder.Name = exampleTaskName;
                 builder.TaskEntryPoint = "BingBackgroundBackgroundTask.BingBackgroundBackgroundTask";
                 builder.SetTrigger(new SystemTrigger(SystemTriggerType.UserPresent, false));
-                builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                //builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
                 builder.IsNetworkRequested = true;
                 BackgroundTaskRegistration task = builder.Register();
             }

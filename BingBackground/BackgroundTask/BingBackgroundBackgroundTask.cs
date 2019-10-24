@@ -6,7 +6,6 @@ using System.IO;
 using System.Net;
 using Windows.System.UserProfile;
 using Windows.Storage;
-using Windows.Graphics.Display;
 using System.Net.Http;
 
 namespace BingBackgroundBackgroundTask
@@ -16,14 +15,14 @@ namespace BingBackgroundBackgroundTask
         const string ImagesSubdirectory = "DownloadedImages";
         BackgroundTaskDeferral _deferral;
 
-        void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance)
+        async void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance)
         {
             _deferral = taskInstance.GetDeferral();
-            RunFunctionAsync();
+            await RunFunctionAsync();
             _deferral.Complete();
         }
 
-        async void RunFunctionAsync()
+        async Task RunFunctionAsync()
         {
             //var text = (TextBlock)FindName("Hint");
             try
@@ -46,10 +45,15 @@ namespace BingBackgroundBackgroundTask
                     //text.Text = "Wallpaper set failed!";
                 }
             }
-            catch (WebException)
-            {
-                //text.Text = "Find Internet connection problem!";
-            }
+            //catch (WebException)
+            //{
+            //    //text.Text = "Find Internet connection problem!";
+            //}
+            //catch (System.Runtime.InteropServices.COMException)
+            //{
+
+            //}
+
             //catch (Exception)
             //{
             //    text.Text = "Unexpected Exception!";
@@ -106,7 +110,7 @@ namespace BingBackgroundBackgroundTask
             //{
             //    Console.WriteLine("No background for " + widthByHeight + " was found.");
             //    Console.WriteLine("Using 1920x1080 instead.");
-                return "_1920x1080.jpg";
+            return "_1920x1080.jpg";
             //}
         }
 
@@ -161,28 +165,44 @@ namespace BingBackgroundBackgroundTask
         {
             var rootFolder = await GetFolderAsync();
             StorageFile storageFile;
-            try
-            {
-                storageFile = await rootFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-            }
-            catch (Exception)
-            {
-                storageFile = await rootFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-            }
+            string newPath = string.Format("ms-appdata:///local/{0}/{1}", ImagesSubdirectory, fileName);
+            var destinationFoler = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
 
-            using (HttpClient client = new HttpClient())
+            storageFile = (StorageFile)await destinationFoler.TryGetItemAsync(fileName);
+
+            if (storageFile == null || (await storageFile.GetBasicPropertiesAsync()).Size < 10000) // if file size is smaller than 10KB
             {
-                byte[] buffer = await client.GetByteArrayAsync(url);
-                using (Stream stream = await storageFile.OpenStreamForWriteAsync())
-                    stream.Write(buffer, 0, buffer.Length);
+                try
+                {
+                    storageFile = await destinationFoler.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+                    //storageFile = await rootFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                }
+                catch (FileLoadException)
+                {
+                    return newPath;
+                    //                storageFile = await rootFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+                }
+                using (HttpClient client = new HttpClient())
+                {
+                    byte[] buffer = await client.GetByteArrayAsync(url);
+                    try
+                    {
+                        using (Stream stream = await storageFile.OpenStreamForWriteAsync())
+                            stream.Write(buffer, 0, buffer.Length);
+                    }
+                    catch (FileLoadException)
+                    {
+                        return newPath;
+                    }
+                }
             }
 
             // Use this path to load image
-            string newPath = string.Format("ms-appdata:///local/{0}/{1}", ImagesSubdirectory, fileName);
-            var file = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
+            //string newPath = string.Format("ms-appdata:///local/{0}/{1}", ImagesSubdirectory, fileName);
+            //var destinationFoler = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
             try
             {
-                await storageFile.CopyAsync(file);
+                await storageFile.CopyAsync(rootFolder);
             }
             catch (Exception)
             {
