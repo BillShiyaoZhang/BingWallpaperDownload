@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Graphics.Display;
 using System.Net.Http;
-using BingBackgroundBackgroundTask;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel;
 using System.Diagnostics;

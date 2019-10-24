@@ -58,3 +58,4 @@ C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\bin
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.csproj.CopyComplete
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.exe
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.pdb
+C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.csprojAssemblyReference.cache
