@@ -84,15 +84,14 @@ namespace BingBackgroundUWP
                 Window.Current.Content = rootFrame;
             }
 
-            string payload = string.Empty;
             if (args.Kind == ActivationKind.StartupTask)
             {
+                string payload = string.Empty;
                 var startupArgs = args as StartupTaskActivatedEventArgs;
                 payload = ActivationKind.StartupTask.ToString();
+                rootFrame.Navigate(typeof(MainPage), payload);
+                Window.Current.Activate();
             }
-
-            rootFrame.Navigate(typeof(MainPage), payload);
-            Window.Current.Activate();
         }
 
         /// <summary>
