@@ -81,6 +81,8 @@ namespace BingBackgroundUWP
             var BTEntryPoint = "BingBackgroundBackgroundTask.BingBackgroundBackgroundTask";
             SetBackgroundTask(userPresentBTName, BTEntryPoint,
                 new SystemTrigger(SystemTriggerType.UserPresent, false));
+
+            // TODO The time trigger should detect a proper time interval for next day, and register the next trigger.
             SetBackgroundTask(timeBTName, BTEntryPoint, new TimeTrigger(90, false));
         }
 
