@@ -5,12 +5,12 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingBackground", "BingBackground\BingBackground.csproj", "{2FE963BB-6404-43D1-AE54-8EE9B8EA66A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingBackgroundUWP", "BingBackgroundUWP\BingBackgroundUWP.csproj", "{7F1E11B0-EE49-45D7-B11C-A4B1024CF6A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBUWP", "BingBackgroundUWP\BBUWP.csproj", "{7F1E11B0-EE49-45D7-B11C-A4B1024CF6A8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2FE963BB-6404-43D1-AE54-8EE9B8EA66A9} = {2FE963BB-6404-43D1-AE54-8EE9B8EA66A9}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingBackgroundBackgroundTask", "BackgroundTask\BingBackgroundBackgroundTask.csproj", "{D29BFE0A-3ECF-4429-8A95-2CD098989A62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBBackgroundTask", "BackgroundTask\BBBackgroundTask.csproj", "{D29BFE0A-3ECF-4429-8A95-2CD098989A62}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBUWPTest", "BBUWPTest\BBUWPTest.csproj", "{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}"
 EndProject

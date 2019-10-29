@@ -67,3 +67,4 @@ D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\Ne
 D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.csproj.CopyComplete
 D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.exe
 D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.pdb
+D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.csprojAssemblyReference.cache

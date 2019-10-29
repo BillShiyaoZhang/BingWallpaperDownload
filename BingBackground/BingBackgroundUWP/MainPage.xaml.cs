@@ -16,7 +16,7 @@ using Windows.UI.Popups;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace BingBackgroundUWP
+namespace BBUWP
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -24,7 +24,9 @@ namespace BingBackgroundUWP
     public sealed partial class MainPage : Page
     {
         const string ImagesSubdirectory = "DownloadedImages";
-
+        const string UserPresentBTName = "BBBTUserPresent";
+        const string TimeBTName = "BBBTTimer";
+        const string BTEntryPoint = "BBBackgroundTask.BBBackgroundTask";
         public MainPage()
         {
             this.InitializeComponent();
@@ -76,14 +78,12 @@ namespace BingBackgroundUWP
 
         void SetBackgroundTasks()
         {
-            var userPresentBTName = "BingBackgroundBTUserPresent";
-            var timeBTName = "BingBackgroundBTTimer";
-            var BTEntryPoint = "BingBackgroundBackgroundTask.BingBackgroundBackgroundTask";
-            SetBackgroundTask(userPresentBTName, BTEntryPoint,
+
+            SetBackgroundTask(UserPresentBTName, BTEntryPoint,
                 new SystemTrigger(SystemTriggerType.UserPresent, false));
 
             // TODO The time trigger should detect a proper time interval for next day, and register the next trigger.
-            SetBackgroundTask(timeBTName, BTEntryPoint, new TimeTrigger(90, false));
+            SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger(90, false));
         }
 
         IBackgroundTaskRegistration SetBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)

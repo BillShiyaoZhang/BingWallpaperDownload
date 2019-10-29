@@ -7,8 +7,8 @@
     <ProjectGuid>{7F1E11B0-EE49-45D7-B11C-A4B1024CF6A8}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BingBackgroundUWP</RootNamespace>
-    <AssemblyName>BingBackgroundUWP</AssemblyName>
+    <RootNamespace>BBUWP</RootNamespace>
+    <AssemblyName>BBUWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
@@ -205,9 +205,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BackgroundTask\BingBackgroundBackgroundTask.csproj">
+    <ProjectReference Include="..\BackgroundTask\BBBackgroundTask.csproj">
       <Project>{d29bfe0a-3ecf-4429-8a95-2cd098989a62}</Project>
-      <Name>BingBackgroundBackgroundTask</Name>
+      <Name>BBBackgroundTask</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

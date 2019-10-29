@@ -8,9 +8,9 @@ using Windows.System.UserProfile;
 using Windows.Storage;
 using System.Net.Http;
 
-namespace BingBackgroundBackgroundTask
+namespace BBBackgroundTask
 {
-    public sealed class BingBackgroundBackgroundTask : IBackgroundTask
+    public sealed class BBBackgroundTask : IBackgroundTask
     {
         const string ImagesSubdirectory = "DownloadedImages";
         BackgroundTaskDeferral _deferral;

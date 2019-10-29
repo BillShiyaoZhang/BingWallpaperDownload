@@ -7,8 +7,8 @@
     <ProjectGuid>{D29BFE0A-3ECF-4429-8A95-2CD098989A62}</ProjectGuid>
     <OutputType>winmdobj</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BingBackgroundBackgroundTask</RootNamespace>
-    <AssemblyName>BingBackgroundBackgroundTask</AssemblyName>
+    <RootNamespace>BBBackgroundTask</RootNamespace>
+    <AssemblyName>BBBackgroundTask</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
@@ -121,7 +121,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BingBackgroundBackgroundTask.cs" />
+    <Compile Include="BBBackgroundTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
