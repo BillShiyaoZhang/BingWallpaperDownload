@@ -1,144 +1,30 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System;
 using System.IO;
 using System.Net;
 using Windows.System.UserProfile;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Graphics.Display;
 using System.Net.Http;
-using Windows.ApplicationModel.Background;
-using Windows.ApplicationModel;
-using System.Diagnostics;
-using Windows.UI.Popups;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
-namespace BBUWP
+namespace BBCore
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : Page
+    public enum RunFunctionCode
     {
-        const string ImagesSubdirectory = "DownloadedImages";
-        const string UserPresentBTName = "BBBTUserPresent";
-        const string TimeBTName = "BBBTTimer";
-        const string BTEntryPoint = "BBBackgroundTask.BBBackgroundTask";
-        public MainPage()
+        SUCCESSFUL, FAILED, NO_INTERNET, UNEXPECTED_EXCEPTION
+    }
+
+    public class BBCore
+    {
+        public async Task<RunFunctionCode> RunFunctionAsync(string ImagesSubdirectory)
         {
-            this.InitializeComponent();
-
-            SetStartupTask();
-            SetBackgroundTasks();
-
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            var lastDate = (string)localSettings.Values["lastDate"];
-            if (lastDate != GetDateString())
-            {
-                RunFunctionAsync();
-            }
-            else
-            {
-                var text = (TextBlock)FindName("Hint");
-                text.Text = "The image has already been there!";
-                text.Visibility = Visibility.Visible;
-            }
-        }
-
-        async void SetStartupTask()
-        {
-            StartupTask startupTask = await StartupTask.GetAsync("MyStartupId"); // Pass the task ID you specified in the appxmanifest file
-            switch (startupTask.State)
-            {
-                case StartupTaskState.Disabled:
-                    // Task is disabled but can be enabled.
-                    StartupTaskState newState = await startupTask.RequestEnableAsync(); // ensure that you are on a UI thread when you call RequestEnableAsync()
-                    Debug.WriteLine("Request to enable startup, result = {0}", newState);
-                    break;
-                case StartupTaskState.DisabledByUser:
-                    // Task is disabled and user must enable it manually.
-                    MessageDialog dialog = new MessageDialog(
-                        "You have disabled this app's ability to run " +
-                        "as soon as you sign in, but if you change your mind, " +
-                        "you can enable this in the Startup tab in Task Manager.",
-                        "TestStartup");
-                    await dialog.ShowAsync();
-                    break;
-                case StartupTaskState.DisabledByPolicy:
-                    Debug.WriteLine("Startup disabled by group policy, or not supported on this device");
-                    break;
-                case StartupTaskState.Enabled:
-                    Debug.WriteLine("Startup is enabled.");
-                    break;
-            }
-        }
-
-        void SetBackgroundTasks()
-        {
-
-            SetBackgroundTask(UserPresentBTName, BTEntryPoint,
-                new SystemTrigger(SystemTriggerType.UserPresent, false));
-
-            // TODO The time trigger should detect a proper time interval for next day, and register the next trigger.
-            SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger(90, false));
-        }
-
-        IBackgroundTaskRegistration SetBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)
-        {
-            var taskRegistered = false;
-
-            foreach (var task in BackgroundTaskRegistration.AllTasks)
-            {
-                if (task.Value.Name == taskName)
-                {
-                    taskRegistered = true;
-                    return task.Value;
-                }
-            }
-
-            if (!taskRegistered)
-            {
-                var builder = new BackgroundTaskBuilder();
-
-                builder.Name = taskName;
-                builder.TaskEntryPoint = taskEntryPoint;
-                builder.SetTrigger(trigger);
-                //builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
-                builder.IsNetworkRequested = true;
-                BackgroundTaskRegistration task = builder.Register();
-                return task;
-            }
-            return null;
-        }
-
-
-        private void DownloadButton_Click(object sender, RoutedEventArgs e)
-        {
-            RunFunctionAsync();
-        }
-
-        private async void FolderButton_Click(object sender, RoutedEventArgs e)
-        {
-            var folder = await GetFolderAsync();
-            await Windows.System.Launcher.LaunchFolderAsync(folder);
-        }
-
-        private async void SetFolderButton_Click(object sender, RoutedEventArgs e)
-        {
-            _ = await SetFolderAsync();
-        }
-
-        async void RunFunctionAsync()
-        {
-            var text = (TextBlock)FindName("Hint");
+            RunFunctionCode value = RunFunctionCode.UNEXPECTED_EXCEPTION;
             try
             {
                 string urlBase = GetBackgroundUrlBase();
                 var resolutionExtension = GetResolutionExtension(urlBase);
-                string address = await DownloadWallpaperAsync(urlBase + resolutionExtension, GetFileName());
+                string address = await DownloadWallpaperAsync(urlBase + resolutionExtension, GetFileName(), ImagesSubdirectory);
                 var result = await SetWallpaperAsync(address);
                 if (result == true)
                 {
@@ -147,28 +33,26 @@ namespace BBUWP
                 }
                 if (result)
                 {
-                    text.Text = "Wallpaper set successful!";
+                    value = RunFunctionCode.SUCCESSFUL; // Wallpaper set successful!
                 }
                 else
                 {
-                    text.Text = "Wallpaper set failed!";
+                    value = RunFunctionCode.FAILED; // Wallpaper set failed!
                 }
             }
             catch (WebException)
             {
-                text.Text = "Find Internet connection problem!";
+                value = RunFunctionCode.NO_INTERNET;    // Find Internet connection problem!";
             }
-            //catch (Exception)
-            //{
-            //    text.Text = "Unexpected Exception!";
-            //}
-            finally
+            catch (Exception)
             {
-                text.Visibility = Visibility.Visible;
+                value = RunFunctionCode.UNEXPECTED_EXCEPTION;   // Unexpected Exception!
             }
+
+            return value;
         }
 
-        private static dynamic DownloadJson()
+        public static dynamic DownloadJson()
         {
             using (WebClient webClient = new WebClient())
             {
@@ -179,13 +63,13 @@ namespace BBUWP
             }
         }
 
-        private static string GetBackgroundUrlBase()
+        public static string GetBackgroundUrlBase()
         {
             dynamic jsonObject = DownloadJson();
             return "https://www.bing.com" + jsonObject.images[0].urlbase;
         }
 
-        private static bool WebsiteExists(string url)
+        public static bool WebsiteExists(string url)
         {
             try
             {
@@ -200,7 +84,7 @@ namespace BBUWP
             }
         }
 
-        private static string GetResolutionExtension(string url)
+        public static string GetResolutionExtension(string url)
         {
             //Rectangle resolution = Screen.PrimaryScreen.Bounds;
             string widthByHeight = DisplayInformation.GetForCurrentView().ScreenWidthInRawPixels + "x" + DisplayInformation.GetForCurrentView().ScreenHeightInRawPixels;
@@ -218,17 +102,17 @@ namespace BBUWP
             }
         }
 
-        string GetFileName()
+        public string GetFileName()
         {
             return GetDateString() + ".bmp";
         }
 
-        string GetDateString()
+        public string GetDateString()
         {
             return DateTime.Now.ToString("M-d-yyyy");
         }
 
-        async Task<StorageFolder> GetFolderAsync()
+        public async Task<StorageFolder> GetFolderAsync()
         {
             StorageFolder folder;
             try
@@ -243,7 +127,7 @@ namespace BBUWP
             return folder;
         }
 
-        async Task<StorageFolder> SetFolderAsync()
+        public async Task<StorageFolder> SetFolderAsync()
         {
             var folderPicker = new Windows.Storage.Pickers.FolderPicker();
             folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
@@ -265,7 +149,7 @@ namespace BBUWP
             return folder;
         }
 
-        async Task<string> DownloadWallpaperAsync(string url, string fileName)
+        public async Task<string> DownloadWallpaperAsync(string url, string fileName, string ImagesSubdirectory)
         {
             var rootFolder = await GetFolderAsync();
             StorageFile storageFile;
@@ -300,7 +184,7 @@ namespace BBUWP
         }
 
         // Pass in a relative path to a file inside the local appdata folder 
-        async Task<bool> SetWallpaperAsync(string localAppDataFileName)
+        public async Task<bool> SetWallpaperAsync(string localAppDataFileName)
         {
             bool success = false;
             if (UserProfilePersonalizationSettings.IsSupported())
@@ -312,6 +196,6 @@ namespace BBUWP
             }
             return success;
         }
+
     }
 }
-
