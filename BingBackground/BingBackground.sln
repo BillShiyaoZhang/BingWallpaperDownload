@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingBackgroundUWP", "BingBa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingBackgroundBackgroundTask", "BackgroundTask\BingBackgroundBackgroundTask.csproj", "{D29BFE0A-3ECF-4429-8A95-2CD098989A62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBUWPTest", "BBUWPTest\BBUWPTest.csproj", "{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,26 @@ Global
 		{D29BFE0A-3ECF-4429-8A95-2CD098989A62}.Release|x64.Build.0 = Release|x64
 		{D29BFE0A-3ECF-4429-8A95-2CD098989A62}.Release|x86.ActiveCfg = Release|x86
 		{D29BFE0A-3ECF-4429-8A95-2CD098989A62}.Release|x86.Build.0 = Release|x86
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|ARM.Build.0 = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|x64.Build.0 = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Debug|x86.Build.0 = Debug|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|ARM.Build.0 = Release|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|ARM64.Build.0 = Release|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|x64.ActiveCfg = Release|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|x64.Build.0 = Release|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|x86.ActiveCfg = Release|Any CPU
+		{F20DA506-E797-4CE9-AEE3-BC5F4D9CB60D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
