@@ -14,6 +14,8 @@ using Windows.ApplicationModel;
 using System.Diagnostics;
 using Windows.UI.Popups;
 using BBCore;
+using Windows.UI.ViewManagement;
+using Windows.Foundation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -34,8 +36,13 @@ namespace BBUWP
         public MainPage()
         {
             this.InitializeComponent();
+            ApplicationView.PreferredLaunchViewSize = new Size(300, 200);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
-            core = new BBCore.BBCore();
+            if (core == null)
+            {
+                core = new BBCore.BBCore();
+            }
 
             SetStartupTask();
             SetBackgroundTasks();
@@ -43,7 +50,7 @@ namespace BBUWP
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             var lastDate = (string)localSettings.Values["lastDate"];
             var text = (TextBlock)FindName("Hint");
-            if (lastDate != GetDateString())
+            if (lastDate != core.GetDateString())
             {
                 RunFunction();
             }
@@ -128,13 +135,23 @@ namespace BBUWP
 
         public async void FolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var folder = await GetFolderAsync();
+            //var folder = await GetFolderAsync();
+            if (core == null)
+            {
+                core = new BBCore.BBCore();
+            }
+            var folder = await core.GetFolderAsync();
             await Windows.System.Launcher.LaunchFolderAsync(folder);
         }
 
         public async void SetFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            _ = await SetFolderAsync();
+            if (core == null)
+            {
+                core = new BBCore.BBCore();
+            }
+            _ = await core.SetFolderAsync();
+            //_ = await SetFolderAsync();
         }
 
         async void RunFunction()
@@ -160,48 +177,6 @@ namespace BBUWP
                     break;
             }
             text.Text = msg;
-        }
-
-        public string GetDateString()
-        {
-            return DateTime.Now.ToString("M-d-yyyy");
-        }
-
-        public async Task<StorageFolder> GetFolderAsync()
-        {
-            StorageFolder folder;
-            try
-            {
-                folder = await Windows.Storage.AccessCache.StorageApplicationPermissions.
-                    FutureAccessList.GetFolderAsync("PickedFolderToken");
-            }
-            catch (ArgumentException)
-            {
-                folder = await SetFolderAsync();
-            }
-            return folder;
-        }
-
-        public async Task<StorageFolder> SetFolderAsync()
-        {
-            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
-            folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
-            folderPicker.FileTypeFilter.Add("*");
-
-            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
-            if (folder != null)
-            {
-                // Application now has read/write access to all contents in the picked folder
-                // (including other sub-folder contents)
-                Windows.Storage.AccessCache.StorageApplicationPermissions.
-                FutureAccessList.AddOrReplace("PickedFolderToken", folder);
-                //this.textBlock.Text = "Picked folder: " + folder.Name;
-            }
-            else
-            {
-                //this.textBlock.Text = "Operation cancelled.";
-            }
-            return folder;
         }
     }
 }

@@ -17,13 +17,36 @@ namespace BBCore
 
     public class BBCore
     {
+        private bool isResolutionExtensionSet;
+
+        private string resolutionExtension;
+
+        public BBCore()
+        {
+            isResolutionExtensionSet = false;
+        }
+
+        public BBCore(string resolutionExtension)
+        {
+            this.resolutionExtension = resolutionExtension;
+            isResolutionExtensionSet = true;
+        }
+
         public async Task<RunFunctionCode> RunFunctionAsync(string ImagesSubdirectory)
         {
             RunFunctionCode value = RunFunctionCode.UNEXPECTED_EXCEPTION;
             try
             {
                 string urlBase = GetBackgroundUrlBase();
-                var resolutionExtension = GetResolutionExtension(urlBase);
+                string resolutionExtension;
+                if (!isResolutionExtensionSet)
+                {
+                    resolutionExtension = GetResolutionExtension(urlBase);
+                }
+                else
+                {
+                    resolutionExtension = this.resolutionExtension;
+                }
                 string address = await DownloadWallpaperAsync(urlBase + resolutionExtension, GetFileName(), ImagesSubdirectory);
                 var result = await SetWallpaperAsync(address);
                 if (result == true)
@@ -52,7 +75,7 @@ namespace BBCore
             return value;
         }
 
-        public static dynamic DownloadJson()
+        static dynamic DownloadJson()
         {
             using (WebClient webClient = new WebClient())
             {
@@ -63,13 +86,13 @@ namespace BBCore
             }
         }
 
-        public static string GetBackgroundUrlBase()
+        static string GetBackgroundUrlBase()
         {
             dynamic jsonObject = DownloadJson();
             return "https://www.bing.com" + jsonObject.images[0].urlbase;
         }
 
-        public static bool WebsiteExists(string url)
+        static bool WebsiteExists(string url)
         {
             try
             {
@@ -84,7 +107,7 @@ namespace BBCore
             }
         }
 
-        public static string GetResolutionExtension(string url)
+        static string GetResolutionExtension(string url)
         {
             //Rectangle resolution = Screen.PrimaryScreen.Bounds;
             string widthByHeight = DisplayInformation.GetForCurrentView().ScreenWidthInRawPixels + "x" + DisplayInformation.GetForCurrentView().ScreenHeightInRawPixels;
@@ -102,7 +125,7 @@ namespace BBCore
             }
         }
 
-        public string GetFileName()
+        string GetFileName()
         {
             return GetDateString() + ".bmp";
         }
