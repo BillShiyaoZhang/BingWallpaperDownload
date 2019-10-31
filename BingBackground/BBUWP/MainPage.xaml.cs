@@ -141,7 +141,12 @@ namespace BBUWP
                 core = new BBCore.BBCore();
             }
             var folder = await core.GetFolderAsync();
-            await Windows.System.Launcher.LaunchFolderAsync(folder);
+            var success = await Windows.System.Launcher.LaunchFolderAsync(folder);
+            if (!success)
+            {
+                var text = (TextBlock)FindName("Hint");
+                text.Text = "Open folder failed";
+            }
         }
 
         public async void SetFolderButton_Click(object sender, RoutedEventArgs e)
@@ -150,8 +155,16 @@ namespace BBUWP
             {
                 core = new BBCore.BBCore();
             }
-            _ = await core.SetFolderAsync();
-            //_ = await SetFolderAsync();
+            var folder = await core.SetFolderAsync();
+            var text = (TextBlock)FindName("Hint");
+            if (folder == null)
+            {
+                text.Text = "Set folder failed!";
+            }
+            else
+            {
+                text.Text = "Set folder successed!";
+            }
         }
 
         async void RunFunction()
