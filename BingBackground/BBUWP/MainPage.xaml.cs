@@ -1,58 +1,90 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Net;
-using Windows.System.UserProfile;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Graphics.Display;
-using System.Net.Http;
+﻿using System;
+using System.Diagnostics;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel;
-using System.Diagnostics;
-using Windows.UI.Popups;
-using BBCore;
-using Windows.UI.ViewManagement;
 using Windows.Foundation;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+using Windows.Storage;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
+using BBCore;
 
 namespace BBUWP
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// The main page includes three buttons and one text block.
+    /// Three buttons are: Set Folder, Download, and Open Folder.
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        const string ImagesSubdirectory = "DownloadedImages";
-        const string UserPresentBTName = "BBBTUserPresent";
-        const string TimeBTName = "BBBTTimer";
-        const string BTEntryPoint = "BBBackgroundTask.BBBackgroundTask";
+        #region Private Constant
 
-        BBCore.BBCore core;
+        /// <summary>
+        /// Name of background task detecting if user is presenting.
+        /// </summary>
+        private const string UserPresentBTName = "BBBTUserPresent";
 
+        /// <summary>
+        /// Name of background task with timer.
+        /// </summary>
+        private const string TimeBTName = "BBBTTimer";
+
+        /// <summary>
+        /// Entry point of background tasks.
+        /// </summary>
+        private const string BTEntryPoint = "BBBackgroundTask.BackgroundTask";
+
+        /// <summary>
+        /// ID of startup task.
+        /// </summary>
+        private const string StartupTaskID = "MyStartupId";
+
+        /// <summary>
+        /// ID of text block in the frame.
+        /// </summary>
+        private const string TextID = "Hint";
+
+        #endregion
+
+        /// <summary>
+        /// Instance of core.
+        /// </summary>
+        private Core _core;
+
+        /// <summary>
+        /// Porperty to access the instance of core.
+        /// </summary>
+        private Core Core
+        {
+            get
+            {
+                if (_core == null)
+                {
+                    _core = new Core();
+                }
+                return _core;
+            }
+        }
+
+        /// <summary>
+        /// Initialize the main page.  Download and set today's image as wallpaper if it didn't do so early today.
+        /// </summary>
         public MainPage()
         {
             this.InitializeComponent();
             ApplicationView.PreferredLaunchViewSize = new Size(300, 200);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
-            if (core == null)
-            {
-                core = new BBCore.BBCore();
-            }
-
             SetStartupTask();
             SetBackgroundTasks();
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            var lastDate = (string)localSettings.Values["lastDate"];
-            var text = (TextBlock)FindName("Hint");
-            if (lastDate != core.GetDateString())
+            var lastDate = (string)localSettings.Values[Core.LastDateKey];
+            var text = (TextBlock)FindName(TextID);
+            if (lastDate != Core.GetDateString())
             {
-                RunFunction();
+                RunAsync();
             }
             else
             {
@@ -61,9 +93,67 @@ namespace BBUWP
             text.Visibility = Visibility.Visible;
         }
 
-        public async void SetStartupTask()
+        #region Public Button Listeners
+
+        /// <summary>
+        /// Listener on download button click.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">Artuments</param>
+        public void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
-            StartupTask startupTask = await StartupTask.GetAsync("MyStartupId"); // Pass the task ID you specified in the appxmanifest file
+            RunAsync();
+        }
+
+        /// <summary>
+        /// Listener on open folder button click.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">Arguments</param>
+        public async void OpenFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var folder = await Core.GetFolderAsync();
+            var success = await Windows.System.Launcher.LaunchFolderAsync(folder);
+            var text = (TextBlock)FindName(TextID);
+            if (!success)
+            {
+                text.Text = "Open folder failed";
+            }
+            else
+            {
+                text.Text = "Open folder successed!";
+            }
+        }
+
+        /// <summary>
+        /// Listener on set folder button click.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">Artuments</param>
+        public async void SetFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var folder = await Core.SetFolderAsync();
+            var text = (TextBlock)FindName(TextID);
+            if (folder == null)
+            {
+                text.Text = "Set folder failed!";
+            }
+            else
+            {
+                text.Text = "Set folder successed!";
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Set startup task and request permission if necessary.
+        /// </summary>
+        private async void SetStartupTask()
+        {
+            StartupTask startupTask = await StartupTask.GetAsync(StartupTaskID); // Pass the task ID you specified in the appxmanifest file
             switch (startupTask.State)
             {
                 case StartupTaskState.Disabled:
@@ -77,7 +167,7 @@ namespace BBUWP
                         "You have disabled this app's ability to run " +
                         "as soon as you sign in, but if you change your mind, " +
                         "you can enable this in the Startup tab in Task Manager.",
-                        "TestStartup");
+                        StartupTaskID);
                     await dialog.ShowAsync();
                     break;
                 case StartupTaskState.DisabledByPolicy:
@@ -89,7 +179,10 @@ namespace BBUWP
             }
         }
 
-        public void SetBackgroundTasks()
+        /// <summary>
+        /// Set background tasks.
+        /// </summary>
+        private void SetBackgroundTasks()
         {
 
             SetBackgroundTask(UserPresentBTName, BTEntryPoint,
@@ -99,7 +192,14 @@ namespace BBUWP
             SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger(90, false));
         }
 
-        public IBackgroundTaskRegistration SetBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)
+        /// <summary>
+        /// Set a background task.
+        /// </summary>
+        /// <param name="taskName">Name of the task</param>
+        /// <param name="taskEntryPoint">Entry point of the task</param>
+        /// <param name="trigger">Trigger of the task</param>
+        /// <returns>Successfully registered task or null</returns>
+        private IBackgroundTaskRegistration SetBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)
         {
             var taskRegistered = false;
 
@@ -119,7 +219,7 @@ namespace BBUWP
                 builder.Name = taskName;
                 builder.TaskEntryPoint = taskEntryPoint;
                 builder.SetTrigger(trigger);
-                //builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
                 builder.IsNetworkRequested = true;
                 BackgroundTaskRegistration task = builder.Register();
                 return task;
@@ -127,50 +227,13 @@ namespace BBUWP
             return null;
         }
 
-
-        public void DownloadButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Download and set image from Bing as wallpaper and get result.
+        /// </summary>
+        private async void RunAsync()
         {
-            RunFunction();
-        }
-
-        public async void FolderButton_Click(object sender, RoutedEventArgs e)
-        {
-            //var folder = await GetFolderAsync();
-            if (core == null)
-            {
-                core = new BBCore.BBCore();
-            }
-            var folder = await core.GetFolderAsync();
-            var success = await Windows.System.Launcher.LaunchFolderAsync(folder);
-            if (!success)
-            {
-                var text = (TextBlock)FindName("Hint");
-                text.Text = "Open folder failed";
-            }
-        }
-
-        public async void SetFolderButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (core == null)
-            {
-                core = new BBCore.BBCore();
-            }
-            var folder = await core.SetFolderAsync();
-            var text = (TextBlock)FindName("Hint");
-            if (folder == null)
-            {
-                text.Text = "Set folder failed!";
-            }
-            else
-            {
-                text.Text = "Set folder successed!";
-            }
-        }
-
-        async void RunFunction()
-        {
-            var code = await core.RunFunctionAsync(ImagesSubdirectory);
-            var text = (TextBlock)FindName("Hint");
+            var code = await Core.RunAsync();
+            var text = (TextBlock)FindName(TextID);
             string msg = "";
             switch (code)
             {
@@ -191,6 +254,8 @@ namespace BBUWP
             }
             text.Text = msg;
         }
+
+        #endregion
     }
 }
 

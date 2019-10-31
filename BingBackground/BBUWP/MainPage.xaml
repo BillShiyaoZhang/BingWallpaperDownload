@@ -11,7 +11,7 @@
     <Grid>
         <Button Content="Set Folder" Click="SetFolderButton_Click" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <Button Content="Download" Click="DownloadButton_Click" Margin="100,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Button Content="Folder" Margin="200,10,0,0" Click="FolderButton_Click" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Button Content="Open Folder" Margin="200,10,0,0" Click="OpenFolderButton_Click" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBlock x:Name="Hint" HorizontalAlignment="Left" Margin="10,50,0,0" Text="Waiting" TextWrapping="Wrap" VerticalAlignment="Top"  Visibility="Visible"/>
     </Grid>
 </Page>

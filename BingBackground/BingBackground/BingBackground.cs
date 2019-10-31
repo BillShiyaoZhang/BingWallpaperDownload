@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 namespace BingBackground {
 
+    [Obsolete("This whole class is obsolete. Use BBUWP instead.", false)]
     public class BingBackground {
 
         private static void Main(string[] args) {

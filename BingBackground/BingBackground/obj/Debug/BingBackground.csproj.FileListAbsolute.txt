@@ -59,12 +59,3 @@ C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.exe
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.pdb
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.csprojAssemblyReference.cache
-D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\BingBackground.exe.config
-D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\BingBackground.exe
-D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\BingBackground.pdb
-D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\Newtonsoft.Json.dll
-D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\Newtonsoft.Json.xml
-D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.csproj.CopyComplete
-D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.exe
-D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.pdb
-D:\Documents\GitHub\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.csprojAssemblyReference.cache
