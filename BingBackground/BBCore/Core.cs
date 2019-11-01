@@ -33,32 +33,49 @@ namespace BBCore
         /// <summary>
         /// The default resolution extension for downloading image.
         /// </summary>
-        public static string DefaultResolutionExtension { get { return "_1920x1080.jpg"; } }
-        
-        #endregion
+        public static string DefaultResolutionExtension { get { return "_" + DefaultWidthByHeight + ".jpg"; } }
 
-        #region Fileds
+        /// <summary>
+        /// Get string of today's DateTime
+        /// </summary>
+        public static string GetDateString { get { return DateTime.Now.ToString("M-d-yyyy"); } }
 
         /// <summary>
         /// Flag on if or not the resolutionExtension is set.  Use resolutionExtension if yes.
         /// </summary>
-        private bool isResolutionExtensionSet;
+        private bool IsResolutionExtensionSet { get; set; }
 
         /// <summary>
         /// The resolution extension of the image, in the format of "_1920x1080.jpg".
         /// </summary>
-        private string resolutionExtension;
+        private string ResolutionExtension { get; set; }
 
         /// <summary>
         /// The token to pick folder which stores images.
         /// </summary>
-        private const string PICK_FOLDER_TOKEN = "PickedFolderToken";
+        private string PickFolderToken { get { return "PickedFolderToken"; } }
+        private static string DefaultWidthByHeight { get { return "1920x1080"; } }
+
+        private string WidthByHeight
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_widthByHeight))
+                {
+                    _widthByHeight = DefaultWidthByHeight;
+                }
+                return _widthByHeight;
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// The defualt subdirectory images stored in local.
         /// </summary>
         private const string DEFAULT_IMAGES_SUBDIRECTORY = "DownloadedImages";
-        #endregion
+
+        private string _widthByHeight;
 
         #region Constructors
 
@@ -67,7 +84,7 @@ namespace BBCore
         /// </summary>
         public Core()
         {
-            isResolutionExtensionSet = false;
+            IsResolutionExtensionSet = false;
         }
 
         /// <summary>
@@ -76,8 +93,8 @@ namespace BBCore
         /// <param name="resolutionExtension"></param>
         public Core(string resolutionExtension)
         {
-            this.resolutionExtension = resolutionExtension;
-            isResolutionExtensionSet = true;
+            this.ResolutionExtension = resolutionExtension;
+            IsResolutionExtensionSet = true;
         }
 
         #endregion
@@ -92,19 +109,23 @@ namespace BBCore
         public async Task<RunFunctionCode> RunAsync(string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
         {
             RunFunctionCode value;
+            if (!IsResolutionExtensionSet)
+            {
+                SetWidthByHeight(); // Set
+            }
             try
             {
-                string urlBase = GetBackgroundUrlBase();
-                if (!isResolutionExtensionSet)
+                string urlBase = await GetBackgroundUrlBaseAsync().ConfigureAwait(false);
+                if (!IsResolutionExtensionSet)
                 {
-                    resolutionExtension = GetResolutionExtension(urlBase);
+                    ResolutionExtension = await GetResolutionExtensionAsync(urlBase).ConfigureAwait(false);
                 }
-                string address = await DownloadWallpaperAsync(urlBase + resolutionExtension, GetFileName(), imagesSubdirectory);
-                var result = await SetWallpaperAsync(address);
+                string address = await DownloadWallpaperAsync(urlBase + ResolutionExtension, GetFileName(), imagesSubdirectory).ConfigureAwait(false);
+                var result = await SetWallpaperAsync(address).ConfigureAwait(false);
                 if (result)
                 {
                     ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                    localSettings.Values[LastDateKey] = GetDateString();
+                    localSettings.Values[LastDateKey] = GetDateString;
                     value = RunFunctionCode.SUCCESSFUL; // Wallpaper set successful!
                 }
                 else
@@ -116,21 +137,12 @@ namespace BBCore
             {
                 value = RunFunctionCode.NO_INTERNET;    // Find Internet connection problem!";
             }
-            catch (Exception)
-            {
-                value = RunFunctionCode.UNEXPECTED_EXCEPTION;   // Unexpected Exception!
-            }
+            //catch (Exception)
+            //{
+            //    value = RunFunctionCode.UNEXPECTED_EXCEPTION;   // Unexpected Exception!
+            //}
 
             return value;
-        }
-
-        /// <summary>
-        /// Get string of today's DateTime
-        /// </summary>
-        /// <returns>DateTime of today</returns>
-        public string GetDateString()
-        {
-            return DateTime.Now.ToString("M-d-yyyy");
         }
 
         /// <summary>
@@ -143,11 +155,11 @@ namespace BBCore
             try
             {
                 folder = await Windows.Storage.AccessCache.StorageApplicationPermissions.
-                    FutureAccessList.GetFolderAsync(PICK_FOLDER_TOKEN);
+                    FutureAccessList.GetFolderAsync(PickFolderToken);
             }
             catch (ArgumentException)
             {
-                folder = await SetFolderAsync();
+                folder = await SetFolderAsync().ConfigureAwait(false);
             }
             return folder;
         }
@@ -168,7 +180,7 @@ namespace BBCore
                 // Application now has read/write access to all contents in the picked folder
                 // (including other sub-folder contents)
                 Windows.Storage.AccessCache.StorageApplicationPermissions.
-                FutureAccessList.AddOrReplace(PICK_FOLDER_TOKEN, folder);
+                FutureAccessList.AddOrReplace(PickFolderToken, folder);
                 //this.textBlock.Text = "Picked folder: " + folder.Name;
             }
             else
@@ -186,13 +198,16 @@ namespace BBCore
         /// Download, from bing, JSON file which includes information of image address.
         /// </summary>
         /// <returns>Deserialized JSON file</returns>
-        private static dynamic DownloadJson()
+        private async Task<dynamic> DownloadJsonAsync()
         {
-            using (WebClient webClient = new WebClient())
+            //            using (WebClient webClient = new WebClient())
+            using (var client = new HttpClient())
             {
                 Console.WriteLine("Downloading JSON...");
-                webClient.Encoding = System.Text.Encoding.UTF8;
-                string jsonString = webClient.DownloadString("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-UK");
+                //              webClient.Encoding = System.Text.Encoding.UTF8;
+                //            string jsonString = webClient.DownloadString("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-UK");
+                var uri = new Uri("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-UK");
+                var jsonString = await client.GetStringAsync(uri).ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<dynamic>(jsonString);
             }
         }
@@ -201,9 +216,9 @@ namespace BBCore
         /// Get URL base of the image without resolution extension
         /// </summary>
         /// <returns>the URL base</returns>
-        private static string GetBackgroundUrlBase()
+        private async Task<string> GetBackgroundUrlBaseAsync()
         {
-            dynamic jsonObject = DownloadJson();
+            dynamic jsonObject = await DownloadJsonAsync().ConfigureAwait(false);
             return "https://www.bing.com" + jsonObject.images[0].urlbase;
         }
 
@@ -212,13 +227,14 @@ namespace BBCore
         /// </summary>
         /// <param name="url">The URL of the website</param>
         /// <returns>If the website exists.</returns>
-        private static bool WebsiteExists(string url)
+        private async Task<bool> WebsiteExistsAsync(string url)
         {
             try
             {
                 WebRequest request = WebRequest.Create(url);
                 request.Method = "HEAD";
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                
+                HttpWebResponse response = (HttpWebResponse) await request.GetResponseAsync().ConfigureAwait(false);
                 return response.StatusCode == HttpStatusCode.OK;
             }
             catch
@@ -232,20 +248,17 @@ namespace BBCore
         /// </summary>
         /// <param name="url">URL of images.</param>
         /// <returns>The resolution extension.</returns>
-        private static string GetResolutionExtension(string url)
+        private async Task<string> GetResolutionExtensionAsync(string url)
         {
-            //Rectangle resolution = Screen.PrimaryScreen.Bounds;
-            string widthByHeight = DisplayInformation.GetForCurrentView().ScreenWidthInRawPixels
-                + "x" + DisplayInformation.GetForCurrentView().ScreenHeightInRawPixels;
-            string potentialExtension = "_" + widthByHeight + ".jpg";
-            if (WebsiteExists(url + potentialExtension))
+            string potentialExtension = "_" + WidthByHeight + ".jpg";
+            if (await WebsiteExistsAsync(url + potentialExtension).ConfigureAwait(false))
             {
-                Console.WriteLine("Background for " + widthByHeight + " found.");
+                Console.WriteLine("Background for " + WidthByHeight + " found.");
                 return potentialExtension;
             }
             else
             {
-                Console.WriteLine("No background for " + widthByHeight + " was found.");
+                Console.WriteLine("No background for " + WidthByHeight + " was found.");
                 Console.WriteLine("Using 1920x1080 instead.");
                 return DefaultResolutionExtension;
             }
@@ -257,7 +270,7 @@ namespace BBCore
         /// <returns>The name of file.</returns>
         private string GetFileName()
         {
-            return GetDateString() + ".bmp";
+            return GetDateString + ".bmp";
         }
 
         /// <summary>
@@ -282,8 +295,8 @@ namespace BBCore
 
             using (HttpClient client = new HttpClient())
             {
-                byte[] buffer = await client.GetByteArrayAsync(url);
-                using (Stream stream = await storageFile.OpenStreamForWriteAsync())
+                byte[] buffer = await client.GetByteArrayAsync(url).ConfigureAwait(false);
+                using (Stream stream = await storageFile.OpenStreamForWriteAsync().ConfigureAwait(false))
                     stream.Write(buffer, 0, buffer.Length);
             }
 
@@ -317,6 +330,12 @@ namespace BBCore
                 success = await profileSettings.TrySetWallpaperImageAsync(file);
             }
             return success;
+        }
+
+        private void SetWidthByHeight()
+        {
+            _widthByHeight = DisplayInformation.GetForCurrentView().ScreenWidthInRawPixels
+                + "x" + DisplayInformation.GetForCurrentView().ScreenHeightInRawPixels;
         }
 
         #endregion

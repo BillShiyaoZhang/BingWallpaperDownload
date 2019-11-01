@@ -82,7 +82,7 @@ namespace BBUWP
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             var lastDate = (string)localSettings.Values[Core.LastDateKey];
             var text = (TextBlock)FindName(TextID);
-            if (lastDate != Core.GetDateString())
+            if (lastDate != Core.GetDateString)
             {
                 RunAsync();
             }
@@ -189,7 +189,12 @@ namespace BBUWP
                 new SystemTrigger(SystemTriggerType.UserPresent, false));
 
             // TODO The time trigger should detect a proper time interval for next day, and register the next trigger.
+            //var currentMins = DateTime.Now.Hour * 60 + DateTime.Now.Minute; // current time in mins
+            //var restMins = 1440 - currentMins;  // rest mins in a day. 24 * 60 = 1440 mins a day
+            //var triggerMins = restMins - restMins % 15 + 15;    // trigger should be set at the beginning of the next day as 15 * n mins
+            //var timerOneShot = SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger((uint)triggerMins, false));
             SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger(90, false));
+
         }
 
         /// <summary>
@@ -221,7 +226,7 @@ namespace BBUWP
                 builder.SetTrigger(trigger);
                 builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
                 builder.IsNetworkRequested = true;
-                BackgroundTaskRegistration task = builder.Register();
+                var task = builder.Register();
                 return task;
             }
             return null;
