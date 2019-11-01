@@ -144,6 +144,11 @@ namespace BBUWP
             }
         }
 
+        public void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Exit();
+        }
+
         #endregion
 
         #region Private Methods
@@ -261,6 +266,8 @@ namespace BBUWP
         }
 
         #endregion
+
+
     }
 }
 
