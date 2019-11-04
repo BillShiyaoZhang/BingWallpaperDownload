@@ -76,9 +76,6 @@ namespace BBUWP
             ApplicationView.PreferredLaunchViewSize = new Size(300, 200);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
-            SetStartupTask();
-            SetBackgroundTasks();
-
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             var lastDate = (string)localSettings.Values[Core.LastDateKey];
             var text = (TextBlock)FindName(TextID);
@@ -91,6 +88,9 @@ namespace BBUWP
                 text.Text = "The image has already been there!";
             }
             text.Visibility = Visibility.Visible;
+
+            SetStartupTask();
+            SetBackgroundTasks();
         }
 
         #region Public Button Listeners

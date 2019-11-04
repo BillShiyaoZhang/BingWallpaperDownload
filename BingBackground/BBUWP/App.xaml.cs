@@ -1,9 +1,11 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BBCore;
 
 namespace BBUWP
 {
@@ -12,6 +14,51 @@ namespace BBUWP
     /// </summary>
     sealed partial class App : Application
     {
+        /// <summary>
+        /// Name of background task detecting if user is presenting.
+        /// </summary>
+        private const string UserPresentBTName = "BBBTUserPresent";
+
+        /// <summary>
+        /// Name of background task with timer.
+        /// </summary>
+        private const string TimeBTName = "BBBTTimer";
+
+        /// <summary>
+        /// Entry point of background tasks.
+        /// </summary>
+        private const string BTEntryPoint = "BBBackgroundTask.BackgroundTask";
+
+        /// <summary>
+        /// ID of startup task.
+        /// </summary>
+        private const string StartupTaskID = "MyStartupId";
+
+        /// <summary>
+        /// ID of text block in the frame.
+        /// </summary>
+        private const string TextID = "Hint";
+
+        /// <summary>
+        /// Instance of core.
+        /// </summary>
+        private Core _core;
+
+        /// <summary>
+        /// Porperty to access the instance of core.
+        /// </summary>
+        private Core Core
+        {
+            get
+            {
+                if (_core == null)
+                {
+                    _core = new Core(Core.DefaultResolutionExtension);
+                }
+                return _core;
+            }
+        }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -63,10 +110,10 @@ namespace BBUWP
             }
         }
 
-        protected override void OnActivated(IActivatedEventArgs args)
+        protected override async void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);
-
+            
             Frame rootFrame = Window.Current.Content as Frame;
             if (rootFrame == null)
             {
@@ -81,6 +128,9 @@ namespace BBUWP
                 payload = ActivationKind.StartupTask.ToString();
                 rootFrame.Navigate(typeof(MainPage), payload);
                 Window.Current.Activate();
+                //SetBackgroundTasks();
+                //await Core.RunAsync();
+                //Window.Current.Close();
             }
         }
 
@@ -107,5 +157,59 @@ namespace BBUWP
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+        /// <summary>
+        /// Set background tasks.
+        /// </summary>
+        private void SetBackgroundTasks()
+        {
+
+            SetBackgroundTask(UserPresentBTName, BTEntryPoint,
+                new SystemTrigger(SystemTriggerType.UserPresent, false));
+
+            // TODO The time trigger should detect a proper time interval for next day, and register the next trigger.
+            //var currentMins = DateTime.Now.Hour * 60 + DateTime.Now.Minute; // current time in mins
+            //var restMins = 1440 - currentMins;  // rest mins in a day. 24 * 60 = 1440 mins a day
+            //var triggerMins = restMins - restMins % 15 + 15;    // trigger should be set at the beginning of the next day as 15 * n mins
+            //var timerOneShot = SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger((uint)triggerMins, false));
+            SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger(90, false));
+
+        }
+
+        /// <summary>
+        /// Set a background task.
+        /// </summary>
+        /// <param name="taskName">Name of the task</param>
+        /// <param name="taskEntryPoint">Entry point of the task</param>
+        /// <param name="trigger">Trigger of the task</param>
+        /// <returns>Successfully registered task or null</returns>
+        private IBackgroundTaskRegistration SetBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)
+        {
+            var taskRegistered = false;
+
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+            {
+                if (task.Value.Name == taskName)
+                {
+                    taskRegistered = true;
+                    return task.Value;
+                }
+            }
+
+            if (!taskRegistered)
+            {
+                var builder = new BackgroundTaskBuilder();
+
+                builder.Name = taskName;
+                builder.TaskEntryPoint = taskEntryPoint;
+                builder.SetTrigger(trigger);
+                builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                builder.IsNetworkRequested = true;
+                var task = builder.Register();
+                return task;
+            }
+            return null;
+        }
+
     }
 }

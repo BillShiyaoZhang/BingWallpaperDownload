@@ -58,7 +58,7 @@
           <uap5:StartupTask
             TaskId="MyStartupId"
             Enabled="false"
-            DisplayName="Test startup" />
+            DisplayName="BingBackground Startup Task" />
         </uap5:Extension>
       </Extensions>
     </Application>

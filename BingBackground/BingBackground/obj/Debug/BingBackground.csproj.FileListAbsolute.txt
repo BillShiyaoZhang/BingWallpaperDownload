@@ -59,3 +59,12 @@ C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.exe
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.pdb
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Debug\BingBackground.csprojAssemblyReference.cache
+C:\Users\zhang\Source\Repos\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\BingBackground.exe.config
+C:\Users\zhang\Source\Repos\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\BingBackground.exe
+C:\Users\zhang\Source\Repos\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\BingBackground.pdb
+C:\Users\zhang\Source\Repos\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\Newtonsoft.Json.dll
+C:\Users\zhang\Source\Repos\BingBackgroundUWP\BingBackground\BingBackground\bin\Debug\Newtonsoft.Json.xml
+C:\Users\zhang\Source\Repos\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.csprojAssemblyReference.cache
+C:\Users\zhang\Source\Repos\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.csproj.CopyComplete
+C:\Users\zhang\Source\Repos\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.exe
+C:\Users\zhang\Source\Repos\BingBackgroundUWP\BingBackground\BingBackground\obj\Debug\BingBackground.pdb
