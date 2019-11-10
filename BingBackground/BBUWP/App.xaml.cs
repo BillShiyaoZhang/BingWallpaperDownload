@@ -110,7 +110,7 @@ namespace BBUWP
             }
         }
 
-        protected override async void OnActivated(IActivatedEventArgs args)
+        protected override void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);
             
