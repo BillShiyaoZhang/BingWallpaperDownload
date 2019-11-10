@@ -6,6 +6,8 @@ using System.Drawing;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Serilog;
+using Serilog.Events;
 
 namespace BBLibrary
 {
@@ -14,10 +16,20 @@ namespace BBLibrary
 
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("System", LogEventLevel.Error)
+                .Enrich.FromLogContext()
+                .WriteTo.File("LogFile.txt")
+                .CreateLogger();
+            Log.Information("======================== Start ========================");
             string urlBase = GetBackgroundUrlBase();
             Image background = DownloadBackground(urlBase + GetResolutionExtension(urlBase));
             SaveBackground(background);
             SetBackground(GetPosition());
+            Log.Information("========================  End  ========================");
+            Log.CloseAndFlush();
         }
 
         private static dynamic DownloadJson()
@@ -25,6 +37,7 @@ namespace BBLibrary
             using (WebClient webClient = new WebClient())
             {
                 Console.WriteLine("Downloading JSON...");
+                Log.Information("Downloading JSON...");
                 webClient.Encoding = System.Text.Encoding.UTF8;
                 string jsonString = webClient.DownloadString("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-UK");
                 return JsonConvert.DeserializeObject<dynamic>(jsonString);
@@ -92,6 +105,7 @@ namespace BBLibrary
         private static Image DownloadBackground(string url)
         {
             Console.WriteLine("Downloading background...");
+            Log.Information("Downloading background...");
             //SetProxy();
             WebRequest request = WebRequest.Create(url);
             WebResponse reponse = request.GetResponse();
@@ -121,6 +135,7 @@ namespace BBLibrary
         private static void SaveBackground(Image background)
         {
             Console.WriteLine("Saving background...");
+            Log.Information("Saving background...");
             background.Save(GetBackgroundImagePath(), System.Drawing.Imaging.ImageFormat.Jpeg);
         }
 
@@ -166,6 +181,7 @@ namespace BBLibrary
         private static void SetBackground(PicturePosition style)
         {
             Console.WriteLine("Setting background...");
+            Log.Information("Setting background...");
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey(Path.Combine("Control Panel", "Desktop"), true))
@@ -200,12 +216,15 @@ namespace BBLibrary
                 NativeMethods.SystemParametersInfo(SetDesktopBackground, 0, GetBackgroundImagePath(), UpdateIniFile | SendWindowsIniChange);
             }
             Console.WriteLine("Finish Windows part.");
+            Log.Debug("Finish Windows part.");
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 Console.WriteLine("Platform debugging...");
+                Log.Debug("Platform debugging...");
                 var output = Bash($"osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"/Users/floragao/{GetBackgroundImagePath()}\"'");
                 Console.WriteLine($"Platform debugging end.  Output: {output}");
+                Log.Debug($"Platform debugging end.  Output: {output}");
             }
 
         }
