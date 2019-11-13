@@ -21,7 +21,7 @@ namespace BBLibrary
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("System", LogEventLevel.Error)
                 .Enrich.FromLogContext()
-                .WriteTo.File("LogFile.txt")
+                .WriteTo.File("./Bing Backgrounds/LogFile.txt")
                 .CreateLogger();
             Log.Information("======================== Start ========================");
             string urlBase = GetBackgroundUrlBase();
@@ -122,7 +122,7 @@ namespace BBLibrary
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                directory = Path.Combine("Bing Backgrounds", DateTime.Now.Year.ToString());
+                directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),"Bing Backgrounds", DateTime.Now.Year.ToString());
             }
             else
             {
@@ -136,6 +136,7 @@ namespace BBLibrary
         {
             Console.WriteLine("Saving background...");
             Log.Information("Saving background...");
+            var path = GetBackgroundImagePath();
             background.Save(GetBackgroundImagePath(), System.Drawing.Imaging.ImageFormat.Jpeg);
         }
 
@@ -222,7 +223,7 @@ namespace BBLibrary
             {
                 Console.WriteLine("Platform debugging...");
                 Log.Debug("Platform debugging...");
-                var output = Bash($"osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"/Users/floragao/{GetBackgroundImagePath()}\"'");
+                var output = Bash($"osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"{GetBackgroundImagePath()}\"'");
                 Console.WriteLine($"Platform debugging end.  Output: {output}");
                 Log.Debug($"Platform debugging end.  Output: {output}");
             }
