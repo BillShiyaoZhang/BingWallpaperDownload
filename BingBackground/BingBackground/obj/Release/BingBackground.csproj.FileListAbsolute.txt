@@ -47,3 +47,11 @@ C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Release\BingBackground.csproj.CopyComplete
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Release\BingBackground.exe
 C:\Users\zhang\Documents\GitHub\BingBackground\BingBackground\BingBackground\obj\Release\BingBackground.pdb
+D:\zhang\Documents\Sources\BingBackgroundUWP\BingBackground\BingBackground\bin\Release\BingBackground.exe.config
+D:\zhang\Documents\Sources\BingBackgroundUWP\BingBackground\BingBackground\bin\Release\BingBackground.exe
+D:\zhang\Documents\Sources\BingBackgroundUWP\BingBackground\BingBackground\bin\Release\BingBackground.pdb
+D:\zhang\Documents\Sources\BingBackgroundUWP\BingBackground\BingBackground\bin\Release\Newtonsoft.Json.dll
+D:\zhang\Documents\Sources\BingBackgroundUWP\BingBackground\BingBackground\bin\Release\Newtonsoft.Json.xml
+D:\zhang\Documents\Sources\BingBackgroundUWP\BingBackground\BingBackground\obj\Release\BingBackground.csproj.CopyComplete
+D:\zhang\Documents\Sources\BingBackgroundUWP\BingBackground\BingBackground\obj\Release\BingBackground.exe
+D:\zhang\Documents\Sources\BingBackgroundUWP\BingBackground\BingBackground\obj\Release\BingBackground.pdb

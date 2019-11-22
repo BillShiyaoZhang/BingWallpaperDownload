@@ -79,7 +79,7 @@ namespace BBUWP
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             var lastDate = (string)localSettings.Values[Core.LastDateKey];
             var text = (TextBlock)FindName(TextID);
-            if (lastDate != Core.GetDateString)
+            if (lastDate != Core.DefaultDateString)
             {
                 RunAsync();
             }

@@ -38,7 +38,7 @@ namespace BBCore
         /// <summary>
         /// Get string of today's DateTime
         /// </summary>
-        public static string GetDateString { get { return DateTime.Now.ToString("M-d-yyyy"); } }
+        public static string DefaultDateString { get { return DateTime.Now.ToString("M-d-yyyy"); } }
 
         /// <summary>
         /// Flag on if or not the resolutionExtension is set.  Use resolutionExtension if yes.
@@ -65,6 +65,28 @@ namespace BBCore
                     _widthByHeight = DefaultWidthByHeight;
                 }
                 return _widthByHeight;
+            }
+        }
+
+        /// <summary>
+        /// Get the relevant path of file it should be today.
+        /// </summary>
+        private string DefaultFilePath
+        {
+            get
+            {
+                return DateTime.Now.Year.ToString() + "\\" + DefaultFileName;
+            }
+        }
+
+        /// <summary>
+        /// Get the name of file it should be today.
+        /// </summary>
+        private string DefaultFileName
+        {
+            get
+            {
+                return DefaultDateString + ".bmp";
             }
         }
 
@@ -113,6 +135,7 @@ namespace BBCore
             {
                 SetWidthByHeight(); // Set
             }
+            var folder = await GetFolderAsync().ConfigureAwait(false);
             try
             {
                 string urlBase = await GetBackgroundUrlBaseAsync().ConfigureAwait(false);
@@ -120,12 +143,12 @@ namespace BBCore
                 {
                     ResolutionExtension = await GetResolutionExtensionAsync(urlBase).ConfigureAwait(false);
                 }
-                string address = await DownloadWallpaperAsync(urlBase + ResolutionExtension, GetFileName(), imagesSubdirectory).ConfigureAwait(false);
+                string address = await DownloadWallpaperAsync(urlBase + ResolutionExtension, folder, DefaultFilePath, imagesSubdirectory).ConfigureAwait(false);
                 var result = await SetWallpaperAsync(address).ConfigureAwait(false);
                 if (result)
                 {
                     ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                    localSettings.Values[LastDateKey] = GetDateString;
+                    localSettings.Values[LastDateKey] = DefaultDateString;
                     value = RunFunctionCode.SUCCESSFUL; // Wallpaper set successful!
                 }
                 else
@@ -265,32 +288,22 @@ namespace BBCore
         }
 
         /// <summary>
-        /// Get the name of file it should be today.
-        /// </summary>
-        /// <returns>The name of file.</returns>
-        private string GetFileName()
-        {
-            return GetDateString + ".bmp";
-        }
-
-        /// <summary>
         /// Download the image from a given URL and store it with a specified file name under certain subdirectory.
         /// </summary>
         /// <param name="url">URL of the image.</param>
-        /// <param name="fileName">The name of the file.</param>
+        /// <param name="filePath">The reletive path of the file.</param>
         /// <param name="ImagesSubdirectory">Subdirectory location to store files.</param>
         /// <returns>Path of the image file.</returns>
-        private async Task<string> DownloadWallpaperAsync(string url, string fileName, string ImagesSubdirectory)
+        private async Task<string> DownloadWallpaperAsync(string url, StorageFolder rootFolder, string filePath, string ImagesSubdirectory)
         {
-            var rootFolder = await GetFolderAsync();
             StorageFile storageFile;
             try
             {
-                storageFile = await rootFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                storageFile = await rootFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
             }
             catch (Exception)
             {
-                storageFile = await rootFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+                storageFile = await rootFolder.CreateFileAsync(filePath, CreationCollisionOption.OpenIfExists);
             }
 
             using (HttpClient client = new HttpClient())
@@ -301,16 +314,12 @@ namespace BBCore
             }
 
             // Use this path to load image
-            string newPath = string.Format("ms-appdata:///local/{0}/{1}", ImagesSubdirectory, fileName);
-            var file = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
-            try
-            {
-                await storageFile.CopyAsync(file);
-            }
-            catch (Exception)
-            {
-                // TODO print file already exist
-            }
+            string newPath = string.Format("ms-appdata:///local/{0}/{1}", ImagesSubdirectory, DefaultFileName);
+            var localFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
+            //string newPath = string.Format("ms-appdata:///local/{0}", GetFileName());
+            //var localFolder = ApplicationData.Current.LocalFolder;
+
+            await storageFile.CopyAsync(localFolder, DefaultFileName, NameCollisionOption.ReplaceExisting);
             return newPath;
         }
 
