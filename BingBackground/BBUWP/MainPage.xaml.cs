@@ -144,6 +144,20 @@ namespace BBUWP
             }
         }
 
+        private async void OpenBingButton_Click(object sender, RoutedEventArgs e)
+        {
+            var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(@"https://www.bing.co.uk"));
+            var text = (TextBlock)FindName(TextID);
+            if (success)
+            {
+                text.Text = "Browser lanuched successed!";
+            }
+            else
+            {
+                text.Text = "Browser lanuched failed!";
+            }
+        }
+
         public void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Exit();
@@ -265,8 +279,8 @@ namespace BBUWP
             text.Text = msg;
         }
 
-        #endregion
 
+        #endregion
 
     }
 }
