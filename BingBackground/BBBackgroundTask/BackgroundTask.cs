@@ -1,5 +1,6 @@
 ﻿using Windows.ApplicationModel.Background;
 using BBCore;
+using Windows.Storage;
 
 namespace BBBackgroundTask
 {
@@ -40,7 +41,12 @@ namespace BBBackgroundTask
         async void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance)
         {
             _deferral = taskInstance.GetDeferral();
-            await Core.RunAsync();
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            var lastDate = (string)localSettings.Values[Core.LastDateKey];
+            if (lastDate != Core.DefaultDateString)
+            {
+                await Core.RunAsync();
+            }
             _deferral.Complete();
         }
     }
