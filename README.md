@@ -1,6 +1,6 @@
 # BingBackground
 
-This project provides tools to download images from [Bing](https://www.bing.com), store locally, and set them as wall papers. There are projects for Windows [UWP](./BingBackground/BBUWP/) and (obsoleted) [cmd](./BingBackground/BingBackground/).
+This project provides tools to download images from [Bing](https://www.bing.com), store locally, and set them as wall papers. There are projects for Windows [UWP](./BingBackground/BBUWP/) and (obsoleted) [cmd](./BingBackground/BingBackground/). Codes are originally pushed [here](https://shiyaozhang.visualstudio.com/BingBackgroundUWP/_git/BingBackgroundUWP).
 
 ## Previous work
 
