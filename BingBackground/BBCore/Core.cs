@@ -90,6 +90,20 @@ namespace BBCore
             }
         }
 
+        public bool IsUpdated
+        {
+            get
+            {
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                var lastDate = (string)localSettings.Values[LastDateKey];
+                if (lastDate != DefaultDateString)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         #endregion
 
         /// <summary>

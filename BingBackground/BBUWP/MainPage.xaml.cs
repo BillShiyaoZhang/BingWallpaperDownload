@@ -38,7 +38,7 @@ namespace BBUWP
         /// <summary>
         /// ID of startup task.
         /// </summary>
-        private const string StartupTaskID = "MyStartupId";
+        private const string StartupTaskID = "BingBackgroundStartupId";
 
         /// <summary>
         /// ID of text block in the frame.
@@ -76,10 +76,10 @@ namespace BBUWP
             ApplicationView.PreferredLaunchViewSize = new Size(300, 200);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            var lastDate = (string)localSettings.Values[Core.LastDateKey];
+            //ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            //var lastDate = (string)localSettings.Values[Core.LastDateKey];
             var text = (TextBlock)FindName(TextID);
-            if (lastDate != Core.DefaultDateString)
+            if (!Core.IsUpdated)
             {
                 RunAsync();
             }
@@ -211,7 +211,6 @@ namespace BBUWP
             //var currentMins = DateTime.Now.Hour * 60 + DateTime.Now.Minute; // current time in mins
             //var restMins = 1440 - currentMins;  // rest mins in a day. 24 * 60 = 1440 mins a day
             //var triggerMins = restMins - restMins % 15 + 15;    // trigger should be set at the beginning of the next day as 15 * n mins
-            //var timerOneShot = SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger((uint)triggerMins, false));
             SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger(90, false));
 
         }
@@ -243,7 +242,7 @@ namespace BBUWP
                 builder.Name = taskName;
                 builder.TaskEntryPoint = taskEntryPoint;
                 builder.SetTrigger(trigger);
-                builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                builder.AddCondition(new SystemCondition(SystemConditionType.FreeNetworkAvailable));
                 builder.IsNetworkRequested = true;
                 var task = builder.Register();
                 return task;

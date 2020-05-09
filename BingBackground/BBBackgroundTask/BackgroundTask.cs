@@ -41,9 +41,7 @@ namespace BBBackgroundTask
         async void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance)
         {
             _deferral = taskInstance.GetDeferral();
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            var lastDate = (string)localSettings.Values[Core.LastDateKey];
-            if (lastDate != Core.DefaultDateString)
+            if (!Core.IsUpdated)
             {
                 await Core.RunAsync();
             }

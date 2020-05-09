@@ -15,8 +15,8 @@
   <mp:PhoneIdentity PhoneProductId="38d81f68-0230-4618-ad0f-4e6fd961d8ea" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>BBUWP</DisplayName>
-    <PublisherDisplayName>zhang</PublisherDisplayName>
+    <DisplayName>BingBackground</DisplayName>
+    <PublisherDisplayName>Shiyao Zhang</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -33,10 +33,10 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="BBUWP.App">
       <uap:VisualElements
-        DisplayName="BBUWP"
+        DisplayName="BingBackground"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="BBUWP"
+        Description="BingBackground"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
@@ -56,7 +56,7 @@
         </Extension>
         <uap5:Extension Category="windows.startupTask">
           <uap5:StartupTask
-            TaskId="MyStartupId"
+            TaskId="BingBackgroundStartupId"
             Enabled="false"
             DisplayName="BingBackground Startup Task" />
         </uap5:Extension>
