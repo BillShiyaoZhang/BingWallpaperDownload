@@ -14,6 +14,7 @@
         <Button Content="Open Folder" Margin="187,10,0,0" Click="OpenFolderButton_Click" VerticalAlignment="Top"/>
         <Button Content="Open Bing" Margin="289,10,0,0" Click="OpenBingButton_Click" VerticalAlignment="Top"/>
         <Button Content="Close" Margin="380,10,0,0" Click="CloseButton_Click" VerticalAlignment="Top"/>
-        <TextBlock x:Name="Hint" HorizontalAlignment="Left" Margin="10,50,0,0" Text="Waiting" TextWrapping="Wrap" VerticalAlignment="Top"  Visibility="Visible"/>
+        <HyperlinkButton Content="Privacy policy" Margin="10,47,0,0" VerticalAlignment="Top" Click="HyperlinkButton_Click"/>
+        <TextBlock x:Name="Hint" HorizontalAlignment="Left" Margin="10,84,0,0" Text="Waiting" TextWrapping="Wrap" VerticalAlignment="Top"  Visibility="Visible"/>
     </Grid>
 </Page>

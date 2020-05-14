@@ -281,6 +281,10 @@ namespace BBUWP
 
         #endregion
 
+        private async void HyperlinkButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri(@"https://github.com/BillShiyaoZhang/BingBackgroundUWP/blob/master/privacy-policy/en-gb.md"));
+        }
     }
 }
 
