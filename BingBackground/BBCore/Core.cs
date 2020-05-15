@@ -216,14 +216,16 @@ namespace BBCore
             {
                 // Application now has read/write access to all contents in the picked folder
                 // (including other sub-folder contents)
-                Windows.Storage.AccessCache.StorageApplicationPermissions.
-                FutureAccessList.AddOrReplace(PickFolderToken, folder);
+                
                 //this.textBlock.Text = "Picked folder: " + folder.Name;
             }
             else
             {
                 //this.textBlock.Text = "Operation cancelled.";
+                folder = KnownFolders.PicturesLibrary;
             }
+            Windows.Storage.AccessCache.StorageApplicationPermissions.
+                FutureAccessList.AddOrReplace(PickFolderToken, folder);
             return folder;
         }
 

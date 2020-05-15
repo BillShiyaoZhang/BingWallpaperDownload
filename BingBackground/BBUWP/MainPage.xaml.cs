@@ -9,6 +9,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using BBCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BBUWP
 {
@@ -76,8 +78,6 @@ namespace BBUWP
             ApplicationView.PreferredLaunchViewSize = new Size(300, 200);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
-            //ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            //var lastDate = (string)localSettings.Values[Core.LastDateKey];
             var text = (TextBlock)FindName(TextID);
             if (!Core.IsUpdated)
             {
@@ -177,6 +177,19 @@ namespace BBUWP
         /// </summary>
         private async void SetStartupTask()
         {
+            var isOn = false;
+            var toggleSwitch = (ToggleSwitch)FindName("StartupTaskSwitch");
+            StartupTask startupTask = await StartupTask.GetAsync(StartupTaskID); // Pass the task ID you specified in the appxmanifest file
+            if (startupTask.State == StartupTaskState.Enabled)
+            {
+                isOn = true;
+            }
+            toggleSwitch.IsOn = isOn;
+        }
+
+        private async Task<bool> RegisterStartupTaskAsync()
+        {
+            var isOn = false;
             StartupTask startupTask = await StartupTask.GetAsync(StartupTaskID); // Pass the task ID you specified in the appxmanifest file
             switch (startupTask.State)
             {
@@ -184,6 +197,10 @@ namespace BBUWP
                     // Task is disabled but can be enabled.
                     StartupTaskState newState = await startupTask.RequestEnableAsync(); // ensure that you are on a UI thread when you call RequestEnableAsync()
                     Debug.WriteLine("Request to enable startup, result = {0}", newState);
+                    if (newState == StartupTaskState.Enabled)
+                    {
+                        isOn = true;
+                    }
                     break;
                 case StartupTaskState.DisabledByUser:
                     // Task is disabled and user must enable it manually.
@@ -195,29 +212,40 @@ namespace BBUWP
                     await dialog.ShowAsync();
                     break;
                 case StartupTaskState.DisabledByPolicy:
-                    Debug.WriteLine("Startup disabled by group policy, or not supported on this device");
+                    MessageDialog dialog1 = new MessageDialog(
+                        "Startup disabled by group policy, or not supported on this device.",
+                        StartupTaskID);
+                    await dialog1.ShowAsync();
                     break;
                 case StartupTaskState.Enabled:
                     Debug.WriteLine("Startup is enabled.");
+                    isOn = true;
                     break;
             }
+            return isOn;
+        }
+
+        private void SetBackgroundTasks()
+        {
+            var toggleSwitch = (ToggleSwitch)FindName("BackgroundTaskSwitch");
+            toggleSwitch.IsOn = IsBackgroundTasksSet(RegisterBackgroundTasks());
         }
 
         /// <summary>
         /// Set background tasks.
         /// </summary>
-        private void SetBackgroundTasks()
+        private List<IBackgroundTaskRegistration> RegisterBackgroundTasks()
         {
-
-            SetBackgroundTask(UserPresentBTName, BTEntryPoint,
-                new SystemTrigger(SystemTriggerType.UserPresent, false));
+            var result = new List<IBackgroundTaskRegistration>();
+            result.Add(RegisterBackgroundTask(UserPresentBTName, BTEntryPoint,
+                new SystemTrigger(SystemTriggerType.UserPresent, false)));
 
             // TODO The time trigger should detect a proper time interval for next day, and register the next trigger.
             //var currentMins = DateTime.Now.Hour * 60 + DateTime.Now.Minute; // current time in mins
             //var restMins = 1440 - currentMins;  // rest mins in a day. 24 * 60 = 1440 mins a day
             //var triggerMins = restMins - restMins % 15 + 15;    // trigger should be set at the beginning of the next day as 15 * n mins
-            SetBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger(90, false));
-
+            result.Add(RegisterBackgroundTask(TimeBTName, BTEntryPoint, new TimeTrigger(90, false)));
+            return result;
         }
 
         /// <summary>
@@ -227,7 +255,7 @@ namespace BBUWP
         /// <param name="taskEntryPoint">Entry point of the task</param>
         /// <param name="trigger">Trigger of the task</param>
         /// <returns>Successfully registered task or null</returns>
-        private IBackgroundTaskRegistration SetBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)
+        private IBackgroundTaskRegistration RegisterBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)
         {
             var taskRegistered = false;
 
@@ -285,7 +313,58 @@ namespace BBUWP
 
 
         #endregion
+        private async void StartupTaskToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                if (toggleSwitch.IsOn == true)
+                {
+                    toggleSwitch.IsOn = await RegisterStartupTaskAsync();
+                }
+                else
+                {
+                    StartupTask startupTask = await StartupTask.GetAsync(StartupTaskID); // Pass the task ID you specified in the appxmanifest file
+                    startupTask.Disable();
+                }
+            }
+        }
 
+
+        private void BackgroundTaskToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                if (toggleSwitch.IsOn == true)
+                {
+                    toggleSwitch.IsOn = IsBackgroundTasksSet(RegisterBackgroundTasks());
+                }
+                else
+                {
+                    foreach (var task in BackgroundTaskRegistration.AllTasks)
+                    {
+                        task.Value.Unregister(true);
+                    }
+                }
+            }
+        }
+
+        private bool IsBackgroundTasksSet(List<IBackgroundTaskRegistration> result)
+        {
+            if (result.Count < 2)
+            {
+                return false;
+            }
+            foreach (var task in result)
+            {
+                if (task == null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
 
