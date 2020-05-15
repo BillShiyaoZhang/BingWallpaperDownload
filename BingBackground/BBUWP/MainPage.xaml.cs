@@ -89,8 +89,8 @@ namespace BBUWP
             }
             text.Visibility = Visibility.Visible;
 
-            SetStartupTask();
-            SetBackgroundTasks();
+            SetStartupTaskToggleSwitch();
+            SetBackgroundTasksToggleSwitch();
         }
 
         #region Public Button Listeners
@@ -175,7 +175,7 @@ namespace BBUWP
         /// <summary>
         /// Set startup task and request permission if necessary.
         /// </summary>
-        private async void SetStartupTask()
+        private async void SetStartupTaskToggleSwitch()
         {
             var isOn = false;
             var toggleSwitch = (ToggleSwitch)FindName("StartupTaskSwitch");
@@ -225,10 +225,10 @@ namespace BBUWP
             return isOn;
         }
 
-        private void SetBackgroundTasks()
+        private void SetBackgroundTasksToggleSwitch()
         {
             var toggleSwitch = (ToggleSwitch)FindName("BackgroundTaskSwitch");
-            toggleSwitch.IsOn = IsBackgroundTasksSet(RegisterBackgroundTasks());
+            toggleSwitch.IsOn = IsBackgroundTasksSet();
         }
 
         /// <summary>
@@ -338,7 +338,8 @@ namespace BBUWP
             {
                 if (toggleSwitch.IsOn == true)
                 {
-                    toggleSwitch.IsOn = IsBackgroundTasksSet(RegisterBackgroundTasks());
+                    RegisterBackgroundTasks();
+                    toggleSwitch.IsOn = IsBackgroundTasksSet();
                 }
                 else
                 {
@@ -350,18 +351,11 @@ namespace BBUWP
             }
         }
 
-        private bool IsBackgroundTasksSet(List<IBackgroundTaskRegistration> result)
+        private bool IsBackgroundTasksSet()
         {
-            if (result.Count < 2)
+            if (BackgroundTaskRegistration.AllTasks.Count < 2)
             {
                 return false;
-            }
-            foreach (var task in result)
-            {
-                if (task == null)
-                {
-                    return false;
-                }
             }
             return true;
         }
