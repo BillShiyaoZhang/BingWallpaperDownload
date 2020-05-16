@@ -15,7 +15,7 @@
   <mp:PhoneIdentity PhoneProductId="5e6b5bdd-9746-4a2c-ae64-577ece97e2a3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Bing Wallpaper Download</DisplayName>
+    <DisplayName>ms-resource:AppDisplayName</DisplayName>
     <PublisherDisplayName>Shiyao Zhang</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -33,10 +33,10 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="BBUWP.App">
       <uap:VisualElements
-        DisplayName="Bing Wallpaper Download"
+        DisplayName="ms-resource:AppDisplayName"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Download Bing image of the day and set it to your computer."
+        Description="ms-resource:Description"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

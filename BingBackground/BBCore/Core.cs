@@ -15,7 +15,7 @@ namespace BBCore
     /// </summary>
     public enum RunFunctionCode
     {
-        SUCCESSFUL, FAILED, NO_INTERNET, UNEXPECTED_EXCEPTION
+        SUCCESSFUL, FAILED, NO_INTERNET, UNEXPECTED_EXCEPTION, FOLDER_NOT_SET
     }
 
     /// <summary>
@@ -150,6 +150,11 @@ namespace BBCore
                 SetWidthByHeight(); // Set
             }
             var folder = await GetFolderAsync().ConfigureAwait(false);
+            if (folder == null)
+            {
+                value = RunFunctionCode.FOLDER_NOT_SET;
+                return value;
+            }
             try
             {
                 string urlBase = await GetBackgroundUrlBaseAsync().ConfigureAwait(false);
@@ -216,16 +221,15 @@ namespace BBCore
             {
                 // Application now has read/write access to all contents in the picked folder
                 // (including other sub-folder contents)
-                
+                Windows.Storage.AccessCache.StorageApplicationPermissions.
+                    FutureAccessList.AddOrReplace(PickFolderToken, folder);
                 //this.textBlock.Text = "Picked folder: " + folder.Name;
             }
             else
             {
                 //this.textBlock.Text = "Operation cancelled.";
-                folder = KnownFolders.PicturesLibrary;
             }
-            Windows.Storage.AccessCache.StorageApplicationPermissions.
-                FutureAccessList.AddOrReplace(PickFolderToken, folder);
+
             return folder;
         }
 
@@ -272,8 +276,8 @@ namespace BBCore
             {
                 WebRequest request = WebRequest.Create(url);
                 request.Method = "HEAD";
-                
-                HttpWebResponse response = (HttpWebResponse) await request.GetResponseAsync().ConfigureAwait(false);
+
+                HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
                 return response.StatusCode == HttpStatusCode.OK;
             }
             catch

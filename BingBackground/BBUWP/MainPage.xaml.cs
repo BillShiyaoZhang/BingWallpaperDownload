@@ -85,7 +85,8 @@ namespace BBUWP
             }
             else
             {
-                text.Text = "The image has already been there!";
+                var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+                text.Text = resourceLoader.GetString("Hint/ImageThere");
             }
             text.Visibility = Visibility.Visible;
 
@@ -115,13 +116,14 @@ namespace BBUWP
             var folder = await Core.GetFolderAsync();
             var success = await Windows.System.Launcher.LaunchFolderAsync(folder);
             var text = (TextBlock)FindName(TextID);
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             if (!success)
             {
-                text.Text = "Open folder failed";
+                text.Text = resourceLoader.GetString("Hint/OpenFolderSpace") + resourceLoader.GetString("Hint/FailedExclamation");
             }
             else
             {
-                text.Text = "Open folder successed!";
+                text.Text = resourceLoader.GetString("Hint/OpenFolderSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
             }
         }
 
@@ -133,14 +135,15 @@ namespace BBUWP
         public async void SetFolderButton_Click(object sender, RoutedEventArgs e)
         {
             var folder = await Core.SetFolderAsync();
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             var text = (TextBlock)FindName(TextID);
             if (folder == null)
             {
-                text.Text = "Set folder failed!";
+                text.Text = resourceLoader.GetString("Hint/SetFolderSpace") + resourceLoader.GetString("Hint/FailedExclamation");
             }
             else
             {
-                text.Text = "Set folder successed!";
+                text.Text = resourceLoader.GetString("Hint/SetFolderSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
             }
         }
 
@@ -148,13 +151,14 @@ namespace BBUWP
         {
             var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(@"https://www.bing.co.uk"));
             var text = (TextBlock)FindName(TextID);
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             if (success)
             {
-                text.Text = "Browser lanuched successed!";
+                text.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
             }
             else
             {
-                text.Text = "Browser lanuched failed!";
+                text.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace") + resourceLoader.GetString("Hint/FailedExclamation");
             }
         }
 
@@ -290,20 +294,24 @@ namespace BBUWP
         {
             var code = await Core.RunAsync();
             var text = (TextBlock)FindName(TextID);
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             string msg = "";
             switch (code)
             {
                 case RunFunctionCode.SUCCESSFUL:
-                    msg = "Wallpaper set successful!";
+                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
                     break;
                 case RunFunctionCode.FAILED:
-                    msg = "Wallpaper set failed!";
+                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + resourceLoader.GetString("Hint/FailedExclamation");
                     break;
                 case RunFunctionCode.NO_INTERNET:
-                    msg = "Find Internet connection problem!";
+                    msg = resourceLoader.GetString("Hint/NoInternet");
+                    break;
+                case RunFunctionCode.FOLDER_NOT_SET:
+                    msg = resourceLoader.GetString("Hint/FolderNotSet");
                     break;
                 case RunFunctionCode.UNEXPECTED_EXCEPTION:
-                    msg = "Unexpected Exception!";
+                    msg = resourceLoader.GetString("Hint/UnexpectedException");
                     break;
                 default:
                     break;

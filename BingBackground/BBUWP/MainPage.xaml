@@ -9,14 +9,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Button Content="Set Folder" Click="SetFolderButton_Click" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Button Content="Download" Click="DownloadButton_Click" Margin="98,10,0,0" VerticalAlignment="Top"/>
-        <Button Content="Open Folder" Margin="187,10,0,0" Click="OpenFolderButton_Click" VerticalAlignment="Top"/>
-        <Button Content="Open Bing" Margin="289,10,0,0" Click="OpenBingButton_Click" VerticalAlignment="Top"/>
-        <Button Content="Close" Margin="380,10,0,0" Click="CloseButton_Click" VerticalAlignment="Top"/>
-        <ToggleSwitch x:Name="BackgroundTaskSwitch" Margin="10,52,0,0" OffContent="Background Task Off" OnContent="Background Task On" VerticalAlignment="Top" Toggled="BackgroundTaskToggleSwitch_Toggled"/>
-        <ToggleSwitch x:Name="StartupTaskSwitch" Margin="10,89,0,0" OffContent="Startup Task Off" OnContent="Startup Task On" VerticalAlignment="Top" Toggled="StartupTaskToggleSwitch_Toggled"/>
-        <HyperlinkButton Content="Privacy policy" Margin="10,117,0,0" VerticalAlignment="Top" Click="HyperlinkButton_Click"/>
+        <Button x:Uid="SetFolder" Content="Set Folder" Click="SetFolderButton_Click" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Button x:Uid="Download" Content="Download" Click="DownloadButton_Click" Margin="98,10,0,0" VerticalAlignment="Top"/>
+        <Button x:Uid="OpenFolder" Content="Open Folder" Margin="187,10,0,0" Click="OpenFolderButton_Click" VerticalAlignment="Top"/>
+        <Button x:Uid="OpenBing" Content="Open Bing" Margin="289,10,0,0" Click="OpenBingButton_Click" VerticalAlignment="Top"/>
+        <Button x:Uid="Close" Content="Close" Margin="380,10,0,0" Click="CloseButton_Click" VerticalAlignment="Top"/>
+        <ToggleSwitch x:Uid="BackgroundTask" x:Name="BackgroundTaskSwitch" Margin="10,52,0,0" OffContent="Background Task Off" OnContent="Background Task On test" VerticalAlignment="Top" Toggled="BackgroundTaskToggleSwitch_Toggled"/>
+        <ToggleSwitch x:Uid="StartupTask" x:Name="StartupTaskSwitch" Margin="10,89,0,0" OffContent="Startup Task Off" OnContent="Startup Task On" VerticalAlignment="Top" Toggled="StartupTaskToggleSwitch_Toggled"/>
+        <HyperlinkButton x:Uid="PrivacyPolicy" Content="Privacy policy" Margin="10,117,0,0" VerticalAlignment="Top" Click="HyperlinkButton_Click"/>
         <TextBlock x:Name="Hint" HorizontalAlignment="Left" Margin="10,154,0,0" Text="Waiting" TextWrapping="Wrap" VerticalAlignment="Top"  Visibility="Visible"/>
     </Grid>
 </Page>
