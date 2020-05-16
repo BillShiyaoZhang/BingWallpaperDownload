@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore '**/*.sln'
+      run: dotnet restore './BingBackground/'
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
