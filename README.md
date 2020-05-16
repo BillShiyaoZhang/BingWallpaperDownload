@@ -2,6 +2,9 @@
 
 This project provides tools to download images from [Bing](https://www.bing.com), store locally, and set them as wall papers. There are projects for Windows [UWP](./BingBackground/BBUWP/) and (obsoleted) [cmd](./BingBackground/BingBackground/). Startup and background tasks are implemented so that it can automatically download and set wallpaper daily. Folder selection and acess are impemented on UI.
 
+## Install
+
+Go to [Windows Store](https://www.microsoft.com/store/apps/9N8413Z3MTSN) for UWP.
 
 ## Privacy Policy
 [en-gb](BingBackground/privacy-policy/en-gb.md)
