@@ -1,5 +1,7 @@
 # Bing Wallpaper Download
 
+![.NET Core](https://github.com/BillShiyaoZhang/BingWallpaperDownload/workflows/.NET%20Core/badge.svg)
+
 This project provides tools to download images from [Bing](https://www.bing.com), store locally, and set them as wall papers. There are projects for Windows [UWP](./BingBackground/BBUWP/) and (obsoleted) [cmd](./BingBackground/BingBackground/). Startup and background tasks are implemented so that it can automatically download and set wallpaper daily. Folder selection and acess are impemented on UI.
 
 ## Install
