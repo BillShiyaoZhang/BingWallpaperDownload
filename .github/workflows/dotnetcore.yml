@@ -17,9 +17,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1
     - name: Install dependencies
-      run: dotnet restore './BingBackground/'
+      run: msbuild './BingBackground/BingBackground.sln' /p:Configuration="Release" /t:restore 
     - name: Build
-      run: dotnet build './BingBackground/' --configuration Release --no-restore
+      run: msbuild './BingBackground/BingBackground.sln' /p:Configuration="Release"
     - name: Test
       run: dotnet test --no-restore --verbosity normal
