@@ -24,4 +24,4 @@ jobs:
     - name: Build
       run: msbuild './BingBackground/BingBackground.sln' /p:Configuration="Release"
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test './BingBackground/BingBackground.sln' --no-restore --verbosity normal
