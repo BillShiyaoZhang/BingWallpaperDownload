@@ -8,15 +8,46 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <Button x:Uid="SetFolder" Content="Set Folder" Click="SetFolderButton_Click" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Button x:Uid="Download" Content="Download" Click="DownloadButton_Click" Margin="98,10,0,0" VerticalAlignment="Top"/>
-        <Button x:Uid="OpenFolder" Content="Open Folder" Margin="187,10,0,0" Click="OpenFolderButton_Click" VerticalAlignment="Top"/>
-        <Button x:Uid="OpenBing" Content="Open Bing" Margin="289,10,0,0" Click="OpenBingButton_Click" VerticalAlignment="Top"/>
-        <Button x:Uid="Close" Content="Close" Margin="380,10,0,0" Click="CloseButton_Click" VerticalAlignment="Top"/>
-        <ToggleSwitch x:Uid="BackgroundTask" x:Name="BackgroundTaskSwitch" Margin="10,52,0,0" OffContent="Background Task Off" OnContent="Background Task On test" VerticalAlignment="Top" Toggled="BackgroundTaskToggleSwitch_Toggled"/>
-        <ToggleSwitch x:Uid="StartupTask" x:Name="StartupTaskSwitch" Margin="10,89,0,0" OffContent="Startup Task Off" OnContent="Startup Task On" VerticalAlignment="Top" Toggled="StartupTaskToggleSwitch_Toggled"/>
-        <HyperlinkButton x:Uid="PrivacyPolicy" Content="Privacy policy" Margin="10,117,0,0" VerticalAlignment="Top" Click="HyperlinkButton_Click"/>
-        <TextBlock x:Name="Hint" HorizontalAlignment="Left" Margin="10,154,0,0" Text="Waiting" TextWrapping="Wrap" VerticalAlignment="Top"  Visibility="Visible"/>
+    <Grid Margin="10,10,10,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="0,5,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Grid.Column="0" x:Uid="SetFolder" Content="Set Folder" Click="SetFolderButton_Click" Margin="5,0,5,0"/>
+            <Button Grid.Row="0" Grid.Column="1" x:Uid="Download" Content="Download" Click="DownloadButton_Click" Margin="5,0,5,0"/>
+            <Button Grid.Row="0" Grid.Column="2" x:Uid="OpenFolder" Content="Open Folder" Click="OpenFolderButton_Click" Margin="5,0,5,0"/>
+            <Button Grid.Row="0" Grid.Column="3" x:Uid="OpenBing" Content="Open Bing" Click="OpenBingButton_Click" Margin="5,0,5,0"/>
+            <Button Grid.Row="0" Grid.Column="4" x:Uid="Close" Content="Close" Click="CloseButton_Click" Margin="5,0,5,0"/>
+
+        </Grid>
+        <Grid Grid.Row="1" Margin="5,5,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ToggleSwitch Grid.Row="0" Grid.Column="0" x:Uid="BackgroundTask" x:Name="BackgroundTaskSwitch" OffContent="Background Task Off" OnContent="Background Task On test" Toggled="BackgroundTaskToggleSwitch_Toggled"/>
+            <ToggleSwitch Margin="20,0,0,0" Grid.Row="0" Grid.Column="1" x:Uid="StartupTask" x:Name="StartupTaskSwitch" OffContent="Startup Task Off" OnContent="Startup Task On" Toggled="StartupTaskToggleSwitch_Toggled"/>
+        </Grid>
+        <Grid Grid.Row="2" Margin="5,0,0,0">
+            <HyperlinkButton x:Uid="PrivacyPolicy" Content="Privacy policy"  Click="HyperlinkButton_Click"/>
+        </Grid>
+        <Grid Grid.Row="3" Margin="5,5,0,5">
+            <TextBlock x:Name="Hint" HorizontalAlignment="Left" Text="Waiting" TextWrapping="Wrap"  Visibility="Visible"/>
+        </Grid>
     </Grid>
 </Page>
