@@ -75,13 +75,21 @@ namespace BBUWP
         public MainPage()
         {
             this.InitializeComponent();
-            ApplicationView.PreferredLaunchViewSize = new Size(300, 200);
+
+            var localSettings = ApplicationData.Current.LocalSettings;
+            if (localSettings.Values["launchedWithPrefSize"] == null)
+            {
+                // first app launch only!!
+                ApplicationView.PreferredLaunchViewSize = new Size(510, 320);
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(510, 320));
+                localSettings.Values["launchedWithPrefSize"] = true;
+            }
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             var text = (TextBlock)FindName(TextID);
             if (!Core.IsUpdated)
             {
-                RunAsync();
+                RunAsync(false);
             }
             else
             {
@@ -103,7 +111,7 @@ namespace BBUWP
         /// <param name="e">Artuments</param>
         public void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
-            RunAsync();
+            RunAsync(true);
         }
 
         /// <summary>
@@ -113,8 +121,12 @@ namespace BBUWP
         /// <param name="e">Arguments</param>
         public async void OpenFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var folder = await Core.GetFolderAsync();
-            var success = await Windows.System.Launcher.LaunchFolderAsync(folder);
+            var folder = await Core.GetFolderAsync(true);
+            bool success = false;
+            if (folder != null)
+            {
+                success = await Windows.System.Launcher.LaunchFolderAsync(folder);
+            }
             var text = (TextBlock)FindName(TextID);
             var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             if (!success)
@@ -290,9 +302,9 @@ namespace BBUWP
         /// <summary>
         /// Download and set image from Bing as wallpaper and get result.
         /// </summary>
-        private async void RunAsync()
+        private async void RunAsync(bool setFolder)
         {
-            var code = await Core.RunAsync();
+            var code = await Core.RunAsync(setFolder);
             var text = (TextBlock)FindName(TextID);
             var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             string msg = "";

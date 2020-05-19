@@ -142,14 +142,14 @@ namespace BBCore
         /// </summary>
         /// <param name="imagesSubdirectory">Subdirectory of images.  Default as "DownloadedImages".</param>
         /// <returns>RunFunctionCode represents the result of running.</returns>
-        public async Task<RunFunctionCode> RunAsync(string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
+        public async Task<RunFunctionCode> RunAsync(bool setFolder, string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
         {
             RunFunctionCode value;
             if (!IsResolutionExtensionSet)
             {
                 SetWidthByHeight(); // Set
             }
-            var folder = await GetFolderAsync().ConfigureAwait(false);
+            var folder = await GetFolderAsync(setFolder).ConfigureAwait(false);
             if (folder == null)
             {
                 value = RunFunctionCode.FOLDER_NOT_SET;
@@ -191,7 +191,7 @@ namespace BBCore
         /// Get the folder which user wants to sotre images.
         /// </summary>
         /// <returns>The folder which user wants to store images.</returns>
-        public async Task<StorageFolder> GetFolderAsync()
+        public async Task<StorageFolder> GetFolderAsync(bool setFolder)
         {
             StorageFolder folder;
             try
@@ -201,7 +201,14 @@ namespace BBCore
             }
             catch (ArgumentException)
             {
-                folder = await SetFolderAsync().ConfigureAwait(false);
+                if (setFolder)
+                {
+                    folder = await SetFolderAsync().ConfigureAwait(false);
+                }
+                else
+                {
+                    folder = null;
+                }
             }
             return folder;
         }

@@ -43,7 +43,7 @@ namespace BBBackgroundTask
             _deferral = taskInstance.GetDeferral();
             if (!Core.IsUpdated)
             {
-                await Core.RunAsync();
+                await Core.RunAsync(false);
             }
             _deferral.Complete();
         }
