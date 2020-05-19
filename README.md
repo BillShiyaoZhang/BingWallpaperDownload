@@ -14,7 +14,7 @@ Go to [Windows Store](https://www.microsoft.com/store/apps/9N8413Z3MTSN) for UWP
 
 ## Previous work
 
-This project is based on previous [work](https://github.com/josueespinosa/BingBackground) by Josue Espinosa, josue.espinosa.live@gmail.com. A command line tool, downloading images from Bing and storing them locally, which is slightly modified and archived [here](./BingBackground/BingBackground/),
+This project is based on previous [work](https://github.com/josueespinosa/BingBackground) by Josue Espinosa. A command line tool, downloading images from Bing and storing them locally, which is slightly modified and archived [here](./BingBackground/BingBackground/),
 
 ## License
 [MIT](https://github.com/BillShiyaoZhang/BingWallpaperDownload/blob/master/LICENSE)
