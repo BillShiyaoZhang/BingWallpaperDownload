@@ -132,7 +132,7 @@
   <data name="Community.Content" xml:space="preserve">
     <value>Community</value>
   </data>
-  <data name="Contribute.Content" xml:space="preserve">
+  <data name="Contribute.Text" xml:space="preserve">
     <value>Contribute</value>
   </data>
   <data name="Description" xml:space="preserve">
@@ -141,7 +141,7 @@
   <data name="Download.Content" xml:space="preserve">
     <value>Download</value>
   </data>
-  <data name="Feedback.Content" xml:space="preserve">
+  <data name="Feedback.Text" xml:space="preserve">
     <value>Feedback</value>
   </data>
   <data name="Hint.BrowserLaunchedSpace" xml:space="preserve">
