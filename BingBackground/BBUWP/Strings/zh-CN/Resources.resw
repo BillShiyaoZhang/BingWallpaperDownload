@@ -129,11 +129,20 @@
   <data name="Close.Content" xml:space="preserve">
     <value>退出</value>
   </data>
+  <data name="Community.Content" xml:space="preserve">
+    <value>社区</value>
+  </data>
+  <data name="Contribute.Content" xml:space="preserve">
+    <value>参与开发</value>
+  </data>
   <data name="Description" xml:space="preserve">
     <value>下载当天Bing图片并设置为壁纸</value>
   </data>
   <data name="Download.Content" xml:space="preserve">
     <value>下载</value>
+  </data>
+  <data name="Feedback.Content" xml:space="preserve">
+    <value>反馈</value>
   </data>
   <data name="Hint.BrowserLaunchedSpace" xml:space="preserve">
     <value>打开浏览器</value>
@@ -164,6 +173,9 @@
   </data>
   <data name="Hint.WallpaperSetSpace" xml:space="preserve">
     <value>设置壁纸</value>
+  </data>
+  <data name="Home.Content" xml:space="preserve">
+    <value>主页</value>
   </data>
   <data name="OpenBing.Content" xml:space="preserve">
     <value>打开Bing</value>
