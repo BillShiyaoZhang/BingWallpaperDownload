@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="UWP.AppRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BBUWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <NavigationView x:Name="NavView" PaneDisplayMode="LeftCompact"
+            IsSettingsVisible="False" IsBackButtonVisible="Collapsed"
+            SelectionFollowsFocus="Enabled"
+            ItemInvoked="navigation_ItemInvoked" Loaded="navigation_Loaded">
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Uid="Home" Content="Home" Icon="Home" Tag="Home" />
+                <NavigationViewItem x:Uid="Community" Content="Community" Icon="Message" Tag="Community" />
+            </NavigationView.MenuItems>
+            <Frame x:Name="ContentFrame"/>
+        </NavigationView>
+    </Grid>
+</Page>
