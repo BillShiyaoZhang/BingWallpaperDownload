@@ -7,7 +7,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace BingBackground {
+namespace ConsoleApp {
 
     [Obsolete("This whole class is obsolete. Use BBUWP instead.", false)]
     public class BingBackground {
