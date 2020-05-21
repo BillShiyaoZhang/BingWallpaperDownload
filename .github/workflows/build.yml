@@ -20,6 +20,6 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
     - name: Install dependencies
-      run: msbuild './BingWallpaperDownlaod/BingWallpaperDownlaod.sln' /p:Configuration="Release" /t:restore 
+      run: msbuild './BingWallpaperDownload/BingWallpaperDownload.sln' /p:Configuration="Release" /t:restore 
     - name: Build
-      run: msbuild './BingWallpaperDownlaod/BingWallpaperDownlaod.sln' /p:Configuration="Release"
+      run: msbuild './BingWallpaperDownload/BingWallpaperDownload.sln' /p:Configuration="Release"
