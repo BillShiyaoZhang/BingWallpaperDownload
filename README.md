@@ -9,8 +9,8 @@ This project provides tools to download images from [Bing](https://www.bing.com)
 Go to [Windows Store](https://www.microsoft.com/store/apps/9N8413Z3MTSN) for UWP.
 
 ## Privacy Policy
-* [en-gb](BingBackground/privacy-policy/en-gb.md)
-* [zh-cn](BingBackground/privacy-policy/zh-cn.md)
+* [en-gb](BingWallpaperDownload/privacy-policy/en-gb.md)
+* [zh-cn](BingWallpaperDownload/privacy-policy/zh-cn.md)
 
 ## Previous work
 
