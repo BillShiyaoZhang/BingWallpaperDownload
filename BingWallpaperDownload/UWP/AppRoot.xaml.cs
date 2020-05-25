@@ -42,8 +42,15 @@ namespace UWP
 
         private void navigation_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            var item = sender.MenuItems.OfType<NavigationViewItem>().First(x => (string)x.Content == (string)args.InvokedItem);
-            NavView_Navigate(item as NavigationViewItem);
+            if (args.IsSettingsInvoked)
+            {
+                ContentFrame.Navigate(typeof(Settings));
+            }
+            else
+            {
+                var item = sender.MenuItems.OfType<NavigationViewItem>().First(x => (string)x.Content == (string)args.InvokedItem);
+                NavView_Navigate(item as NavigationViewItem);
+            }
         }
 
    
