@@ -17,19 +17,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" x:Name="Feedback" Click="Feedback_Click" Margin="5,0,5,0">
-                <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="Mail" />
-                    <TextBlock x:Uid="Feedback" Margin="8,0,0,0">Feedback</TextBlock>
-                </StackPanel>
-            </Button>
-            <!--<Button Grid.Column="0" x:Name="Feedback" Content="Feedback" Click="Feedback_Click" Margin="5,0,5,0"/>-->
-            <Button Grid.Column="1" x:Name="Contribute" Click="Contribute_Click" Margin="5,0,5,0">
-                <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="People" />
-                    <TextBlock x:Uid="Contribute" Margin="8,0,0,0">Contribute</TextBlock>
-                </StackPanel>
-            </Button>
+            <Button Grid.Column="0" x:Uid="Feedback" x:Name="Feedback" Content="Feedback" Click="Feedback_Click" Margin="5,0,5,0" />
+            <Button Grid.Column="1" x:Uid="Contribute" x:Name="Contribute" Content="Contribute" Click="Contribute_Click" Margin="5,0,5,0" />
         </Grid>
     </Grid>
 </Page>
