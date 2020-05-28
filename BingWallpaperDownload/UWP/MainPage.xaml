@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="0,5,0,5">
             <Grid.ColumnDefinitions>
@@ -23,6 +24,13 @@
         </Grid>
         <Grid Grid.Row="1" Margin="5,5,0,5">
             <TextBlock x:Name="MainHint" HorizontalAlignment="Left" Text="Waiting" TextWrapping="Wrap"  Visibility="Visible"/>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Image x:Name="ImageToday"/>
+            <StackPanel Height="40" VerticalAlignment="Bottom" 
+                        Background="DarkGray" Opacity=".75">
+                <TextBlock Text="This is the description"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>

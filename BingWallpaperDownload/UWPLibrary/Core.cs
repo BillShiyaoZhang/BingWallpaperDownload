@@ -7,6 +7,7 @@ using Windows.System.UserProfile;
 using Windows.Storage;
 using Windows.Graphics.Display;
 using System.Net.Http;
+using Windows.UI.Xaml.Controls;
 
 namespace UWPLibrary
 {
@@ -71,13 +72,20 @@ namespace UWPLibrary
         /// </summary>
         private string DefaultFileName { get { return DefaultDateString + ".bmp"; } }
 
+        public static string LastDate
+        {
+            get
+            {
+                return (string)ApplicationData.Current.
+                    LocalSettings.Values[Core.LastDateKey];
+            }
+        }
+
         public bool IsUpdated
         {
             get
             {
-                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                var lastDate = (string)localSettings.Values[LastDateKey];
-                if (lastDate != DefaultDateString)
+                if (LastDate != DefaultDateString)
                 {
                     return false;
                 }
@@ -118,12 +126,28 @@ namespace UWPLibrary
 
         #region Public Methods
 
+        public static string ImageAddressPrefix
+        {
+            get
+            {
+                return $"ms-appdata:///local/{DEFAULT_IMAGES_SUBDIRECTORY}";
+            }
+        }
+
+        private string ImageAddress
+        {
+            get
+            {
+                return $"{ImageAddressPrefix}/{DefaultFileName}";
+            }
+        }
+
         /// <summary>
         /// Download and set images from Bing as wallpapers.
         /// </summary>
         /// <param name="imagesSubdirectory">Subdirectory of images.  Default as "DownloadedImages".</param>
         /// <returns>RunFunctionCode represents the result of running.</returns>
-        public async Task<RunFunctionCode> RunAsync(bool setFolder, string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
+        public async Task<RunFunctionCode> DownloadAndSetWallpaperAsync(bool setFolder, string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
         {
             RunFunctionCode value;
             if (!IsResolutionExtensionSet)
@@ -143,8 +167,8 @@ namespace UWPLibrary
                 {
                     ResolutionExtension = await GetResolutionExtensionAsync(urlBase).ConfigureAwait(false);
                 }
-                string address = await DownloadWallpaperAsync(urlBase + ResolutionExtension, folder, DefaultFilePath, imagesSubdirectory).ConfigureAwait(false);
-                var result = await SetWallpaperAsync(address).ConfigureAwait(false);
+                await DownloadWallpaperAsync(urlBase + ResolutionExtension, folder, DefaultFilePath, imagesSubdirectory).ConfigureAwait(false);
+                var result = await SetWallpaperAsync(ImageAddress).ConfigureAwait(false);
                 if (result)
                 {
                     ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -297,7 +321,7 @@ namespace UWPLibrary
         /// <param name="filePath">The reletive path of the file.</param>
         /// <param name="ImagesSubdirectory">Subdirectory location to store files.</param>
         /// <returns>Path of the image file.</returns>
-        private async Task<string> DownloadWallpaperAsync(string url, StorageFolder rootFolder, string filePath, string ImagesSubdirectory)
+        private async Task DownloadWallpaperAsync(string url, StorageFolder rootFolder, string filePath, string ImagesSubdirectory)
         {
             StorageFile storageFile;
             try
@@ -317,13 +341,11 @@ namespace UWPLibrary
             }
 
             // Use this path to load image
-            string newPath = string.Format("ms-appdata:///local/{0}/{1}", ImagesSubdirectory, DefaultFileName);
             var localFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
             //string newPath = string.Format("ms-appdata:///local/{0}", GetFileName());
             //var localFolder = ApplicationData.Current.LocalFolder;
 
             await storageFile.CopyAsync(localFolder, DefaultFileName, NameCollisionOption.ReplaceExisting);
-            return newPath;
         }
 
         /// <summary>

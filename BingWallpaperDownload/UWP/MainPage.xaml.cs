@@ -5,6 +5,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.ViewManagement;
 using UWPLibrary;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.System.UserProfile;
 
 namespace UWP
 {
@@ -14,6 +16,19 @@ namespace UWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        string ImageTodayAddress
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Core.LastDate))
+                {
+                    return "";
+                }
+                return $"{Core.ImageAddressPrefix}/{Core.LastDate}.bmp";
+            }
+        }
+
         /// <summary>
         /// Instance of core.
         /// </summary>
@@ -53,6 +68,27 @@ namespace UWP
                 MainHint.Text = resourceLoader.GetString("Hint/ImageThere");
             }
             MainHint.Visibility = Visibility.Visible;
+
+            if (!string.IsNullOrWhiteSpace(ImageTodayAddress))
+                UpdateImageToday(ImageTodayAddress);
+        }
+
+        private async void UpdateImageToday(string imageLocation)
+        {
+            if (UserProfilePersonalizationSettings.IsSupported())
+            {
+                var uri = new Uri(imageLocation);
+                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+                UserProfilePersonalizationSettings profileSettings = UserProfilePersonalizationSettings.Current;
+                //await profileSettings.TrySetWallpaperImageAsync(file);
+                using (var randomAccessStream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    var image = new BitmapImage();
+                    await image.SetSourceAsync(randomAccessStream);
+                    ImageToday.Source = image;
+                    ImageToday.Visibility = Visibility.Visible;
+                }
+            }
         }
 
         #region Private Methods
@@ -75,9 +111,10 @@ namespace UWP
         /// </summary>
         private async void RunAsync(bool setFolder)
         {
-            var code = await Core.RunAsync(setFolder);
+            var code = await Core.DownloadAndSetWallpaperAsync(setFolder);
             var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             string msg = "";
+
             switch (code)
             {
                 case RunFunctionCode.SUCCESSFUL:
@@ -100,7 +137,7 @@ namespace UWP
             }
             MainHint.Text = msg;
         }
-        
+
         #endregion
 
         #region Public Listeners
@@ -113,6 +150,9 @@ namespace UWP
         public void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
             RunAsync(true);
+
+            if (!string.IsNullOrWhiteSpace(ImageTodayAddress))
+                UpdateImageToday(ImageTodayAddress);
         }
 
         private async void OpenBingButton_Click(object sender, RoutedEventArgs e)
