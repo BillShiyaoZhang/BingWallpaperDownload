@@ -8,13 +8,8 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Margin="10,10,10,10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Margin="0,5,0,5">
+    <RelativePanel Margin="10,10,10,10">
+        <Grid x:Name="HomeButtonGrid" Margin="0,5,0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -22,21 +17,26 @@
             <Button Grid.Column="0" x:Uid="Download" Content="Download" Click="DownloadButton_Click" Margin="5,0,5,0"/>
             <Button Grid.Column="1" x:Uid="OpenBing" Content="Open Bing" Click="OpenBingButton_Click" Margin="5,0,5,0"/>
         </Grid>
-        <Grid Grid.Row="1" Margin="5,5,0,5">
+        <Grid x:Name="HomeHintGrid" Margin="5,5,0,5"
+              RelativePanel.Below="HomeButtonGrid">
             <TextBlock x:Name="MainHint" HorizontalAlignment="Left" Text="Waiting" TextWrapping="Wrap"  Visibility="Visible"/>
         </Grid>
-        <Grid Grid.Row="2">
-            <HyperlinkButton x:Name="ImageTodayHrefButton"
+        <Grid RelativePanel.Below="HomeHintGrid">
+            <HyperlinkButton x:Name="ImageTodayHrefButton" Height="Auto"
                              AutomationProperties.Name="Go to Bing for image today">
                 <Image x:Name="ImageToday" Width="auto" Height="auto"/>
             </HyperlinkButton>
-            <StackPanel Height="40" VerticalAlignment="Bottom" 
-                        Background="DarkGray" Opacity=".75">
-                <TextBlock x:Name="ImageTodayTitle" Width="auto" Height="auto"
-                           FontSize="24" Text="Title" TextWrapping="Wrap"/>
-                <TextBlock x:Name="ImageTodayDescription" Width="auto" Height="auto"
-                           FontSize="18" Text="Description" TextWrapping="Wrap"/>
-            </StackPanel>
+            <Grid VerticalAlignment="Bottom"
+                Background="Gray" Opacity="0.7">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="ImageTodayTitle" Grid.Row="0"
+                           FontSize="24" FontWeight="Bold" FontStyle="Italic" Text="Title" TextWrapping="Wrap"/>
+                <TextBlock x:Name="ImageTodayDescription" Grid.Row="1"
+                           FontSize="16" Text="Description" TextWrapping="Wrap"/>
+            </Grid>
         </Grid>
-    </Grid>
+    </RelativePanel>
 </Page>
