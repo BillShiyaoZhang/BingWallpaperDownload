@@ -26,10 +26,16 @@
             <TextBlock x:Name="MainHint" HorizontalAlignment="Left" Text="Waiting" TextWrapping="Wrap"  Visibility="Visible"/>
         </Grid>
         <Grid Grid.Row="2">
-            <Image x:Name="ImageToday"/>
+            <HyperlinkButton x:Name="ImageTodayHrefButton"
+                             AutomationProperties.Name="Go to Bing for image today">
+                <Image x:Name="ImageToday" Width="auto" Height="auto"/>
+            </HyperlinkButton>
             <StackPanel Height="40" VerticalAlignment="Bottom" 
                         Background="DarkGray" Opacity=".75">
-                <TextBlock Text="This is the description"/>
+                <TextBlock x:Name="ImageTodayTitle" Width="auto" Height="auto"
+                           FontSize="24" Text="Title" TextWrapping="Wrap"/>
+                <TextBlock x:Name="ImageTodayDescription" Width="auto" Height="auto"
+                           FontSize="18" Text="Description" TextWrapping="Wrap"/>
             </StackPanel>
         </Grid>
     </Grid>

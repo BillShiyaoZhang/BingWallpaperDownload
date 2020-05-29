@@ -122,10 +122,13 @@
   <ItemGroup>
     <Compile Include="Core.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RunFunctionCode.cs" />
+    <Compile Include="DownloadAndSetWallpaperCode.cs" />
     <EmbeddedResource Include="Properties\BBCore.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack">
+      <Version>1.11.23</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>

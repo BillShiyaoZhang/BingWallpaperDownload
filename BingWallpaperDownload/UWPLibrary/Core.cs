@@ -8,6 +8,8 @@ using Windows.Storage;
 using Windows.Graphics.Display;
 using System.Net.Http;
 using Windows.UI.Xaml.Controls;
+using HtmlAgilityPack;
+using System.Linq;
 
 namespace UWPLibrary
 {
@@ -23,6 +25,12 @@ namespace UWPLibrary
         /// The key of last date stored in local settings.
         /// </summary>
         public static string LastDateKey { get { return "lastDate"; } }
+
+        public static string ImageTodayTitleKey { get { return "imageTodayTitle"; } }
+
+        public static string ImageTodayDescriptionKey { get { return "imageTodayDescription"; } }
+
+        public static string ImageTodayLearnMoreHrefKey { get { return "learnMoreHref"; } }
 
         /// <summary>
         /// The default resolution extension for downloading image.
@@ -147,9 +155,9 @@ namespace UWPLibrary
         /// </summary>
         /// <param name="imagesSubdirectory">Subdirectory of images.  Default as "DownloadedImages".</param>
         /// <returns>RunFunctionCode represents the result of running.</returns>
-        public async Task<RunFunctionCode> DownloadAndSetWallpaperAsync(bool setFolder, string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
+        public async Task<DownloadAndSetWallpaperCode> DownloadAndSetWallpaperAsync(bool setFolder, string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
         {
-            RunFunctionCode value;
+            DownloadAndSetWallpaperCode value;
             if (!IsResolutionExtensionSet)
             {
                 SetWidthByHeight(); // Set
@@ -157,7 +165,7 @@ namespace UWPLibrary
             var folder = await GetFolderAsync(setFolder).ConfigureAwait(false);
             if (folder == null)
             {
-                value = RunFunctionCode.FOLDER_NOT_SET;
+                value = DownloadAndSetWallpaperCode.FOLDER_NOT_SET;
                 return value;
             }
             try
@@ -168,21 +176,23 @@ namespace UWPLibrary
                     ResolutionExtension = await GetResolutionExtensionAsync(urlBase).ConfigureAwait(false);
                 }
                 await DownloadWallpaperAsync(urlBase + ResolutionExtension, folder, DefaultFilePath, imagesSubdirectory).ConfigureAwait(false);
-                var result = await SetWallpaperAsync(ImageAddress).ConfigureAwait(false);
-                if (result)
+                var wallpaperResult = await SetWallpaperAsync(ImageAddress).ConfigureAwait(false);
+                if (wallpaperResult)
                 {
                     ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
                     localSettings.Values[LastDateKey] = DefaultDateString;
-                    value = RunFunctionCode.SUCCESSFUL; // Wallpaper set successful!
+                    value = DownloadAndSetWallpaperCode.SUCCESSFUL; // Wallpaper set successful!
+
+                    GetLearnMoreInformation();
                 }
                 else
                 {
-                    value = RunFunctionCode.FAILED; // Wallpaper set failed!
+                    value = DownloadAndSetWallpaperCode.FAILED; // Wallpaper set failed!
                 }
             }
             catch (WebException)
             {
-                value = RunFunctionCode.NO_INTERNET;    // Find Internet connection problem!";
+                value = DownloadAndSetWallpaperCode.NO_INTERNET;    // Find Internet connection problem!";
             }
             //catch (Exception)
             //{
@@ -190,6 +200,49 @@ namespace UWPLibrary
             //}
 
             return value;
+        }
+
+        private async void GetLearnMoreInformation()
+        {
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            try
+            {
+                string learnMoreHref = new HtmlWeb().Load(@"https://www.bing.com/")
+                    .DocumentNode
+                    .SelectNodes("//a[@class='learn_more']")
+                    .FirstOrDefault()
+                    .Attributes["href"]
+                    .Value;
+                learnMoreHref = learnMoreHref
+                    .Replace("&amp;", "&")
+                    .Replace("&quot;", "\"");
+                if (!string.IsNullOrWhiteSpace(learnMoreHref))
+                    localSettings.Values[ImageTodayLearnMoreHrefKey] = learnMoreHref;
+
+                var uri = new Uri("https://www.bing.com" + learnMoreHref);
+                using (var httpClient = new Windows.Web.Http.HttpClient())
+                {
+                    string result = await httpClient.GetStringAsync(uri);
+
+                    var htmlDoc = new HtmlDocument();
+                    htmlDoc.LoadHtml(result);
+
+                    string imageTitle = htmlDoc.DocumentNode
+                        .SelectNodes("//h2[@class=' ency_imgTitle']")
+                        .FirstOrDefault()
+                        .InnerText;
+                    if (!string.IsNullOrWhiteSpace(imageTitle))
+                        localSettings.Values[ImageTodayTitleKey] = imageTitle;
+
+                    string imageDescription = htmlDoc.DocumentNode
+                        .SelectNodes("//div[@class='ency_desc']")
+                        .FirstOrDefault()
+                        .InnerText;
+                    if (!string.IsNullOrWhiteSpace(imageDescription))
+                        localSettings.Values[ImageTodayDescriptionKey] = imageDescription;
+                }
+            }
+            catch (Exception) { }
         }
 
         /// <summary>

@@ -50,7 +50,8 @@ namespace UWP
         }
 
         /// <summary>
-        /// Initialize the main page.  Download and set today's image as wallpaper if it didn't do so early today.
+        /// Initialize the main page.  Download and set today's image 
+        /// as wallpaper if it didn't do so early today.
         /// </summary>
         public MainPage()
         {
@@ -64,7 +65,8 @@ namespace UWP
             }
             else
             {
-                var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+                var resourceLoader = Windows.ApplicationModel.Resources
+                    .ResourceLoader.GetForCurrentView();
                 MainHint.Text = resourceLoader.GetString("Hint/ImageThere");
             }
             MainHint.Visibility = Visibility.Visible;
@@ -75,11 +77,13 @@ namespace UWP
 
         private async void UpdateImageToday(string imageLocation)
         {
+            // Set image today on UI
             if (UserProfilePersonalizationSettings.IsSupported())
             {
                 var uri = new Uri(imageLocation);
                 StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
-                UserProfilePersonalizationSettings profileSettings = UserProfilePersonalizationSettings.Current;
+                UserProfilePersonalizationSettings profileSettings
+                    = UserProfilePersonalizationSettings.Current;
                 //await profileSettings.TrySetWallpaperImageAsync(file);
                 using (var randomAccessStream = await file.OpenAsync(FileAccessMode.Read))
                 {
@@ -89,6 +93,23 @@ namespace UWP
                     ImageToday.Visibility = Visibility.Visible;
                 }
             }
+            // Set title and description of image today
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+            var imageTodayTitleText = (string)localSettings.Values[Core.ImageTodayTitleKey];
+            if (!string.IsNullOrWhiteSpace(imageTodayTitleText))
+                ImageTodayTitle.Text = imageTodayTitleText;
+
+            var imageTodayDescriptionText = (string)localSettings
+                .Values[Core.ImageTodayDescriptionKey];
+            if (!string.IsNullOrWhiteSpace(imageTodayDescriptionText))
+                ImageTodayDescription.Text = imageTodayDescriptionText;
+
+            var imageTodayHrefText = (string)localSettings
+                .Values[Core.ImageTodayLearnMoreHrefKey];
+            if (!string.IsNullOrWhiteSpace(imageTodayHrefText))
+                ImageTodayHrefButton.NavigateUri
+                    = new Uri("https://www.bing.com" + imageTodayHrefText);
         }
 
         #region Private Methods
@@ -117,19 +138,19 @@ namespace UWP
 
             switch (code)
             {
-                case RunFunctionCode.SUCCESSFUL:
+                case DownloadAndSetWallpaperCode.SUCCESSFUL:
                     msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
                     break;
-                case RunFunctionCode.FAILED:
+                case DownloadAndSetWallpaperCode.FAILED:
                     msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + resourceLoader.GetString("Hint/FailedExclamation");
                     break;
-                case RunFunctionCode.NO_INTERNET:
+                case DownloadAndSetWallpaperCode.NO_INTERNET:
                     msg = resourceLoader.GetString("Hint/NoInternet");
                     break;
-                case RunFunctionCode.FOLDER_NOT_SET:
+                case DownloadAndSetWallpaperCode.FOLDER_NOT_SET:
                     msg = resourceLoader.GetString("Hint/FolderNotSet");
                     break;
-                case RunFunctionCode.UNEXPECTED_EXCEPTION:
+                case DownloadAndSetWallpaperCode.UNEXPECTED_EXCEPTION:
                     msg = resourceLoader.GetString("Hint/UnexpectedException");
                     break;
                 default:
