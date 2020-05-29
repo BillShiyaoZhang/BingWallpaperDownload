@@ -23,7 +23,9 @@
         </Grid>
         <Grid RelativePanel.Below="HomeHintGrid">
             <HyperlinkButton x:Name="ImageTodayHrefButton" Height="Auto"
-                             AutomationProperties.Name="Go to Bing for image today">
+                             AutomationProperties.Name="Go to Bing for image today.
+                             To read title and description of the image, press
+                             Narrator + Ctrl + O for each one.">
                 <Image x:Name="ImageToday" Width="auto" Height="auto"/>
             </HyperlinkButton>
             <Grid VerticalAlignment="Bottom"
