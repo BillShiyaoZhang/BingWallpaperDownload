@@ -177,6 +177,9 @@
   <data name="Home.Content" xml:space="preserve">
     <value>主页</value>
   </data>
+  <data name="ImageTodayHyperLinkButton.AutomationProperties.Name" xml:space="preserve">
+    <value>打开Bing查看今日图片。若要阅读标题和描述，请依次按“讲述人”+ Ctrl + O。</value>
+  </data>
   <data name="OpenBing.Content" xml:space="preserve">
     <value>打开Bing</value>
   </data>

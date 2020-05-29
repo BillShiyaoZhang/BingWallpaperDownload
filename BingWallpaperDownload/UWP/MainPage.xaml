@@ -22,10 +22,10 @@
             <TextBlock x:Name="MainHint" HorizontalAlignment="Left" Text="Waiting" TextWrapping="Wrap"  Visibility="Visible"/>
         </Grid>
         <Grid RelativePanel.Below="HomeHintGrid">
-            <HyperlinkButton x:Name="ImageTodayHrefButton" Height="Auto"
-                             AutomationProperties.Name="Go to Bing for image today.
-                             To read title and description of the image, press
-                             Narrator + Ctrl + O for each one.">
+            <HyperlinkButton x:Name="ImageTodayHrefButton" 
+                             x:Uid="ImageTodayHyperLinkButton"
+                             Height="Auto"
+                             AutomationProperties.Name="test">
                 <Image x:Name="ImageToday" Width="auto" Height="auto"/>
             </HyperlinkButton>
             <Grid VerticalAlignment="Bottom"

@@ -177,6 +177,9 @@
   <data name="Home.Content" xml:space="preserve">
     <value>Home</value>
   </data>
+  <data name="ImageTodayHyperLinkButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Go to Bing for image today. To read title and description of the image, press Narrator + Ctrl + O for each one.</value>
+  </data>
   <data name="OpenBing.Content" xml:space="preserve">
     <value>Open Bing</value>
   </data>
