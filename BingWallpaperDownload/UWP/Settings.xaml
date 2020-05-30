@@ -20,22 +20,32 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" x:Uid="SetFolder" Content="Set Folder" Click="SetFolderButton_Click" Margin="5,0,5,0"/>
-            <Button Grid.Column="1" x:Uid="OpenFolder" Content="Open Folder" Click="OpenFolderButton_Click" Margin="5,0,5,0"/>
+            <Button Grid.Column="0" x:Uid="SetFolder" Content="Set Folder"
+                    Style="{ThemeResource ButtonRevealStyle}"
+                    Click="SetFolderButton_Click" Margin="5,0,5,0"/>
+            <Button Grid.Column="1" x:Uid="OpenFolder" Content="Open Folder"
+                    Style="{ThemeResource ButtonRevealStyle}"
+                    Click="OpenFolderButton_Click" Margin="5,0,5,0"/>
         </Grid>
         <Grid Grid.Row="1" Margin="5,5,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <ToggleSwitch Grid.Column="0" x:Uid="BackgroundTask" x:Name="BackgroundTaskSwitch" OffContent="Background Task Off" OnContent="Background Task On test" Toggled="BackgroundTaskToggleSwitch_Toggled"/>
-            <ToggleSwitch Margin="20,0,0,0" Grid.Column="1" x:Uid="StartupTask" x:Name="StartupTaskSwitch" OffContent="Startup Task Off" OnContent="Startup Task On" Toggled="StartupTaskToggleSwitch_Toggled"/>
+            <ToggleSwitch Grid.Column="0" x:Uid="BackgroundTask" 
+                          x:Name="BackgroundTaskSwitch" OffContent="Background Task Off"
+                          OnContent="Background Task On test" 
+                          Toggled="BackgroundTaskToggleSwitch_Toggled"/>
+            <ToggleSwitch Margin="20,0,0,0" Grid.Column="1" x:Uid="StartupTask" 
+                          x:Name="StartupTaskSwitch" OffContent="Startup Task Off"
+                          OnContent="Startup Task On" Toggled="StartupTaskToggleSwitch_Toggled"/>
         </Grid>
         <Grid Grid.Row="2" Margin="5,0,0,0">
             <HyperlinkButton x:Uid="PrivacyPolicy" Content="Privacy policy"  Click="HyperlinkButton_Click"/>
         </Grid>
         <Grid Grid.Row="3" Margin="5,5,0,5">
-            <TextBlock x:Name="SettingsHint" HorizontalAlignment="Left" Text="Waiting" TextWrapping="Wrap"  Visibility="Collapsed"/>
+            <TextBlock x:Name="SettingsHint" HorizontalAlignment="Left" 
+                       Text="Waiting" TextWrapping="Wrap"  Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </Page>

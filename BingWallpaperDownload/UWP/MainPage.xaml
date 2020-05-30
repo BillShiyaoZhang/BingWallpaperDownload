@@ -7,6 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        
+    </Page.Resources>
 
     <RelativePanel Margin="10,10,10,10">
         <Grid x:Name="HomeButtonGrid" Margin="0,5,0,5">
@@ -15,8 +18,10 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" x:Uid="Download" Content="Download" 
+                    Style="{ThemeResource ButtonRevealStyle}"
                     Click="DownloadButton_Click" Margin="0,0,5,0"/>
             <Button Grid.Column="1" x:Uid="OpenBing" Content="Open Bing" 
+                    Style="{ThemeResource ButtonRevealStyle}"
                     Click="OpenBingButton_Click" Margin="5,0,5,0"/>
         </Grid>
         <Grid x:Name="HomeHintGrid" Margin="0,5,0,5"
@@ -31,12 +36,14 @@
                              AutomationProperties.Name="test">
                 <Image x:Name="ImageToday" Width="auto" Height="auto"/>
             </HyperlinkButton>
-            <RelativePanel VerticalAlignment="Bottom" BorderBrush="DarkGray"
+
+            <RelativePanel VerticalAlignment="Bottom" BorderThickness="2"
+                           BorderBrush="{ThemeResource SystemControlTransparentRevealBorderBrush}"
                            PointerEntered="ImageTodayTextPanel_PointerEntered"
                            PointerExited="ImageTodayTextPanel_PointerExited"
                            Tapped="ImageTodayTextPanel_Tapped" 
-                           Padding="5,5,5,5"
-                           Background="{ThemeResource SystemControlAcrylicElementBrush}" Opacity="0.7">
+                           Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}"
+                           Opacity=".7">
 
                 <TextBlock x:Name="ImageTodayTitle" Grid.Row="0"
                            RelativePanel.AlignBottomWithPanel="True"

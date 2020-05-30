@@ -8,6 +8,7 @@ using UWPLibrary;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.System.UserProfile;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media;
 
 namespace UWP
 {
@@ -135,11 +136,11 @@ namespace UWP
             switch (code)
             {
                 case DownloadAndSetWallpaperCode.SUCCESSFUL:
-                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + 
+                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") +
                         resourceLoader.GetString("Hint/SuccessedExclamation");
                     break;
                 case DownloadAndSetWallpaperCode.FAILED:
-                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + 
+                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") +
                         resourceLoader.GetString("Hint/FailedExclamation");
                     break;
                 case DownloadAndSetWallpaperCode.NO_INTERNET:
@@ -180,12 +181,12 @@ namespace UWP
             var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             if (success)
             {
-                MainHint.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace") 
+                MainHint.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace")
                     + resourceLoader.GetString("Hint/SuccessedExclamation");
             }
             else
             {
-                MainHint.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace") 
+                MainHint.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace")
                     + resourceLoader.GetString("Hint/FailedExclamation");
             }
         }
@@ -194,7 +195,7 @@ namespace UWP
 
         private void ImageTodayTextPanel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            ImageTodayTitle.SetValue(RelativePanel.AlignBottomWithPanelProperty, 
+            ImageTodayTitle.SetValue(RelativePanel.AlignBottomWithPanelProperty,
                 !(bool)ImageTodayTitle.GetValue(RelativePanel.AlignBottomWithPanelProperty));
             ImageTodayDescription.SetValue(RelativePanel.AlignBottomWithPanelProperty,
                !(bool)ImageTodayDescription.GetValue(RelativePanel.AlignBottomWithPanelProperty));
@@ -203,16 +204,13 @@ namespace UWP
         private void ImageTodayTextPanel_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var view = (RelativePanel)sender;
-            view.BorderThickness = new Thickness(2);
-            view.Padding = new Thickness(3);
-
+            view.Background = Application.Current.Resources["ListViewItemRevealBackgroundSelectedPointerOver"] as Brush;
         }
 
         private void ImageTodayTextPanel_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var view = (RelativePanel)sender;
-            view.BorderThickness = new Thickness(0);
-            view.Padding = new Thickness(5);
+            view.Background = Application.Current.Resources["SystemControlAcrylicElementMediumHighBrush"] as Brush;
         }
     }
 }
