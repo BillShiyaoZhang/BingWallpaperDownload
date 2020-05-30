@@ -21,6 +21,17 @@ namespace UWPLibrary
     {
         #region Properties
 
+        private static string ImageUrl { get { return "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=" + LanguageCountryCode; } }
+
+        public static string LanguageCountryCode
+        {
+            get
+            {
+                return "en-GB";
+                //return GlobalizationPreferences.Languages[0];
+            }
+        }
+
         /// <summary>
         /// The key of last date stored in local settings.
         /// </summary>
@@ -306,10 +317,7 @@ namespace UWPLibrary
             //            using (WebClient webClient = new WebClient())
             using (var client = new HttpClient())
             {
-                Console.WriteLine("Downloading JSON...");
-                //              webClient.Encoding = System.Text.Encoding.UTF8;
-                //            string jsonString = webClient.DownloadString("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-UK");
-                var uri = new Uri("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-UK");
+                var uri = new Uri(ImageUrl);
                 var jsonString = await client.GetStringAsync(uri).ConfigureAwait(false);
                 return JsonConvert.DeserializeObject<dynamic>(jsonString);
             }

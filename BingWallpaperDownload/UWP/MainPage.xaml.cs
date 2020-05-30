@@ -7,6 +7,7 @@ using Windows.UI.ViewManagement;
 using UWPLibrary;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.System.UserProfile;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace UWP
 {
@@ -117,13 +118,8 @@ namespace UWP
         private void SetWindowSize()
         {
             var localSettings = ApplicationData.Current.LocalSettings;
-            if (localSettings.Values["launchedWithPrefSize"] == null)
-            {
-                // first app launch only!!
-                ApplicationView.PreferredLaunchViewSize = new Size(510, 320);
-                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(510, 320));
-                localSettings.Values["launchedWithPrefSize"] = true;
-            }
+            ApplicationView.PreferredLaunchViewSize = new Size(767, 500);
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(510, 320));
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
@@ -139,10 +135,12 @@ namespace UWP
             switch (code)
             {
                 case DownloadAndSetWallpaperCode.SUCCESSFUL:
-                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
+                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + 
+                        resourceLoader.GetString("Hint/SuccessedExclamation");
                     break;
                 case DownloadAndSetWallpaperCode.FAILED:
-                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + resourceLoader.GetString("Hint/FailedExclamation");
+                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") + 
+                        resourceLoader.GetString("Hint/FailedExclamation");
                     break;
                 case DownloadAndSetWallpaperCode.NO_INTERNET:
                     msg = resourceLoader.GetString("Hint/NoInternet");
@@ -182,16 +180,40 @@ namespace UWP
             var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             if (success)
             {
-                MainHint.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
+                MainHint.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace") 
+                    + resourceLoader.GetString("Hint/SuccessedExclamation");
             }
             else
             {
-                MainHint.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace") + resourceLoader.GetString("Hint/FailedExclamation");
+                MainHint.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace") 
+                    + resourceLoader.GetString("Hint/FailedExclamation");
             }
         }
 
         #endregion
 
+        private void ImageTodayTextPanel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            ImageTodayTitle.SetValue(RelativePanel.AlignBottomWithPanelProperty, 
+                !(bool)ImageTodayTitle.GetValue(RelativePanel.AlignBottomWithPanelProperty));
+            ImageTodayDescription.SetValue(RelativePanel.AlignBottomWithPanelProperty,
+               !(bool)ImageTodayDescription.GetValue(RelativePanel.AlignBottomWithPanelProperty));
+        }
+
+        private void ImageTodayTextPanel_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            var view = (RelativePanel)sender;
+            view.BorderThickness = new Thickness(2);
+            view.Padding = new Thickness(3);
+
+        }
+
+        private void ImageTodayTextPanel_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            var view = (RelativePanel)sender;
+            view.BorderThickness = new Thickness(0);
+            view.Padding = new Thickness(5);
+        }
     }
 }
 

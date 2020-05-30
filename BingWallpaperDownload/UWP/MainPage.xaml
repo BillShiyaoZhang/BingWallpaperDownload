@@ -14,12 +14,15 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" x:Uid="Download" Content="Download" Click="DownloadButton_Click" Margin="5,0,5,0"/>
-            <Button Grid.Column="1" x:Uid="OpenBing" Content="Open Bing" Click="OpenBingButton_Click" Margin="5,0,5,0"/>
+            <Button Grid.Column="0" x:Uid="Download" Content="Download" 
+                    Click="DownloadButton_Click" Margin="0,0,5,0"/>
+            <Button Grid.Column="1" x:Uid="OpenBing" Content="Open Bing" 
+                    Click="OpenBingButton_Click" Margin="5,0,5,0"/>
         </Grid>
-        <Grid x:Name="HomeHintGrid" Margin="5,5,0,5"
+        <Grid x:Name="HomeHintGrid" Margin="0,5,0,5"
               RelativePanel.Below="HomeButtonGrid">
-            <TextBlock x:Name="MainHint" HorizontalAlignment="Left" Text="Waiting" TextWrapping="Wrap"  Visibility="Visible"/>
+            <TextBlock x:Name="MainHint" HorizontalAlignment="Left" 
+                       Text="Waiting" TextWrapping="Wrap"  Visibility="Visible"/>
         </Grid>
         <Grid RelativePanel.Below="HomeHintGrid">
             <HyperlinkButton x:Name="ImageTodayHrefButton" 
@@ -28,17 +31,21 @@
                              AutomationProperties.Name="test">
                 <Image x:Name="ImageToday" Width="auto" Height="auto"/>
             </HyperlinkButton>
-            <Grid VerticalAlignment="Bottom"
-                Background="Gray" Opacity="0.7">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+            <RelativePanel VerticalAlignment="Bottom" BorderBrush="DarkGray"
+                           PointerEntered="ImageTodayTextPanel_PointerEntered"
+                           PointerExited="ImageTodayTextPanel_PointerExited"
+                           Tapped="ImageTodayTextPanel_Tapped" 
+                           Padding="5,5,5,5"
+                           Background="{ThemeResource SystemControlAcrylicElementBrush}" Opacity="0.7">
+
                 <TextBlock x:Name="ImageTodayTitle" Grid.Row="0"
+                           RelativePanel.AlignBottomWithPanel="True"
                            FontSize="24" FontWeight="Bold" FontStyle="Italic" Text="Title" TextWrapping="Wrap"/>
                 <TextBlock x:Name="ImageTodayDescription" Grid.Row="1"
+                           RelativePanel.Below="ImageTodayTitle" Margin="0,5,0,0"
+                           RelativePanel.AlignBottomWithPanel="False"
                            FontSize="16" Text="Description" TextWrapping="Wrap"/>
-            </Grid>
+            </RelativePanel>
         </Grid>
     </RelativePanel>
 </Page>
