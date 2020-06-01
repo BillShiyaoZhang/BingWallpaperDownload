@@ -9,6 +9,8 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.System.UserProfile;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media;
+using System.Threading.Tasks;
+using Nito.AsyncEx;
 
 namespace UWP
 {
@@ -59,11 +61,16 @@ namespace UWP
         {
             this.InitializeComponent();
 
+            MyInit();
+        }
+
+        private async void MyInit()
+        {
             SetWindowSize();
 
             if (!Core.IsUpdated)
             {
-                RunAsync(false);
+                await RunAsync(false);
             }
             else
             {
@@ -74,27 +81,22 @@ namespace UWP
             MainHint.Visibility = Visibility.Visible;
 
             if (!string.IsNullOrWhiteSpace(ImageTodayAddress))
-                UpdateImageToday(ImageTodayAddress);
+                await UpdateImageToday(ImageTodayAddress);
         }
 
-        private async void UpdateImageToday(string imageLocation)
+        private async Task UpdateImageToday(string imageLocation)
         {
             // Set image today on UI
-            if (UserProfilePersonalizationSettings.IsSupported())
+            var uri = new Uri(imageLocation);
+            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            using (var randomAccessStream = await file.OpenAsync(FileAccessMode.Read))
             {
-                var uri = new Uri(imageLocation);
-                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
-                UserProfilePersonalizationSettings profileSettings
-                    = UserProfilePersonalizationSettings.Current;
-                //await profileSettings.TrySetWallpaperImageAsync(file);
-                using (var randomAccessStream = await file.OpenAsync(FileAccessMode.Read))
-                {
-                    var image = new BitmapImage();
-                    await image.SetSourceAsync(randomAccessStream);
-                    ImageToday.Source = image;
-                    ImageToday.Visibility = Visibility.Visible;
-                }
+                var image = new BitmapImage();
+                await image.SetSourceAsync(randomAccessStream);
+                ImageToday.Source = image;
+                ImageToday.Visibility = Visibility.Visible;
             }
+
             // Set title and description of image today
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
@@ -127,7 +129,7 @@ namespace UWP
         /// <summary>
         /// Download and set image from Bing as wallpaper and get result.
         /// </summary>
-        private async void RunAsync(bool setFolder)
+        private async Task RunAsync(bool setFolder)
         {
             var code = await Core.DownloadAndSetWallpaperAsync(setFolder);
             var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
@@ -167,12 +169,12 @@ namespace UWP
         /// </summary>
         /// <param name="sender">The button</param>
         /// <param name="e">Artuments</param>
-        public void DownloadButton_Click(object sender, RoutedEventArgs e)
+        public async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
-            RunAsync(true);
+            await RunAsync(true);
 
             if (!string.IsNullOrWhiteSpace(ImageTodayAddress))
-                UpdateImageToday(ImageTodayAddress);
+                await UpdateImageToday(ImageTodayAddress);
         }
 
         private async void OpenBingButton_Click(object sender, RoutedEventArgs e)

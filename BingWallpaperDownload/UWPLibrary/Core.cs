@@ -173,7 +173,7 @@ namespace UWPLibrary
             {
                 SetWidthByHeight(); // Set
             }
-            var folder = await GetFolderAsync(setFolder).ConfigureAwait(false);
+            var folder = await GetFolderAsync(setFolder);
             if (folder == null)
             {
                 value = DownloadAndSetWallpaperCode.FOLDER_NOT_SET;
@@ -181,16 +181,19 @@ namespace UWPLibrary
             }
             try
             {
-                string urlBase = await GetBackgroundUrlBaseAsync().ConfigureAwait(false);
+                string urlBase = await GetBackgroundUrlBaseAsync();
                 if (!IsResolutionExtensionSet)
                 {
-                    ResolutionExtension = await GetResolutionExtensionAsync(urlBase).ConfigureAwait(false);
+                    ResolutionExtension
+                        = await GetResolutionExtensionAsync(urlBase);
                 }
-                await DownloadWallpaperAsync(urlBase + ResolutionExtension, folder, DefaultFilePath, imagesSubdirectory).ConfigureAwait(false);
-                var wallpaperResult = await SetWallpaperAsync(ImageAddress).ConfigureAwait(false);
+                await DownloadWallpaperAsync(urlBase + ResolutionExtension,
+                    folder, DefaultFilePath, imagesSubdirectory);
+                var wallpaperResult = await SetWallpaperAsync(ImageAddress);
                 if (wallpaperResult)
                 {
-                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                    ApplicationDataContainer localSettings 
+                        = ApplicationData.Current.LocalSettings;
                     localSettings.Values[LastDateKey] = DefaultDateString;
                     value = DownloadAndSetWallpaperCode.SUCCESSFUL; // Wallpaper set successful!
 
@@ -215,7 +218,8 @@ namespace UWPLibrary
 
         private async void GetLearnMoreInformation()
         {
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            ApplicationDataContainer localSettings
+                = ApplicationData.Current.LocalSettings;
             try
             {
                 string learnMoreHref = new HtmlWeb().Load(@"https://www.bing.com/")
@@ -272,7 +276,7 @@ namespace UWPLibrary
             {
                 if (setFolder)
                 {
-                    folder = await SetFolderAsync().ConfigureAwait(false);
+                    folder = await SetFolderAsync();
                 }
                 else
                 {
@@ -318,7 +322,7 @@ namespace UWPLibrary
             using (var client = new HttpClient())
             {
                 var uri = new Uri(ImageUrl);
-                var jsonString = await client.GetStringAsync(uri).ConfigureAwait(false);
+                var jsonString = await client.GetStringAsync(uri);
                 return JsonConvert.DeserializeObject<dynamic>(jsonString);
             }
         }
@@ -329,7 +333,7 @@ namespace UWPLibrary
         /// <returns>the URL base</returns>
         private async Task<string> GetBackgroundUrlBaseAsync()
         {
-            dynamic jsonObject = await DownloadJsonAsync().ConfigureAwait(false);
+            dynamic jsonObject = await DownloadJsonAsync();
             return "https://www.bing.com" + jsonObject.images[0].urlbase;
         }
 
@@ -345,7 +349,8 @@ namespace UWPLibrary
                 WebRequest request = WebRequest.Create(url);
                 request.Method = "HEAD";
 
-                HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
+                HttpWebResponse response 
+                    = (HttpWebResponse)await request.GetResponseAsync();
                 return response.StatusCode == HttpStatusCode.OK;
             }
             catch
@@ -362,7 +367,7 @@ namespace UWPLibrary
         private async Task<string> GetResolutionExtensionAsync(string url)
         {
             string potentialExtension = "_" + WidthByHeight + ".jpg";
-            if (await WebsiteExistsAsync(url + potentialExtension).ConfigureAwait(false))
+            if (await WebsiteExistsAsync(url + potentialExtension))
             {
                 Console.WriteLine("Background for " + WidthByHeight + " found.");
                 return potentialExtension;
@@ -396,8 +401,8 @@ namespace UWPLibrary
 
             using (HttpClient client = new HttpClient())
             {
-                byte[] buffer = await client.GetByteArrayAsync(url).ConfigureAwait(false);
-                using (Stream stream = await storageFile.OpenStreamForWriteAsync().ConfigureAwait(false))
+                byte[] buffer = await client.GetByteArrayAsync(url);
+                using (Stream stream = await storageFile.OpenStreamForWriteAsync())
                     stream.Write(buffer, 0, buffer.Length);
             }
 
