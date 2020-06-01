@@ -29,7 +29,8 @@
             <TextBlock x:Name="MainHint" HorizontalAlignment="Left" 
                        Text="Waiting" TextWrapping="Wrap"  Visibility="Visible"/>
         </Grid>
-        <Grid RelativePanel.Below="HomeHintGrid">
+        <Grid x:Name="ImageTodayGrid" RelativePanel.Below="HomeHintGrid" 
+              Visibility="Collapsed">
             <HyperlinkButton x:Name="ImageTodayHrefButton" 
                              x:Uid="ImageTodayHyperLinkButton"
                              Height="Auto"
@@ -47,7 +48,8 @@
 
                 <TextBlock x:Name="ImageTodayTitle" Grid.Row="0"
                            RelativePanel.AlignBottomWithPanel="True"
-                           FontSize="24" FontWeight="Bold" FontStyle="Italic" Text="Title" TextWrapping="Wrap"/>
+                           FontSize="24" FontWeight="Bold" FontStyle="Italic"
+                           TextWrapping="Wrap"/>
                 <TextBlock x:Name="ImageTodayDescription" Grid.Row="1"
                            RelativePanel.Below="ImageTodayTitle" Margin="0,5,0,0"
                            RelativePanel.AlignBottomWithPanel="False"

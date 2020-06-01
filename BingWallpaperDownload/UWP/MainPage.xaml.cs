@@ -94,7 +94,7 @@ namespace UWP
                 var image = new BitmapImage();
                 await image.SetSourceAsync(randomAccessStream);
                 ImageToday.Source = image;
-                ImageToday.Visibility = Visibility.Visible;
+                ImageTodayGrid.Visibility = Visibility.Visible;
             }
 
             // Set title and description of image today
