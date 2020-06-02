@@ -207,13 +207,13 @@ namespace UWP
         private void ImageTodayTextPanel_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var view = (RelativePanel)sender;
-            view.Background = Application.Current.Resources["ListViewItemRevealBackgroundSelectedPointerOver"] as Brush;
+            view.Opacity = 0.95;
         }
 
         private void ImageTodayTextPanel_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var view = (RelativePanel)sender;
-            view.Background = Application.Current.Resources["SystemControlAcrylicElementMediumHighBrush"] as Brush;
+            view.Opacity = 0.7;
         }
     }
 }
