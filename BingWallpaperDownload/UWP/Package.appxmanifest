@@ -10,7 +10,7 @@
   <Identity
     Name="29074ShiyaoZhang.Bing"
     Publisher="CN=904DBA2D-E4E3-41AF-BB76-3158EE2E1C1B"
-    Version="1.0.3.0" />
+    Version="1.0.4.0" />
 
   <mp:PhoneIdentity PhoneProductId="5e6b5bdd-9746-4a2c-ae64-577ece97e2a3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
