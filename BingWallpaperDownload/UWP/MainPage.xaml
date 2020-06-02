@@ -31,12 +31,12 @@
         </Grid>
         <Grid x:Name="ImageTodayGrid" RelativePanel.Below="HomeHintGrid" 
               Visibility="Collapsed">
-            <HyperlinkButton x:Name="ImageTodayHrefButton" 
+            <!--<HyperlinkButton x:Name="ImageTodayHrefButton" 
                              x:Uid="ImageTodayHyperLinkButton"
                              Height="Auto"
-                             AutomationProperties.Name="test">
+                             AutomationProperties.Name="test">-->
                 <Image x:Name="ImageToday" Width="auto" Height="auto"/>
-            </HyperlinkButton>
+            <!--</HyperlinkButton>-->
 
             <RelativePanel VerticalAlignment="Bottom" BorderThickness="2"
                            BorderBrush="{ThemeResource SystemControlTransparentRevealBorderBrush}"

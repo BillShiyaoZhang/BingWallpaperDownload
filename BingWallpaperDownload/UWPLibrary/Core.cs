@@ -167,36 +167,40 @@ namespace UWPLibrary
         /// <returns>RunFunctionCode represents the result of running.</returns>
         public async Task<DownloadAndSetWallpaperCode> DownloadAndSetWallpaperAsync(bool setFolder, string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
         {
+            DownloadLearnMoreInformation();
+
             DownloadAndSetWallpaperCode value;
+
             if (!IsResolutionExtensionSet)
             {
                 SetWidthByHeight(); // Set
             }
-            var folder = await GetFolderAsync(setFolder);
+
+            // exit UI context
+            var folder = await GetFolderAsync(setFolder).ConfigureAwait(false);
             if (folder == null)
             {
                 value = DownloadAndSetWallpaperCode.FOLDER_NOT_SET;
                 return value;
             }
+
             try
             {
-                string urlBase = await GetBackgroundUrlBaseAsync();
+                string urlBase = await GetBackgroundUrlBaseAsync().ConfigureAwait(false);
                 if (!IsResolutionExtensionSet)
                 {
                     ResolutionExtension
-                        = await GetResolutionExtensionAsync(urlBase);
+                        = await GetResolutionExtensionAsync(urlBase).ConfigureAwait(false);
                 }
                 await DownloadWallpaperAsync(urlBase + ResolutionExtension,
-                    folder, DefaultFilePath, imagesSubdirectory);
-                var wallpaperResult = await SetWallpaperAsync(ImageAddress);
+                    folder, DefaultFilePath, imagesSubdirectory).ConfigureAwait(false);
+                var wallpaperResult = await SetWallpaperAsync(ImageAddress).ConfigureAwait(false);
                 if (wallpaperResult)
                 {
-                    ApplicationDataContainer localSettings 
+                    ApplicationDataContainer localSettings
                         = ApplicationData.Current.LocalSettings;
                     localSettings.Values[LastDateKey] = DefaultDateString;
                     value = DownloadAndSetWallpaperCode.SUCCESSFUL; // Wallpaper set successful!
-
-                    GetLearnMoreInformation();
                 }
                 else
                 {
@@ -215,7 +219,7 @@ namespace UWPLibrary
             return value;
         }
 
-        private async void GetLearnMoreInformation()
+        public static async void DownloadLearnMoreInformation()
         {
             ApplicationDataContainer localSettings
                 = ApplicationData.Current.LocalSettings;
@@ -275,7 +279,7 @@ namespace UWPLibrary
             {
                 if (setFolder)
                 {
-                    folder = await SetFolderAsync();
+                    folder = await SetFolderAsync().ConfigureAwait(false);
                 }
                 else
                 {
@@ -348,7 +352,7 @@ namespace UWPLibrary
                 WebRequest request = WebRequest.Create(url);
                 request.Method = "HEAD";
 
-                HttpWebResponse response 
+                HttpWebResponse response
                     = (HttpWebResponse)await request.GetResponseAsync();
                 return response.StatusCode == HttpStatusCode.OK;
             }
@@ -367,16 +371,8 @@ namespace UWPLibrary
         {
             string potentialExtension = "_" + WidthByHeight + ".jpg";
             if (await WebsiteExistsAsync(url + potentialExtension))
-            {
-                Console.WriteLine("Background for " + WidthByHeight + " found.");
                 return potentialExtension;
-            }
-            else
-            {
-                Console.WriteLine("No background for " + WidthByHeight + " was found.");
-                Console.WriteLine("Using 1920x1080 instead.");
-                return DefaultResolutionExtension;
-            }
+            return DefaultResolutionExtension;
         }
 
         /// <summary>
@@ -391,11 +387,13 @@ namespace UWPLibrary
             StorageFile storageFile;
             try
             {
-                storageFile = await rootFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
+                storageFile = await rootFolder
+                    .CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
             }
             catch (Exception)
             {
-                storageFile = await rootFolder.CreateFileAsync(filePath, CreationCollisionOption.OpenIfExists);
+                storageFile = await rootFolder
+                    .CreateFileAsync(filePath, CreationCollisionOption.OpenIfExists);
             }
 
             using (HttpClient client = new HttpClient())
@@ -406,11 +404,13 @@ namespace UWPLibrary
             }
 
             // Use this path to load image
-            var localFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
+            var localFolder = await ApplicationData.Current.LocalFolder
+                .CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
             //string newPath = string.Format("ms-appdata:///local/{0}", GetFileName());
             //var localFolder = ApplicationData.Current.LocalFolder;
 
-            await storageFile.CopyAsync(localFolder, DefaultFileName, NameCollisionOption.ReplaceExisting);
+            await storageFile
+                .CopyAsync(localFolder, DefaultFileName, NameCollisionOption.ReplaceExisting);
         }
 
         /// <summary>
@@ -420,15 +420,15 @@ namespace UWPLibrary
         /// <returns>If or not wallpaper is set successed.</returns>
         private async Task<bool> SetWallpaperAsync(string localAppDataFileName)
         {
-            bool success = false;
             if (UserProfilePersonalizationSettings.IsSupported())
             {
                 var uri = new Uri(localAppDataFileName);
                 StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
-                UserProfilePersonalizationSettings profileSettings = UserProfilePersonalizationSettings.Current;
-                success = await profileSettings.TrySetWallpaperImageAsync(file);
+                UserProfilePersonalizationSettings profileSettings 
+                    = UserProfilePersonalizationSettings.Current;
+                return await profileSettings.TrySetWallpaperImageAsync(file);
             }
-            return success;
+            return false;
         }
 
         private void SetWidthByHeight()

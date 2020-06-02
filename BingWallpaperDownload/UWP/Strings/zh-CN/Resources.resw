@@ -147,6 +147,9 @@
   <data name="Hint.BrowserLaunchedSpace" xml:space="preserve">
     <value>打开浏览器</value>
   </data>
+  <data name="Hint.Downloading" xml:space="preserve">
+    <value>下载中…</value>
+  </data>
   <data name="Hint.FailedExclamation" xml:space="preserve">
     <value>失败！</value>
   </data>

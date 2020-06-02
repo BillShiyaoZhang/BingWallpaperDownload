@@ -8,6 +8,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Media;
 using UWPLibrary;
+using Windows.ApplicationModel.Resources;
 
 namespace UWP
 {
@@ -18,7 +19,7 @@ namespace UWP
     public sealed partial class MainPage : Page
     {
 
-        string ImageTodayAddress
+        static string ImageTodayAddress
         {
             get
             {
@@ -71,14 +72,13 @@ namespace UWP
             }
             else
             {
-                var resourceLoader = Windows.ApplicationModel.Resources
-                    .ResourceLoader.GetForCurrentView();
+                var resourceLoader = ResourceLoader.GetForCurrentView();
                 MainHint.Text = resourceLoader.GetString("Hint/ImageThere");
             }
             MainHint.Visibility = Visibility.Visible;
 
             if (!string.IsNullOrWhiteSpace(ImageTodayAddress))
-                await UpdateImageToday(ImageTodayAddress);
+                await UpdateImageToday(ImageTodayAddress).ConfigureAwait(false);
         }
 
         private async Task UpdateImageToday(string imageLocation)
@@ -106,16 +106,16 @@ namespace UWP
             if (!string.IsNullOrWhiteSpace(imageTodayDescriptionText))
                 ImageTodayDescription.Text = imageTodayDescriptionText;
 
-            var imageTodayHrefText = (string)localSettings
-                .Values[Core.ImageTodayLearnMoreHrefKey];
-            if (!string.IsNullOrWhiteSpace(imageTodayHrefText))
-                ImageTodayHrefButton.NavigateUri
-                    = new Uri("https://www.bing.com" + imageTodayHrefText);
+            //var imageTodayHrefText = (string)localSettings
+            //    .Values[Core.ImageTodayLearnMoreHrefKey];
+            //if (!string.IsNullOrWhiteSpace(imageTodayHrefText))
+            //    ImageTodayHrefButton.NavigateUri
+            //        = new Uri("https://www.bing.com" + imageTodayHrefText);
         }
 
         #region Private Methods
 
-        private void SetWindowSize()
+        private static void SetWindowSize()
         {
             var localSettings = ApplicationData.Current.LocalSettings;
             ApplicationView.PreferredLaunchViewSize = new Size(767, 500);
@@ -129,7 +129,7 @@ namespace UWP
         private async Task RunAsync(bool setFolder)
         {
             var code = await Core.DownloadAndSetWallpaperAsync(setFolder);
-            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            var resourceLoader = ResourceLoader.GetForCurrentView();
             string msg = "";
 
             switch (code)
@@ -168,16 +168,20 @@ namespace UWP
         /// <param name="e">Artuments</param>
         public async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
+            var resourceLoader = ResourceLoader.GetForCurrentView();
+            MainHint.Text = resourceLoader.GetString("Hint/Downloading");
             await RunAsync(true);
 
             if (!string.IsNullOrWhiteSpace(ImageTodayAddress))
-                await UpdateImageToday(ImageTodayAddress);
+                await UpdateImageToday(ImageTodayAddress).ConfigureAwait(false);
         }
 
         private async void OpenBingButton_Click(object sender, RoutedEventArgs e)
         {
-            var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(@"https://www.bing.co.uk"));
-            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            var success = await Windows.System.Launcher
+                .LaunchUriAsync(new Uri(@"https://www.bing.co.uk"));
+
+            var resourceLoader = ResourceLoader.GetForCurrentView();
             if (success)
             {
                 MainHint.Text = resourceLoader.GetString("Hint/BrowserLaunchedSpace")

@@ -147,6 +147,9 @@
   <data name="Hint.BrowserLaunchedSpace" xml:space="preserve">
     <value>Browser lanuched </value>
   </data>
+  <data name="Hint.Downloading" xml:space="preserve">
+    <value>Downloading...</value>
+  </data>
   <data name="Hint.FailedExclamation" xml:space="preserve">
     <value>failed!</value>
   </data>
