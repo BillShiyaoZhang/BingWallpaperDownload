@@ -1,15 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using HtmlAgilityPack;
 using Newtonsoft.Json;
+using System;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Windows.System.UserProfile;
 using Windows.Storage;
 using Windows.Graphics.Display;
-using System.Net.Http;
-using Windows.UI.Xaml.Controls;
-using HtmlAgilityPack;
-using System.Linq;
 
 namespace UWPLibrary
 {

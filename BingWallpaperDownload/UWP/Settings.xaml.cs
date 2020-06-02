@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Background;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using UWPLibrary;
-using Windows.ApplicationModel;
-using System.Threading.Tasks;
 using Windows.UI.Popups;
-using Windows.ApplicationModel.Background;
+using UWPLibrary;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 

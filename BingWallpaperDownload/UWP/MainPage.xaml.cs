@@ -1,16 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.ViewManagement;
-using UWPLibrary;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.System.UserProfile;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media;
-using System.Threading.Tasks;
-using Nito.AsyncEx;
+using UWPLibrary;
 
 namespace UWP
 {
