@@ -15,7 +15,7 @@
             ItemInvoked="navigation_ItemInvoked" Loaded="navigation_Loaded">
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="Home" Content="Home" Icon="Home" Tag="Home" />
-                <NavigationViewItem x:Uid="Community" Content="Community" Icon="Message" Tag="Community" />
+                <!--<NavigationViewItem x:Uid="Community" Content="Community" Icon="Message" Tag="Community" />-->
             </NavigationView.MenuItems>
             <Frame x:Name="ContentFrame"/>
         </NavigationView>

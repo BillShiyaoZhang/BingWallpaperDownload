@@ -120,11 +120,11 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>Bing Wallpaper Download</value>
   </data>
-  <data name="BackgroundTask.OffContent" xml:space="preserve">
-    <value>Background Task Off</value>
+  <data name="AutoReadSwitch.Header" xml:space="preserve">
+    <value>Auto read</value>
   </data>
-  <data name="BackgroundTask.OnContent" xml:space="preserve">
-    <value>Background Task On</value>
+  <data name="BackgroundTask.Header" xml:space="preserve">
+    <value>Background task</value>
   </data>
   <data name="Close.Content" xml:space="preserve">
     <value>Close</value>
@@ -132,16 +132,16 @@
   <data name="Community.Content" xml:space="preserve">
     <value>Community</value>
   </data>
-  <data name="Contribute.Content" xml:space="preserve">
+  <data name="Contribute.Label" xml:space="preserve">
     <value>Contribute</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Download Bing image of the day and set it to your computer.</value>
   </data>
-  <data name="Download.Content" xml:space="preserve">
+  <data name="Download.Label" xml:space="preserve">
     <value>Download</value>
   </data>
-  <data name="Feedback.Content" xml:space="preserve">
+  <data name="Feedback.Label" xml:space="preserve">
     <value>Feedback</value>
   </data>
   <data name="Hint.BrowserLaunchedSpace" xml:space="preserve">
@@ -183,22 +183,22 @@
   <data name="ImageTodayHyperLinkButton.AutomationProperties.Name" xml:space="preserve">
     <value>Image today. To read title and description of the image, press Narrator + Ctrl + O once a time.</value>
   </data>
-  <data name="OpenBing.Content" xml:space="preserve">
+  <data name="OpenBing.Label" xml:space="preserve">
     <value>Open Bing</value>
   </data>
-  <data name="OpenFolder.Content" xml:space="preserve">
+  <data name="OpenFolder.Label" xml:space="preserve">
     <value>Open Folder</value>
   </data>
   <data name="PrivacyPolicy.Content" xml:space="preserve">
     <value>Privacy Policy</value>
   </data>
-  <data name="SetFolder.Content" xml:space="preserve">
+  <data name="ReadAloud.Label" xml:space="preserve">
+    <value>Read Aloud</value>
+  </data>
+  <data name="SetFolder.Label" xml:space="preserve">
     <value>Set Folder</value>
   </data>
-  <data name="StartupTask.OffContent" xml:space="preserve">
-    <value>Startup Task Off</value>
-  </data>
-  <data name="StartupTask.OnContent" xml:space="preserve">
-    <value>Startup Task On</value>
+  <data name="StartupTask.Header" xml:space="preserve">
+    <value>Startup task</value>
   </data>
 </root>

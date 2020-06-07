@@ -8,44 +8,38 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Grid Margin="0,15,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Margin="0,5,0,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" x:Uid="SetFolder" Content="Set Folder"
-                    Style="{ThemeResource ButtonRevealStyle}"
-                    Click="SetFolderButton_Click" Margin="5,0,5,0"/>
-            <Button Grid.Column="1" x:Uid="OpenFolder" Content="Open Folder"
-                    Style="{ThemeResource ButtonRevealStyle}"
-                    Click="OpenFolderButton_Click" Margin="5,0,5,0"/>
-        </Grid>
-        <Grid Grid.Row="1" Margin="5,5,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <ToggleSwitch Grid.Column="0" x:Uid="BackgroundTask" 
-                          x:Name="BackgroundTaskSwitch" OffContent="Background Task Off"
-                          OnContent="Background Task On test" 
-                          Toggled="BackgroundTaskToggleSwitch_Toggled"/>
-            <ToggleSwitch Margin="20,0,0,0" Grid.Column="1" x:Uid="StartupTask" 
-                          x:Name="StartupTaskSwitch" OffContent="Startup Task Off"
-                          OnContent="Startup Task On" Toggled="StartupTaskToggleSwitch_Toggled"/>
-        </Grid>
-        <Grid Grid.Row="2" Margin="5,0,0,0">
-            <HyperlinkButton x:Uid="PrivacyPolicy" Content="Privacy policy"  Click="HyperlinkButton_Click"/>
-        </Grid>
-        <Grid Grid.Row="3" Margin="5,5,0,5">
-            <TextBlock x:Name="SettingsHint" HorizontalAlignment="Left" 
-                       Text="Waiting" TextWrapping="Wrap"  Visibility="Collapsed"/>
+        <CommandBar Grid.Row="0" Background="Transparent" IsOpen="False" IsSticky="True"
+                        HorizontalAlignment="Left" DefaultLabelPosition="Right" >
+            <AppBarButton Icon="MoveToFolder" x:Uid="SetFolder" Click="SetFolderButton_Click"/>
+            <AppBarButton Icon="Folder" x:Uid="OpenFolder" Click="OpenFolderButton_Click"/>
+            <AppBarButton Icon="Comment" x:Uid="Feedback" Click="Feedback_Click"/>
+            <AppBarButton Icon="People" x:Uid="Contribute" Click="Contribute_Click"/>
+        </CommandBar>
+        <Grid Grid.Row="1" Margin="10,10,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ToggleSwitch Grid.Row="0" x:Uid="BackgroundTask" x:Name="BackgroundTaskSwitch"
+                      Header="Background task" Toggled="BackgroundTaskToggleSwitch_Toggled"/>
+            <ToggleSwitch Grid.Row="1" x:Uid="StartupTask" Header="Startup task"
+                          Margin="0,10,0,0"
+                      x:Name="StartupTaskSwitch" Toggled="StartupTaskToggleSwitch_Toggled"/>
+            <ToggleSwitch Grid.Row="2" x:Uid="AutoReadSwitch" Header="Auto read"
+                          Margin="0,10,0,0" x:Name="AutoReadSwitch" 
+                          Toggled="AutoReadSwitch_Toggled"/>
+            <HyperlinkButton Grid.Row="3" x:Uid="PrivacyPolicy" Content="Privacy policy"  
+                             Click="HyperlinkButton_Click"/>
+            <TextBlock Grid.Row="4" x:Name="SettingsHint" HorizontalAlignment="Left" 
+                    Text="Waiting" TextWrapping="Wrap"  Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </Page>

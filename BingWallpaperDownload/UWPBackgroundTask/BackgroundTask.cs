@@ -42,7 +42,7 @@ namespace UWPBackgroundTask
             _deferral = taskInstance.GetDeferral();
             if (!Core.IsUpdated)
             {
-                await Core.DownloadAndSetWallpaperAsync(false);
+                await Core.RunAsync(false);
             }
             _deferral.Complete();
         }

@@ -165,7 +165,7 @@ namespace UWPLibrary
         /// </summary>
         /// <param name="imagesSubdirectory">Subdirectory of images.  Default as "DownloadedImages".</param>
         /// <returns>RunFunctionCode represents the result of running.</returns>
-        public async Task<DownloadAndSetWallpaperCode> DownloadAndSetWallpaperAsync(bool setFolder, string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
+        public async Task<DownloadAndSetWallpaperCode> RunAsync(bool setFolder, string imagesSubdirectory = DEFAULT_IMAGES_SUBDIRECTORY)
         {
             DownloadLearnMoreInformation();
 
@@ -225,7 +225,7 @@ namespace UWPLibrary
                 = ApplicationData.Current.LocalSettings;
             try
             {
-                string learnMoreHref = new HtmlWeb().Load(@"https://www.bing.com/")
+                string learnMoreHref = new HtmlWeb().Load(@"https://www.bing.com/?cc=gb")
                     .DocumentNode
                     .SelectNodes("//a[@class='learn_more']")
                     .FirstOrDefault()

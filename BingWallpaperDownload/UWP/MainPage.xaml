@@ -7,54 +7,38 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.Resources>
-        
-    </Page.Resources>
 
-    <RelativePanel Margin="10,10,10,10">
-        <Grid x:Name="HomeButtonGrid" Margin="0,5,0,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" x:Uid="Download" Content="Download" 
-                    Style="{ThemeResource ButtonRevealStyle}"
-                    Click="DownloadButton_Click" Margin="0,0,5,0"/>
-            <Button Grid.Column="1" x:Uid="OpenBing" Content="Open Bing" 
-                    Style="{ThemeResource ButtonRevealStyle}"
-                    Click="OpenBingButton_Click" Margin="5,0,5,0"/>
-        </Grid>
-        <Grid x:Name="HomeHintGrid" Margin="0,5,0,5"
-              RelativePanel.Below="HomeButtonGrid">
-            <TextBlock x:Name="MainHint" HorizontalAlignment="Left" 
-                       Text="Waiting" TextWrapping="Wrap"  Visibility="Visible"/>
-        </Grid>
-        <Grid x:Name="ImageTodayGrid" RelativePanel.Below="HomeHintGrid" 
-              Visibility="Collapsed">
-            <HyperlinkButton x:Name="ImageTodayHrefButton" 
-                             x:Uid="ImageTodayHyperLinkButton"
-                             Height="Auto"
-                             AutomationProperties.Name="test">
-                <Image x:Name="ImageToday" Width="auto" Height="auto"/>
-            </HyperlinkButton>
-
-            <RelativePanel VerticalAlignment="Bottom" BorderThickness="2"
-                           BorderBrush="{ThemeResource SystemControlTransparentRevealBorderBrush}"
-                           PointerEntered="ImageTodayTextPanel_PointerEntered"
-                           PointerExited="ImageTodayTextPanel_PointerExited"
-                           Tapped="ImageTodayTextPanel_Tapped" 
-                           Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}"
-                           Opacity=".7">
-
-                <TextBlock x:Name="ImageTodayTitle" Grid.Row="0"
-                           RelativePanel.AlignBottomWithPanel="True"
-                           FontSize="24" FontWeight="Bold" FontStyle="Italic"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <CommandBar Grid.Row="0" Grid.Column="0" Background="Transparent" IsOpen="False"
+                    DefaultLabelPosition="Right" IsSticky="True" HorizontalAlignment="Left">
+            <AppBarButton Icon="Download" x:Uid="Download" Click="DownloadButton_Click"/>
+            <AppBarButton Icon="Globe" x:Uid="OpenBing" Click="OpenBingButton_Click"/>
+            <AppBarButton Icon="Volume" x:Uid="ReadAloud" Click="ReadAloudButton_Click"/>
+        </CommandBar>
+        <MediaElement x:Name="mediaElement"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="MainHint" HorizontalAlignment="Right" 
+                   VerticalAlignment="Center" Margin="0,0,10,0" Text="Waiting" 
+                   TextWrapping="Wrap" Visibility="Visible"/>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" x:Name="ImageTodayGrid" Visibility="Collapsed">
+            <Image x:Name="ImageToday"/>
+            <StackPanel VerticalAlignment="Bottom" Orientation="Vertical" Opacity=".7"
+                        PointerEntered="ImageTodayTextPanel_PointerEntered"
+                        PointerExited="ImageTodayTextPanel_PointerExited"
+                        Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}"
+                        Tapped="ImageTodayTextPanel_Tapped" Padding="8">
+                <TextBlock x:Name="ImageTodayTitle" TextWrapping="Wrap" FontSize="24" 
+                           FontWeight="Bold" FontStyle="Italic"/>
+                <TextBlock x:Name="ImageTodayDescription" FontSize="16" Text="Description" 
                            TextWrapping="Wrap"/>
-                <TextBlock x:Name="ImageTodayDescription" Grid.Row="1"
-                           RelativePanel.Below="ImageTodayTitle" Margin="0,5,0,0"
-                           RelativePanel.AlignBottomWithPanel="False"
-                           FontSize="16" Text="Description" TextWrapping="Wrap"/>
-            </RelativePanel>
+            </StackPanel>
         </Grid>
-    </RelativePanel>
+    </Grid>
 </Page>

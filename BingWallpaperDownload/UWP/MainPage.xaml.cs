@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Media;
 using UWPLibrary;
 using Windows.ApplicationModel.Resources;
+using Windows.Media.SpeechSynthesis;
 
 namespace UWP
 {
@@ -111,14 +112,47 @@ namespace UWP
             //if (!string.IsNullOrWhiteSpace(imageTodayHrefText))
             //    ImageTodayHrefButton.NavigateUri
             //        = new Uri("https://www.bing.com" + imageTodayHrefText);
+
+            var isAutoRead = localSettings.Values["AutoReadKey"];
+            if (isAutoRead == null)
+            {
+                localSettings.Values["AutoReadKey"] = true;
+                isAutoRead = true;
+            }
+            if ((bool)isAutoRead)
+            {
+                await AutoReadImageTodayAsync().ConfigureAwait(false);
+            }
+
+        }
+
+        private async Task AutoReadImageTodayAsync()
+        {
+            // The object for controlling the speech synthesis engine (voice).
+            using (var synth = new SpeechSynthesizer()){
+
+                var autoReadText = "";
+                var title = ImageTodayTitle.Text;
+                if (!string.IsNullOrWhiteSpace(title))
+                    autoReadText += $"Title: {title}\n";
+                var description = ImageTodayDescription.Text;
+                if (!string.IsNullOrWhiteSpace(description))
+                    autoReadText += $"Description: {description}";
+
+                // Generate the audio stream from plain text.
+                SpeechSynthesisStream stream = await synth.SynthesizeTextToStreamAsync(autoReadText);
+
+                // Send the stream to the media object.
+                mediaElement.SetSource(stream, stream.ContentType);
+                mediaElement.Play();
+            }
         }
 
         #region Private Methods
 
         private static void SetWindowSize()
         {
-            var localSettings = ApplicationData.Current.LocalSettings;
-            ApplicationView.PreferredLaunchViewSize = new Size(767, 500);
+            ApplicationView.PreferredLaunchViewSize = new Size(900, 525);
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(510, 320));
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
@@ -128,7 +162,7 @@ namespace UWP
         /// </summary>
         private async Task RunAsync(bool setFolder)
         {
-            var code = await Core.DownloadAndSetWallpaperAsync(setFolder);
+            var code = await Core.RunAsync(setFolder);
             var resourceLoader = ResourceLoader.GetForCurrentView();
             string msg = "";
 
@@ -198,22 +232,34 @@ namespace UWP
 
         private void ImageTodayTextPanel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            ImageTodayTitle.SetValue(RelativePanel.AlignBottomWithPanelProperty,
-                !(bool)ImageTodayTitle.GetValue(RelativePanel.AlignBottomWithPanelProperty));
-            ImageTodayDescription.SetValue(RelativePanel.AlignBottomWithPanelProperty,
-               !(bool)ImageTodayDescription.GetValue(RelativePanel.AlignBottomWithPanelProperty));
+            switch (ImageTodayDescription.Visibility)
+            {
+                case Visibility.Visible:
+                    ImageTodayDescription.Visibility = Visibility.Collapsed;
+                    break;
+                case Visibility.Collapsed:
+                    break;
+                default:
+                    ImageTodayDescription.Visibility = Visibility.Collapsed;
+                    break;
+            }
         }
 
         private void ImageTodayTextPanel_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            var view = (RelativePanel)sender;
+            var view = (StackPanel)sender;
             view.Opacity = 0.95;
         }
 
         private void ImageTodayTextPanel_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            var view = (RelativePanel)sender;
+            var view = (StackPanel)sender;
             view.Opacity = 0.7;
+        }
+
+        private async void ReadAloudButton_Click(object sender, RoutedEventArgs e)
+        {
+            await AutoReadImageTodayAsync().ConfigureAwait(false);
         }
     }
 }

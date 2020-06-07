@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Popups;
 using UWPLibrary;
+using Windows.Storage;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -178,6 +179,19 @@ namespace UWP
         {
             SetStartupTaskToggleSwitch();
             SetBackgroundTasksToggleSwitch();
+            SetAutoReadToggleSwitch();
+        }
+
+        private void SetAutoReadToggleSwitch()
+        {
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            var isAutoRead = localSettings.Values["AutoReadKey"];
+            if (isAutoRead == null)
+            {
+                localSettings.Values["AutoReadKey"] = true;
+                isAutoRead = true;
+            }
+            AutoReadSwitch.IsOn = (bool)isAutoRead;
         }
 
         private void SetBackgroundTasksToggleSwitch()
@@ -291,6 +305,29 @@ namespace UWP
         }
 
         #endregion
+
+        private void AutoReadSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["AutoReadKey"] = AutoReadSwitch.IsOn;
+        }
+
+        private async void Feedback_Click(object sender, RoutedEventArgs e)
+        {
+            var emailMessage = new Windows.ApplicationModel.Email.EmailMessage();
+
+            var emailRecipient = new Windows.ApplicationModel.Email.EmailRecipient("zhangshiyao_ZSY@outlook.com");
+            emailMessage.To.Add(emailRecipient);
+            emailMessage.Subject = "[BWD] [Feedback]";
+
+            await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(emailMessage);
+        }
+
+        private async void Contribute_Click(object sender, RoutedEventArgs e)
+        {
+            var uri = new Uri("https://github.com/BillShiyaoZhang/BingWallpaperDownload");
+            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
+        }
 
     }
 }
