@@ -116,16 +116,27 @@ namespace UWP
             //    ImageTodayHrefButton.NavigateUri
             //        = new Uri("https://www.bing.com" + imageTodayHrefText);
 
+            // Set auto read
             var isAutoRead = localSettings.Values["AutoReadKey"];
             if (isAutoRead == null)
             {
-                localSettings.Values["AutoReadKey"] = true;
                 isAutoRead = true;
+                localSettings.Values["AutoReadKey"] = true;
             }
             if ((bool)isAutoRead)
-            {
                 await AutoReadImageTodayAsync().ConfigureAwait(false);
+
+            // Set description visibility
+            var isDescriptionVisible = localSettings.Values["ImageTodayDescriptionVisibleKey"];
+            if (isDescriptionVisible == null)
+            {
+                isDescriptionVisible = true;
+                localSettings.Values["ImageTodayDescriptionVisibleKey"] = true;
             }
+            if ((bool)isDescriptionVisible)
+                ImageTodayDescription.Visibility = Visibility.Visible;
+            else
+                ImageTodayDescription.Visibility = Visibility.Collapsed;
 
         }
 
@@ -238,14 +249,17 @@ namespace UWP
 
         private void ImageTodayTextPanel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             switch (ImageTodayDescription.Visibility)
             {
                 case Visibility.Visible:
                     ImageTodayDescription.Visibility = Visibility.Collapsed;
+                    localSettings.Values["ImageTodayDescriptionVisibleKey"] = false;
                     break;
                 case Visibility.Collapsed:
                 default:
                     ImageTodayDescription.Visibility = Visibility.Visible;
+                    localSettings.Values["ImageTodayDescriptionVisibleKey"] = true;
                     break;
             }
         }
