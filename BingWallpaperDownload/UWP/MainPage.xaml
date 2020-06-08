@@ -10,24 +10,13 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <CommandBar Grid.Row="0" Grid.Column="0" Background="Transparent" IsOpen="False"
-                    DefaultLabelPosition="Right" IsSticky="True" HorizontalAlignment="Left">
-            <AppBarButton Icon="Download" x:Uid="Download" Click="DownloadButton_Click"/>
-            <AppBarButton Icon="Globe" x:Uid="OpenBing" Click="OpenBingButton_Click"/>
-            <AppBarButton Icon="Volume" x:Uid="ReadAloud" Click="ReadAloudButton_Click"/>
-        </CommandBar>
-        <MediaElement x:Name="mediaElement"/>
-        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="MainHint" HorizontalAlignment="Right" 
-                   VerticalAlignment="Center" Margin="0,0,10,0" Text="Waiting" 
-                   TextWrapping="Wrap" Visibility="Visible"/>
-        <Grid Grid.Row="1" Grid.ColumnSpan="2" x:Name="ImageTodayGrid" Visibility="Collapsed">
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" x:Name="ImageTodayGrid" Visibility="Collapsed">
             <Image x:Name="ImageToday"/>
             <StackPanel VerticalAlignment="Bottom" Orientation="Vertical" Opacity=".7"
                         PointerEntered="ImageTodayTextPanel_PointerEntered"
@@ -40,5 +29,29 @@
                            TextWrapping="Wrap"/>
             </StackPanel>
         </Grid>
+        <CommandBar Grid.Row="1" Grid.Column="0" Background="Transparent" IsOpen="False"
+                    x:Name="MainCommandBar"
+                    DefaultLabelPosition="Right" IsSticky="True" >
+            <CommandBar.Content>
+                <TextBlock Grid.Row="0" Grid.Column="1" x:Name="MainHint" 
+                    Margin="8,9,0,0" Text="Waiting"
+                   TextWrapping="Wrap" Visibility="Visible"/>
+            </CommandBar.Content>
+            <AppBarButton Icon="Volume" x:Name="ReadAloud" x:Uid="ReadAloud" 
+                          Click="ReadAloudButton_Click"/>
+            <AppBarButton Icon="Globe" x:Uid="OpenBing" Click="OpenBingButton_Click"/>
+            <AppBarButton Icon="Folder" x:Uid="OpenFolder" Click="OpenFolderButton_Click"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Icon="Download" x:Uid="Download" Click="DownloadButton_Click"/>
+                <AppBarButton Icon="MoveToFolder" x:Uid="SetFolder" Click="SetFolderButton_Click"/>
+                <AppBarSeparator/>
+                <AppBarButton Icon="Comment" x:Uid="Feedback" Click="Feedback_Click"/>
+                <AppBarButton Icon="People" x:Uid="Contribute" Click="Contribute_Click"/>
+                <AppBarSeparator/>
+                <AppBarButton Icon="Setting" x:Uid="Settings" Click="Settings_Click"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+        <MediaElement x:Name="mediaElement" MediaEnded="mediaElement_MediaEnded"
+                      MediaFailed="mediaElement_MediaFailed"/>
     </Grid>
 </Page>

@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Media;
 using UWPLibrary;
 using Windows.ApplicationModel.Resources;
 using Windows.Media.SpeechSynthesis;
+using Windows.UI.Xaml.Navigation;
 
 namespace UWP
 {
@@ -19,6 +20,8 @@ namespace UWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        private bool isMediaPlaying = false;
 
         static string ImageTodayAddress
         {
@@ -145,6 +148,10 @@ namespace UWP
                 // Send the stream to the media object.
                 mediaElement.SetSource(stream, stream.ContentType);
                 mediaElement.Play();
+                isMediaPlaying = true;
+                var resourceLoader = ResourceLoader.GetForCurrentView();
+                ReadAloud.Label = resourceLoader.GetString("ReadAloudMute/Label");
+                ReadAloud.Icon = new SymbolIcon(Symbol.Mute);
             }
         }
 
@@ -153,8 +160,7 @@ namespace UWP
         private static void SetWindowSize()
         {
             ApplicationView.PreferredLaunchViewSize = new Size(900, 525);
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(510, 320));
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
         }
 
         /// <summary>
@@ -213,7 +219,7 @@ namespace UWP
         private async void OpenBingButton_Click(object sender, RoutedEventArgs e)
         {
             var success = await Windows.System.Launcher
-                .LaunchUriAsync(new Uri(@"https://www.bing.co.uk"));
+                .LaunchUriAsync(new Uri(@"http://bing.com/"));
 
             var resourceLoader = ResourceLoader.GetForCurrentView();
             if (success)
@@ -238,9 +244,8 @@ namespace UWP
                     ImageTodayDescription.Visibility = Visibility.Collapsed;
                     break;
                 case Visibility.Collapsed:
-                    break;
                 default:
-                    ImageTodayDescription.Visibility = Visibility.Collapsed;
+                    ImageTodayDescription.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -259,8 +264,107 @@ namespace UWP
 
         private async void ReadAloudButton_Click(object sender, RoutedEventArgs e)
         {
-            await AutoReadImageTodayAsync().ConfigureAwait(false);
+            if (isMediaPlaying)
+                ResetMediaElement();
+            else
+                await AutoReadImageTodayAsync().ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Listener on set folder button click.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">Artuments</param>
+        public async void SetFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var folder = await Core.SetFolderAsync();
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            if (folder == null)
+            {
+                MainHint.Text = resourceLoader.GetString("Hint/SetFolderSpace") + resourceLoader.GetString("Hint/FailedExclamation");
+            }
+            else
+            {
+                MainHint.Text = resourceLoader.GetString("Hint/SetFolderSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
+            }
+            MainHint.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Listener on open folder button click.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">Arguments</param>
+        public async void OpenFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var folder = await Core.GetFolderAsync(true);
+            bool success = false;
+            if (folder != null)
+            {
+                success = await Windows.System.Launcher.LaunchFolderAsync(folder);
+            }
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            if (!success)
+            {
+                MainHint.Text = resourceLoader.GetString("Hint/OpenFolderSpace") + resourceLoader.GetString("Hint/FailedExclamation");
+            }
+            else
+            {
+                MainHint.Text = resourceLoader.GetString("Hint/OpenFolderSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
+            }
+            MainHint.Visibility = Visibility.Visible;
+        }
+        private async void Feedback_Click(object sender, RoutedEventArgs e)
+        {
+            var emailMessage = new Windows.ApplicationModel.Email.EmailMessage();
+
+            var emailRecipient = new Windows.ApplicationModel.Email.EmailRecipient("zhangshiyao_ZSY@outlook.com");
+            emailMessage.To.Add(emailRecipient);
+            emailMessage.Subject = "[BWD] [Feedback]";
+
+            await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(emailMessage);
+        }
+
+        private async void Contribute_Click(object sender, RoutedEventArgs e)
+        {
+            var uri = new Uri("http://github.com/BillShiyaoZhang/BingWallpaperDownload");
+            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Settings));
+        }
+
+        private void mediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            ResetMediaElement();
+        }
+
+        private void mediaElement_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            ResetMediaElement();
+        }
+
+        private void ResetMediaElement()
+        {
+            isMediaPlaying = false;
+            mediaElement.Stop();
+            var resourceLoader = ResourceLoader.GetForCurrentView();
+            ReadAloud.Label = resourceLoader.GetString("ReadAloud/Label");
+            ReadAloud.Icon = new SymbolIcon(Symbol.Volume);
+        }
+
+        //private void BackButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (Frame.CanGoBack)
+        //        Frame.GoBack();
+        //}
+
+        //protected override void OnNavigatedTo(NavigationEventArgs e)
+        //{
+        //    BackButton.IsEnabled = Frame.CanGoBack;
+        //}
     }
 }
 

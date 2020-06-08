@@ -10,8 +10,8 @@
 
     <Grid>
         <NavigationView x:Name="NavView" PaneDisplayMode="LeftCompact"
-            IsSettingsVisible="True" IsBackButtonVisible="Collapsed"
-            SelectionFollowsFocus="Enabled"
+            IsSettingsVisible="False" IsBackButtonVisible="Visible"
+            SelectionFollowsFocus="Enabled" IsBackEnabled="True"
             ItemInvoked="navigation_ItemInvoked" Loaded="navigation_Loaded">
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Uid="Home" Content="Home" Icon="Home" Tag="Home" />

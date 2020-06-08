@@ -123,6 +123,9 @@
   <data name="AutoReadSwitch.Header" xml:space="preserve">
     <value>Auto read</value>
   </data>
+  <data name="BackButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Go back</value>
+  </data>
   <data name="BackgroundTask.Header" xml:space="preserve">
     <value>Background task</value>
   </data>
@@ -145,7 +148,7 @@
     <value>Feedback</value>
   </data>
   <data name="Hint.BrowserLaunchedSpace" xml:space="preserve">
-    <value>Browser lanuched </value>
+    <value>Browser launched </value>
   </data>
   <data name="Hint.Downloading" xml:space="preserve">
     <value>Downloading...</value>
@@ -195,8 +198,14 @@
   <data name="ReadAloud.Label" xml:space="preserve">
     <value>Read Aloud</value>
   </data>
+  <data name="ReadAloudMute.Label" xml:space="preserve">
+    <value>Stop read</value>
+  </data>
   <data name="SetFolder.Label" xml:space="preserve">
     <value>Set Folder</value>
+  </data>
+  <data name="Settings.Label" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="StartupTask.Header" xml:space="preserve">
     <value>Startup task</value>

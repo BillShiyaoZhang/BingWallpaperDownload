@@ -29,7 +29,7 @@ namespace UWP
 
         private async void Contribute_Click(object sender, RoutedEventArgs e)
         {
-            var uri = new Uri("https://github.com/BillShiyaoZhang/BingWallpaperDownload");
+            var uri = new Uri("http://github.com/BillShiyaoZhang/BingWallpaperDownload");
             var success = await Windows.System.Launcher.LaunchUriAsync(uri);
         }
     }

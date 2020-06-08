@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Popups;
 using UWPLibrary;
 using Windows.Storage;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -217,50 +218,6 @@ namespace UWP
 
         #region Public Listener
 
-        /// <summary>
-        /// Listener on set folder button click.
-        /// </summary>
-        /// <param name="sender">The button</param>
-        /// <param name="e">Artuments</param>
-        public async void SetFolderButton_Click(object sender, RoutedEventArgs e)
-        {
-            var folder = await Core.SetFolderAsync();
-            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
-            if (folder == null)
-            {
-                SettingsHint.Text = resourceLoader.GetString("Hint/SetFolderSpace") + resourceLoader.GetString("Hint/FailedExclamation");
-            }
-            else
-            {
-                SettingsHint.Text = resourceLoader.GetString("Hint/SetFolderSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
-            }
-            SettingsHint.Visibility = Visibility.Visible;
-        }
-
-        /// <summary>
-        /// Listener on open folder button click.
-        /// </summary>
-        /// <param name="sender">The button</param>
-        /// <param name="e">Arguments</param>
-        public async void OpenFolderButton_Click(object sender, RoutedEventArgs e)
-        {
-            var folder = await Core.GetFolderAsync(true);
-            bool success = false;
-            if (folder != null)
-            {
-                success = await Windows.System.Launcher.LaunchFolderAsync(folder);
-            }
-            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
-            if (!success)
-            {
-                SettingsHint.Text = resourceLoader.GetString("Hint/OpenFolderSpace") + resourceLoader.GetString("Hint/FailedExclamation");
-            }
-            else
-            {
-                SettingsHint.Text = resourceLoader.GetString("Hint/OpenFolderSpace") + resourceLoader.GetString("Hint/SuccessedExclamation");
-            }
-            SettingsHint.Visibility = Visibility.Visible;
-        }
 
         private void BackgroundTaskToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
@@ -327,6 +284,17 @@ namespace UWP
         {
             var uri = new Uri("https://github.com/BillShiyaoZhang/BingWallpaperDownload");
             var success = await Windows.System.Launcher.LaunchUriAsync(uri);
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Frame.CanGoBack)
+                Frame.GoBack();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            BackButton.IsEnabled = Frame.CanGoBack;
         }
 
     }

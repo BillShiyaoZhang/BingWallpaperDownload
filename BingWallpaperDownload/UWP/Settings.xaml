@@ -8,17 +8,20 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Margin="0,15,0,0">
+    <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <CommandBar Grid.Row="0" Background="Transparent" IsOpen="False" IsSticky="True"
                         HorizontalAlignment="Left" DefaultLabelPosition="Right" >
-            <AppBarButton Icon="MoveToFolder" x:Uid="SetFolder" Click="SetFolderButton_Click"/>
-            <AppBarButton Icon="Folder" x:Uid="OpenFolder" Click="OpenFolderButton_Click"/>
-            <AppBarButton Icon="Comment" x:Uid="Feedback" Click="Feedback_Click"/>
-            <AppBarButton Icon="People" x:Uid="Contribute" Click="Contribute_Click"/>
+            <CommandBar.Content>
+                <Button Style="{StaticResource NavigationBackButtonNormalStyle}"
+                        x:Name="BackButton" x:Uid="BackButton"
+                        VerticalAlignment="Top" Click="BackButton_Click"/>
+            </CommandBar.Content>
+            <!--<AppBarButton Icon="Comment" x:Uid="Feedback" Click="Feedback_Click"/>
+            <AppBarButton Icon="People" x:Uid="Contribute" Click="Contribute_Click"/>-->
         </CommandBar>
         <Grid Grid.Row="1" Margin="10,10,0,0">
             <Grid.RowDefinitions>
