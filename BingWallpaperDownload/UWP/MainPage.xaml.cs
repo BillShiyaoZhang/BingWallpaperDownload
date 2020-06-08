@@ -72,7 +72,8 @@ namespace UWP
 
             if (!Core.IsUpdated)
             {
-                await RunAsync(false);
+                var code = await RunAsync(false);
+                SetHint(code);
             }
             else
             {
@@ -82,7 +83,58 @@ namespace UWP
             MainHint.Visibility = Visibility.Visible;
 
             if (!string.IsNullOrWhiteSpace(ImageTodayAddress))
-                await UpdateImageToday(ImageTodayAddress).ConfigureAwait(false);
+                //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                //{
+                    //UI code here
+                    await UpdateImageToday(ImageTodayAddress);
+            //});
+            
+            await SetAutoRead().ConfigureAwait(false);
+        }
+
+        private void SetHint(DownloadAndSetWallpaperCode code)
+        {
+            var resourceLoader = ResourceLoader.GetForCurrentView();
+            string msg = "";
+
+            switch (code)
+            {
+                case DownloadAndSetWallpaperCode.SUCCESSFUL:
+                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") +
+                        resourceLoader.GetString("Hint/SuccessedExclamation");
+                    break;
+                case DownloadAndSetWallpaperCode.FAILED:
+                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") +
+                        resourceLoader.GetString("Hint/FailedExclamation");
+                    break;
+                case DownloadAndSetWallpaperCode.NO_INTERNET:
+                    msg = resourceLoader.GetString("Hint/NoInternet");
+                    break;
+                case DownloadAndSetWallpaperCode.FOLDER_NOT_SET:
+                    msg = resourceLoader.GetString("Hint/FolderNotSet");
+                    break;
+                case DownloadAndSetWallpaperCode.UNEXPECTED_EXCEPTION:
+                    msg = resourceLoader.GetString("Hint/UnexpectedException");
+                    break;
+                default:
+                    break;
+            }
+            MainHint.Text = msg;
+
+        }
+
+        private async Task SetAutoRead()
+        {
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            // Set auto read
+            var isAutoRead = localSettings.Values["AutoReadKey"];
+            if (isAutoRead == null)
+            {
+                isAutoRead = true;
+                localSettings.Values["AutoReadKey"] = true;
+            }
+            if ((bool)isAutoRead)
+                await AutoReadImageTodayAsync().ConfigureAwait(false);
         }
 
         private async Task UpdateImageToday(string imageLocation)
@@ -116,16 +168,6 @@ namespace UWP
             //    ImageTodayHrefButton.NavigateUri
             //        = new Uri("https://www.bing.com" + imageTodayHrefText);
 
-            // Set auto read
-            var isAutoRead = localSettings.Values["AutoReadKey"];
-            if (isAutoRead == null)
-            {
-                isAutoRead = true;
-                localSettings.Values["AutoReadKey"] = true;
-            }
-            if ((bool)isAutoRead)
-                await AutoReadImageTodayAsync().ConfigureAwait(false);
-
             // Set description visibility
             var isDescriptionVisible = localSettings.Values["ImageTodayDescriptionVisibleKey"];
             if (isDescriptionVisible == null)
@@ -143,7 +185,8 @@ namespace UWP
         private async Task AutoReadImageTodayAsync()
         {
             // The object for controlling the speech synthesis engine (voice).
-            using (var synth = new SpeechSynthesizer()){
+            using (var synth = new SpeechSynthesizer())
+            {
 
                 var autoReadText = "";
                 var title = ImageTodayTitle.Text;
@@ -177,35 +220,9 @@ namespace UWP
         /// <summary>
         /// Download and set image from Bing as wallpaper and get result.
         /// </summary>
-        private async Task RunAsync(bool setFolder)
+        private async Task<DownloadAndSetWallpaperCode> RunAsync(bool setFolder)
         {
-            var code = await Core.RunAsync(setFolder);
-            var resourceLoader = ResourceLoader.GetForCurrentView();
-            string msg = "";
-
-            switch (code)
-            {
-                case DownloadAndSetWallpaperCode.SUCCESSFUL:
-                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") +
-                        resourceLoader.GetString("Hint/SuccessedExclamation");
-                    break;
-                case DownloadAndSetWallpaperCode.FAILED:
-                    msg = resourceLoader.GetString("Hint/WallpaperSetSpace") +
-                        resourceLoader.GetString("Hint/FailedExclamation");
-                    break;
-                case DownloadAndSetWallpaperCode.NO_INTERNET:
-                    msg = resourceLoader.GetString("Hint/NoInternet");
-                    break;
-                case DownloadAndSetWallpaperCode.FOLDER_NOT_SET:
-                    msg = resourceLoader.GetString("Hint/FolderNotSet");
-                    break;
-                case DownloadAndSetWallpaperCode.UNEXPECTED_EXCEPTION:
-                    msg = resourceLoader.GetString("Hint/UnexpectedException");
-                    break;
-                default:
-                    break;
-            }
-            MainHint.Text = msg;
+            return await Core.RunAsync(setFolder);
         }
 
         #endregion
