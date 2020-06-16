@@ -120,6 +120,18 @@ namespace UWPLibrary
 
         private string _widthByHeight;
 
+        public static T GetLocalSettingsOrDefault<T>(string key, T defaultValue)
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            var result = localSettings.Values[key];
+            if (result == null)
+            {
+                result = (T)defaultValue;
+                localSettings.Values[key] = result;
+            }
+            return (T)result;
+        }
+
         #region Constructors
 
         /// <summary>
@@ -159,6 +171,8 @@ namespace UWPLibrary
                 return $"{ImageAddressPrefix}/{DefaultFileName}";
             }
         }
+
+        public string RootFolderName { get { return "BWD images"; } }
 
         /// <summary>
         /// Download and set images from Bing as wallpapers.
@@ -302,6 +316,12 @@ namespace UWPLibrary
             StorageFolder folder = await folderPicker.PickSingleFolderAsync();
             if (folder != null)
             {
+                if (folder.Name != RootFolderName)
+                {
+                    var isEmpty = await IsFolderEmpty(folder).ConfigureAwait(false);
+                    if (!isEmpty)
+                        folder = await folder.CreateFolderAsync(RootFolderName,CreationCollisionOption.OpenIfExists);
+                }
                 // Application now has read/write access to all contents in the picked folder
                 // (including other sub-folder contents)
                 Windows.Storage.AccessCache.StorageApplicationPermissions.
@@ -309,6 +329,12 @@ namespace UWPLibrary
             }
 
             return folder;
+        }
+
+        private async Task<bool> IsFolderEmpty(StorageFolder folder)
+        {
+            var items = await folder.GetItemsAsync(0, 1);
+            return items.Count == 0;
         }
 
         #endregion
@@ -408,7 +434,6 @@ namespace UWPLibrary
                 .CreateFolderAsync(ImagesSubdirectory, CreationCollisionOption.OpenIfExists);
             //string newPath = string.Format("ms-appdata:///local/{0}", GetFileName());
             //var localFolder = ApplicationData.Current.LocalFolder;
-
             await storageFile
                 .CopyAsync(localFolder, DefaultFileName, NameCollisionOption.ReplaceExisting);
         }

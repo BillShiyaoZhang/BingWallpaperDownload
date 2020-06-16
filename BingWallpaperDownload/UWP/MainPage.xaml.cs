@@ -23,6 +23,9 @@ namespace UWP
 
         private bool isMediaPlaying = false;
 
+        private static string TeachingFinishedKey { get { return "TeachingSessionFinishedKey"; } }
+        private static bool IsTeachingFinished { get { return Core.GetLocalSettingsOrDefault(TeachingFinishedKey, false); } }
+
         static string ImageTodayAddress
         {
             get
@@ -62,34 +65,49 @@ namespace UWP
         public MainPage()
         {
             this.InitializeComponent();
-
-            MyInit();
+            try
+            {
+                MyInit();
+            }
+            catch (Exception)
+            {
+                MainHint.Text = ResourceLoader.GetForCurrentView()
+                    .GetString("Hint/UnexpectedException");
+            }
         }
 
         private async void MyInit()
         {
+            ShowTeach();
+
             SetWindowSize();
 
             if (!Core.IsUpdated)
             {
-                var code = await RunAsync(false);
+                var code = await RunAsync();
                 SetHint(code);
             }
             else
             {
-                var resourceLoader = ResourceLoader.GetForCurrentView();
-                MainHint.Text = resourceLoader.GetString("Hint/ImageThere");
+                MainHint.Text = ResourceLoader.GetForCurrentView()
+                    .GetString("Hint/ImageThere");
             }
             MainHint.Visibility = Visibility.Visible;
 
             if (!string.IsNullOrWhiteSpace(ImageTodayAddress))
                 //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                 //{
-                    //UI code here
-                    await UpdateImageToday(ImageTodayAddress);
+                //UI code here
+                await UpdateImageToday(ImageTodayAddress);
             //});
-            
+
             await SetAutoRead().ConfigureAwait(false);
+        }
+
+        private void ShowTeach()
+        {
+            if (!IsTeachingFinished)
+                MainTeachingTip.IsOpen = true;
         }
 
         private void SetHint(DownloadAndSetWallpaperCode code)
@@ -125,15 +143,8 @@ namespace UWP
 
         private async Task SetAutoRead()
         {
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             // Set auto read
-            var isAutoRead = localSettings.Values["AutoReadKey"];
-            if (isAutoRead == null)
-            {
-                isAutoRead = true;
-                localSettings.Values["AutoReadKey"] = true;
-            }
-            if ((bool)isAutoRead)
+            if (Core.GetLocalSettingsOrDefault("AutoReadKey", false))
                 await AutoReadImageTodayAsync().ConfigureAwait(false);
         }
 
@@ -220,7 +231,7 @@ namespace UWP
         /// <summary>
         /// Download and set image from Bing as wallpaper and get result.
         /// </summary>
-        private async Task<DownloadAndSetWallpaperCode> RunAsync(bool setFolder)
+        private async Task<DownloadAndSetWallpaperCode> RunAsync(bool setFolder = false)
         {
             return await Core.RunAsync(setFolder);
         }
@@ -238,10 +249,12 @@ namespace UWP
         {
             var resourceLoader = ResourceLoader.GetForCurrentView();
             MainHint.Text = resourceLoader.GetString("Hint/Downloading");
-            await RunAsync(true);
+
+            var code = await RunAsync(true);
+            SetHint(code);
 
             if (!string.IsNullOrWhiteSpace(ImageTodayAddress))
-                await UpdateImageToday(ImageTodayAddress).ConfigureAwait(false);
+                await UpdateImageToday(ImageTodayAddress);
         }
 
         private async void OpenBingButton_Click(object sender, RoutedEventArgs e)
@@ -386,16 +399,15 @@ namespace UWP
             ReadAloud.Icon = new SymbolIcon(Symbol.Volume);
         }
 
-        //private void BackButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (Frame.CanGoBack)
-        //        Frame.GoBack();
-        //}
+        private void MainTeachingTip_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            DownloadButton_Click(null, null);
+        }
 
-        //protected override void OnNavigatedTo(NavigationEventArgs e)
-        //{
-        //    BackButton.IsEnabled = Frame.CanGoBack;
-        //}
+        private void MainTeachingTip_Closing(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosingEventArgs args)
+        {
+            ApplicationData.Current.LocalSettings.Values[TeachingFinishedKey] = true;
+        }
     }
 }
 

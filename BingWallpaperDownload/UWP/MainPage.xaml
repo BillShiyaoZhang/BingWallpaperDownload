@@ -5,6 +5,7 @@
     xmlns:local="using:UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -29,9 +30,9 @@
                            TextWrapping="Wrap"/>
             </StackPanel>
         </Grid>
-        <CommandBar Grid.Row="1" Grid.Column="0" Background="Transparent" IsOpen="False"
+        <CommandBar Grid.Row="1" Grid.Column="0" Background="Transparent"
                     x:Name="MainCommandBar"
-                    DefaultLabelPosition="Right" IsSticky="True" >
+                    DefaultLabelPosition="Right">
             <CommandBar.Content>
                 <TextBlock Grid.Row="0" Grid.Column="1" x:Name="MainHint" 
                     Margin="8,9,0,0" Text="Waiting"
@@ -42,15 +43,29 @@
             <AppBarButton Icon="Globe" x:Uid="OpenBing" Click="OpenBingButton_Click"/>
             <AppBarButton Icon="Folder" x:Uid="OpenFolder" Click="OpenFolderButton_Click"/>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Icon="Download" x:Uid="Download" Click="DownloadButton_Click"/>
+                <AppBarButton Icon="Download" x:Uid="Download" x:Name="Download"
+                              Click="DownloadButton_Click"/>
                 <AppBarButton Icon="MoveToFolder" x:Uid="SetFolder" Click="SetFolderButton_Click"/>
                 <AppBarSeparator/>
                 <AppBarButton Icon="Comment" x:Uid="Feedback" Click="Feedback_Click"/>
                 <AppBarButton Icon="People" x:Uid="Contribute" Click="Contribute_Click"/>
                 <AppBarSeparator/>
-                <AppBarButton Icon="Setting" x:Uid="Settings" Click="Settings_Click"/>
+                <AppBarButton Icon="Setting" x:Uid="Settings" x:Name="Settings"
+                              Click="Settings_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
+        <muxc:TeachingTip x:Name="MainTeachingTip"      
+                          x:Uid="MainTeachingTip"
+	                      IsOpen="False"
+                          IsLightDismissEnabled="True"
+                          PreferredPlacement="BottomRight"
+                          PlacementMargin="0,0,0,15"
+                          ActionButtonClick="MainTeachingTip_ActionButtonClick"
+                          Closing="MainTeachingTip_Closing">
+            <muxc:TeachingTip.IconSource>
+                <muxc:SymbolIconSource Symbol="Download" />
+            </muxc:TeachingTip.IconSource>
+        </muxc:TeachingTip>
         <MediaElement x:Name="mediaElement" MediaEnded="mediaElement_MediaEnded"
                       MediaFailed="mediaElement_MediaFailed"/>
     </Grid>

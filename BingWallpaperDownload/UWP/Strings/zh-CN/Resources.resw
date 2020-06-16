@@ -121,13 +121,13 @@
     <value>Bing壁纸下载</value>
   </data>
   <data name="AutoReadSwitch.Header" xml:space="preserve">
-    <value>自动朗读</value>
+    <value>应用启动后自动朗读图片描述</value>
   </data>
   <data name="BackButton.AutomationProperties.Name" xml:space="preserve">
     <value>Go back</value>
   </data>
   <data name="BackgroundTask.Header" xml:space="preserve">
-    <value>后台任务</value>
+    <value>后台下载壁纸</value>
   </data>
   <data name="Close.Content" xml:space="preserve">
     <value>退出</value>
@@ -186,6 +186,15 @@
   <data name="ImageTodayHyperLinkButton.AutomationProperties.Name" xml:space="preserve">
     <value>今日图片。若要阅读标题和描述，请依次按“讲述人”+ Ctrl + O。</value>
   </data>
+  <data name="MainTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="MainTeachingTip.Subtitle" xml:space="preserve">
+    <value>设置存储位置、下载并设置壁纸。你也可以在更多里找到这个按钮。</value>
+  </data>
+  <data name="MainTeachingTip.Title" xml:space="preserve">
+    <value>下载你的第一个壁纸</value>
+  </data>
   <data name="OpenBing.Label" xml:space="preserve">
     <value>打开Bing</value>
   </data>
@@ -208,6 +217,6 @@
     <value>设置</value>
   </data>
   <data name="StartupTask.Header" xml:space="preserve">
-    <value>开机启动</value>
+    <value>开机启动应用</value>
   </data>
 </root>

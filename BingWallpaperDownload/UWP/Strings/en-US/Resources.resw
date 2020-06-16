@@ -121,13 +121,13 @@
     <value>Bing Wallpaper Download</value>
   </data>
   <data name="AutoReadSwitch.Header" xml:space="preserve">
-    <value>Auto read</value>
+    <value>Auto read image description at app run</value>
   </data>
   <data name="BackButton.AutomationProperties.Name" xml:space="preserve">
     <value>Go back</value>
   </data>
   <data name="BackgroundTask.Header" xml:space="preserve">
-    <value>Background task</value>
+    <value>Wallpaper downloads in background daily</value>
   </data>
   <data name="Close.Content" xml:space="preserve">
     <value>Close</value>
@@ -186,6 +186,15 @@
   <data name="ImageTodayHyperLinkButton.AutomationProperties.Name" xml:space="preserve">
     <value>Image today. To read title and description of the image, press Narrator + Ctrl + O once a time.</value>
   </data>
+  <data name="MainTeachingTip.ActionButtonContent" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="MainTeachingTip.Subtitle" xml:space="preserve">
+    <value>Set storage location, download and set wallpapers. You can find this button in See more as well.</value>
+  </data>
+  <data name="MainTeachingTip.Title" xml:space="preserve">
+    <value>Download your first wallpaper</value>
+  </data>
   <data name="OpenBing.Label" xml:space="preserve">
     <value>Open Bing</value>
   </data>
@@ -208,6 +217,6 @@
     <value>Settings</value>
   </data>
   <data name="StartupTask.Header" xml:space="preserve">
-    <value>Startup task</value>
+    <value>Run app at startup</value>
   </data>
 </root>
