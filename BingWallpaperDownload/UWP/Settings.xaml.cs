@@ -41,29 +41,10 @@ namespace UWP
         /// </summary>
         private const string StartupTaskID = "BingBackgroundStartupId";
 
-        /// <summary>
-        /// Instance of core.
-        /// </summary>
-        private Core _core;
-
         #endregion
 
         #region Private Properties
 
-        /// <summary>
-        /// Porperty to access the instance of core.
-        /// </summary>
-        private Core Core
-        {
-            get
-            {
-                if (_core == null)
-                {
-                    _core = new Core();
-                }
-                return _core;
-            }
-        }
         private bool IsBackgroundTasksSet()
         {
             if (BackgroundTaskRegistration.AllTasks.Count < 2)
@@ -185,14 +166,7 @@ namespace UWP
 
         private void SetAutoReadToggleSwitch()
         {
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            var isAutoRead = localSettings.Values["AutoReadKey"];
-            if (isAutoRead == null)
-            {
-                localSettings.Values["AutoReadKey"] = true;
-                isAutoRead = true;
-            }
-            AutoReadSwitch.IsOn = (bool)isAutoRead;
+            AutoReadSwitch.IsOn = Core.GetLocalSettingsOrDefault(Core.AutoReadKey, true);
         }
 
         private void SetBackgroundTasksToggleSwitch()
@@ -266,24 +240,7 @@ namespace UWP
         private void AutoReadSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            localSettings.Values["AutoReadKey"] = AutoReadSwitch.IsOn;
-        }
-
-        private async void Feedback_Click(object sender, RoutedEventArgs e)
-        {
-            var emailMessage = new Windows.ApplicationModel.Email.EmailMessage();
-
-            var emailRecipient = new Windows.ApplicationModel.Email.EmailRecipient("zhangshiyao_ZSY@outlook.com");
-            emailMessage.To.Add(emailRecipient);
-            emailMessage.Subject = "[BWD] [Feedback]";
-
-            await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(emailMessage);
-        }
-
-        private async void Contribute_Click(object sender, RoutedEventArgs e)
-        {
-            var uri = new Uri("https://github.com/BillShiyaoZhang/BingWallpaperDownload");
-            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
+            localSettings.Values[Core.AutoReadKey] = AutoReadSwitch.IsOn;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

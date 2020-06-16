@@ -6,11 +6,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Media;
-using UWPLibrary;
 using Windows.ApplicationModel.Resources;
 using Windows.Media.SpeechSynthesis;
-using Windows.UI.Xaml.Navigation;
+using Windows.ApplicationModel;
+using UWPLibrary;
 
 namespace UWP
 {
@@ -22,6 +21,8 @@ namespace UWP
     {
 
         private bool isMediaPlaying = false;
+
+        private static string ImageTodayDescriptionVisibleKey { get { return "ImageTodayDescriptionVisibleKey"; } }
 
         private static string FirstLaunchKey { get { return "FirstLaunchKey"; } }
         private static bool IsFirstLaunch { get { return Core.GetLocalSettingsOrDefault(FirstLaunchKey, true); } }
@@ -46,7 +47,7 @@ namespace UWP
         /// <summary>
         /// Porperty to access the instance of core.
         /// </summary>
-        private Core Core
+        private Core Model
         {
             get
             {
@@ -83,7 +84,7 @@ namespace UWP
 
             SetWindowSize();
 
-            if (!Core.IsUpdated)
+            if (!Model.IsUpdated)
             {
                 var code = await RunAsync();
                 SetHint(code);
@@ -148,7 +149,7 @@ namespace UWP
         private async Task SetAutoRead()
         {
             // Set auto read
-            if (Core.GetLocalSettingsOrDefault("AutoReadKey", false))
+            if (Core.GetLocalSettingsOrDefault(Core.AutoReadKey, false))
                 await AutoReadImageTodayAsync().ConfigureAwait(false);
         }
 
@@ -184,13 +185,7 @@ namespace UWP
             //        = new Uri("https://www.bing.com" + imageTodayHrefText);
 
             // Set description visibility
-            var isDescriptionVisible = localSettings.Values["ImageTodayDescriptionVisibleKey"];
-            if (isDescriptionVisible == null)
-            {
-                isDescriptionVisible = true;
-                localSettings.Values["ImageTodayDescriptionVisibleKey"] = true;
-            }
-            if ((bool)isDescriptionVisible)
+            if (Core.GetLocalSettingsOrDefault(ImageTodayDescriptionVisibleKey, true))
                 ImageTodayDescription.Visibility = Visibility.Visible;
             else
                 ImageTodayDescription.Visibility = Visibility.Collapsed;
@@ -242,7 +237,7 @@ namespace UWP
         /// </summary>
         private async Task<DownloadAndSetWallpaperCode> RunAsync(bool setFolder = false)
         {
-            return await Core.RunAsync(setFolder);
+            return await Model.RunAsync(setFolder);
         }
 
         #endregion
@@ -293,12 +288,12 @@ namespace UWP
             {
                 case Visibility.Visible:
                     ImageTodayDescription.Visibility = Visibility.Collapsed;
-                    localSettings.Values["ImageTodayDescriptionVisibleKey"] = false;
+                    localSettings.Values[ImageTodayDescriptionVisibleKey] = false;
                     break;
                 case Visibility.Collapsed:
                 default:
                     ImageTodayDescription.Visibility = Visibility.Visible;
-                    localSettings.Values["ImageTodayDescriptionVisibleKey"] = true;
+                    localSettings.Values[ImageTodayDescriptionVisibleKey] = true;
                     break;
             }
         }
@@ -330,7 +325,7 @@ namespace UWP
         /// <param name="e">Artuments</param>
         public async void SetFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var folder = await Core.SetFolderAsync();
+            var folder = await Model.SetFolderAsync();
             var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             if (folder == null)
             {
@@ -350,7 +345,7 @@ namespace UWP
         /// <param name="e">Arguments</param>
         public async void OpenFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            var folder = await Core.GetFolderAsync(true);
+            var folder = await Model.GetFolderAsync(true);
             bool success = false;
             if (folder != null)
             {
@@ -373,9 +368,15 @@ namespace UWP
 
             var emailRecipient = new Windows.ApplicationModel.Email.EmailRecipient("zhangshiyao_ZSY@outlook.com");
             emailMessage.To.Add(emailRecipient);
-            emailMessage.Subject = "[BWD] [Feedback]";
+            emailMessage.Subject = $"[BWD] [Feedback] [{GetAppVersion()}]";
 
             await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(emailMessage);
+        }
+
+        public static string GetAppVersion()
+        {
+            var version = Package.Current.Id.Version;
+            return $"{version.Major}.{version.Minor}.{version.Build}";
         }
 
         private async void Contribute_Click(object sender, RoutedEventArgs e)

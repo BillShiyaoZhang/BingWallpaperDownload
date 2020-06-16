@@ -31,6 +31,8 @@ namespace UWPLibrary
             }
         }
 
+        public static string AutoReadKey { get { return "AutoReadKey"; } }
+
         /// <summary>
         /// The key of last date stored in local settings.
         /// </summary>
@@ -320,7 +322,7 @@ namespace UWPLibrary
                 {
                     var isEmpty = await IsFolderEmpty(folder).ConfigureAwait(false);
                     if (!isEmpty)
-                        folder = await folder.CreateFolderAsync(RootFolderName,CreationCollisionOption.OpenIfExists);
+                        folder = await folder.CreateFolderAsync(RootFolderName, CreationCollisionOption.OpenIfExists);
                 }
                 // Application now has read/write access to all contents in the picked folder
                 // (including other sub-folder contents)
@@ -449,7 +451,7 @@ namespace UWPLibrary
             {
                 var uri = new Uri(localAppDataFileName);
                 StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
-                UserProfilePersonalizationSettings profileSettings 
+                UserProfilePersonalizationSettings profileSettings
                     = UserProfilePersonalizationSettings.Current;
                 return await profileSettings.TrySetWallpaperImageAsync(file);
             }
