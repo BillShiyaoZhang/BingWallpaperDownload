@@ -135,17 +135,35 @@
   <data name="Community.Content" xml:space="preserve">
     <value>社区</value>
   </data>
+  <data name="Contribute.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Ctrl + C</value>
+  </data>
   <data name="Contribute.Label" xml:space="preserve">
     <value>参与开发</value>
+  </data>
+  <data name="Contribute.ToolTipService.ToolTip" xml:space="preserve">
+    <value>快捷键：Ctrl+C</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>下载当天Bing图片并设置为壁纸</value>
   </data>
+  <data name="Download.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Ctrl + D</value>
+  </data>
   <data name="Download.Label" xml:space="preserve">
     <value>下载</value>
   </data>
+  <data name="Download.ToolTipService.ToolTip" xml:space="preserve">
+    <value>快捷键：Ctrl+D</value>
+  </data>
+  <data name="Feedback.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Ctrl + F</value>
+  </data>
   <data name="Feedback.Label" xml:space="preserve">
     <value>反馈</value>
+  </data>
+  <data name="Feedback.ToolTipService.ToolTip" xml:space="preserve">
+    <value>快捷键：Ctrl+F</value>
   </data>
   <data name="Hint.BrowserLaunchedSpace" xml:space="preserve">
     <value>打开浏览器</value>
@@ -189,32 +207,65 @@
   <data name="MainTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>下载</value>
   </data>
+  <data name="MainTeachingTip.AutomationProperties.Name" xml:space="preserve">
+    <value>下载你的第一个壁纸。设置存储位置、下载并设置壁纸。按下 Ctrl + D 或者在更多里找到这个按钮。</value>
+  </data>
   <data name="MainTeachingTip.Subtitle" xml:space="preserve">
     <value>设置存储位置、下载并设置壁纸。你也可以在更多里找到这个按钮。</value>
   </data>
   <data name="MainTeachingTip.Title" xml:space="preserve">
     <value>下载你的第一个壁纸</value>
   </data>
+  <data name="OpenBing.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Ctrl + B</value>
+  </data>
   <data name="OpenBing.Label" xml:space="preserve">
     <value>打开Bing</value>
+  </data>
+  <data name="OpenBing.ToolTipService.ToolTip" xml:space="preserve">
+    <value>快捷键：Ctrl+B</value>
+  </data>
+  <data name="OpenFolder.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Ctrl + O</value>
   </data>
   <data name="OpenFolder.Label" xml:space="preserve">
     <value>打开文件夹</value>
   </data>
+  <data name="OpenFolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>快捷键：Ctrl+O</value>
+  </data>
   <data name="PrivacyPolicy.Content" xml:space="preserve">
     <value>隐私条款</value>
+  </data>
+  <data name="ReadAloud.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Ctrl + R</value>
   </data>
   <data name="ReadAloud.Label" xml:space="preserve">
     <value>朗读</value>
   </data>
+  <data name="ReadAloud.ToolTipService.ToolTip" xml:space="preserve">
+    <value>快捷键：Ctrl+R</value>
+  </data>
   <data name="ReadAloudMute.Label" xml:space="preserve">
     <value>停止朗读</value>
+  </data>
+  <data name="SetFolder.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Ctrl + M</value>
   </data>
   <data name="SetFolder.Label" xml:space="preserve">
     <value>设置文件夹</value>
   </data>
+  <data name="SetFolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>快捷键：Ctrl+M</value>
+  </data>
+  <data name="Settings.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Ctrl + S</value>
+  </data>
   <data name="Settings.Label" xml:space="preserve">
     <value>设置</value>
+  </data>
+  <data name="Settings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>快捷键：Ctrl+S</value>
   </data>
   <data name="StartupTask.Header" xml:space="preserve">
     <value>开机启动应用</value>

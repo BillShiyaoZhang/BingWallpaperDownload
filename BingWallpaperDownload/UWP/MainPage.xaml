@@ -39,19 +39,55 @@
                    TextWrapping="Wrap" Visibility="Visible"/>
             </CommandBar.Content>
             <AppBarButton Icon="Volume" x:Name="ReadAloud" x:Uid="ReadAloud" 
-                          Click="ReadAloudButton_Click"/>
-            <AppBarButton Icon="Globe" x:Uid="OpenBing" Click="OpenBingButton_Click"/>
-            <AppBarButton Icon="Folder" x:Uid="OpenFolder" Click="OpenFolderButton_Click"/>
+                          Click="ReadAloudButton_Click">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="R" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+            <AppBarButton Icon="Globe" x:Uid="OpenBing" 
+                          Click="OpenBingButton_Click">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="B" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+            <AppBarButton Icon="Folder" x:Uid="OpenFolder" 
+                          Click="OpenFolderButton_Click">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="O" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
             <CommandBar.SecondaryCommands>
                 <AppBarButton Icon="Download" x:Uid="Download" x:Name="Download"
-                              Click="DownloadButton_Click"/>
-                <AppBarButton Icon="MoveToFolder" x:Uid="SetFolder" Click="SetFolderButton_Click"/>
+                              Click="DownloadButton_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="D" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton Icon="MoveToFolder" x:Uid="SetFolder" 
+                              Click="SetFolderButton_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="M" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
                 <AppBarSeparator/>
-                <AppBarButton Icon="Comment" x:Uid="Feedback" Click="Feedback_Click"/>
-                <AppBarButton Icon="People" x:Uid="Contribute" Click="Contribute_Click"/>
+                <AppBarButton Icon="Comment" x:Uid="Feedback" 
+                              Click="Feedback_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="F" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton Icon="People" x:Uid="Contribute" Click="Contribute_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="C" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
                 <AppBarSeparator/>
                 <AppBarButton Icon="Setting" x:Uid="Settings" x:Name="Settings"
-                              Click="Settings_Click"/>
+                              Click="Settings_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="S" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>
         <muxc:TeachingTip x:Name="MainTeachingTip"      
@@ -60,8 +96,7 @@
                           IsLightDismissEnabled="True"
                           PreferredPlacement="BottomRight"
                           PlacementMargin="0,0,0,15"
-                          ActionButtonClick="MainTeachingTip_ActionButtonClick"
-                          Closing="MainTeachingTip_Closing">
+                          ActionButtonClick="MainTeachingTip_ActionButtonClick">
             <muxc:TeachingTip.IconSource>
                 <muxc:SymbolIconSource Symbol="Download" />
             </muxc:TeachingTip.IconSource>

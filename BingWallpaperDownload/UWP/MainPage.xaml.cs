@@ -23,8 +23,8 @@ namespace UWP
 
         private bool isMediaPlaying = false;
 
-        private static string TeachingFinishedKey { get { return "TeachingSessionFinishedKey"; } }
-        private static bool IsTeachingFinished { get { return Core.GetLocalSettingsOrDefault(TeachingFinishedKey, false); } }
+        private static string FirstLaunchKey { get { return "FirstLaunchKey"; } }
+        private static bool IsFirstLaunch { get { return Core.GetLocalSettingsOrDefault(FirstLaunchKey, true); } }
 
         static string ImageTodayAddress
         {
@@ -78,7 +78,8 @@ namespace UWP
 
         private async void MyInit()
         {
-            ShowTeach();
+            if (IsFirstLaunch)
+                FirstLaunch();
 
             SetWindowSize();
 
@@ -104,10 +105,13 @@ namespace UWP
             await SetAutoRead().ConfigureAwait(false);
         }
 
-        private void ShowTeach()
+        private void FirstLaunch()
         {
-            if (!IsTeachingFinished)
-                MainTeachingTip.IsOpen = true;
+            // show teaching tips
+            MainTeachingTip.IsOpen = true;
+            ApplicationData.Current.LocalSettings.Values[FirstLaunchKey] = false;
+
+            UWP.Settings.RegisterBackgroundTasks();
         }
 
         private void SetHint(DownloadAndSetWallpaperCode code)
@@ -198,7 +202,6 @@ namespace UWP
             // The object for controlling the speech synthesis engine (voice).
             using (var synth = new SpeechSynthesizer())
             {
-
                 var autoReadText = "";
                 var title = ImageTodayTitle.Text;
                 if (!string.IsNullOrWhiteSpace(title))
@@ -207,16 +210,22 @@ namespace UWP
                 if (!string.IsNullOrWhiteSpace(description))
                     autoReadText += $"Description: {description}";
 
+                ReadAloud.Label = ResourceLoader.GetForCurrentView().GetString("ReadAloudMute/Label");
+                ReadAloud.Icon = new SymbolIcon(Symbol.Mute);
+
+                var srs = new Windows.UI.Accessibility.ScreenReaderService();
+                // if screen reader is open, wait it until AutomationProperties.Name 
+                // of ReadAloud button finished read
+                if (srs.CurrentScreenReaderPosition.ScreenPositionInRawPixels != default(Rect))
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(3.5)).ConfigureAwait(true);
+                }
+
                 // Generate the audio stream from plain text.
                 SpeechSynthesisStream stream = await synth.SynthesizeTextToStreamAsync(autoReadText);
-
                 // Send the stream to the media object.
                 mediaElement.SetSource(stream, stream.ContentType);
-                mediaElement.Play();
                 isMediaPlaying = true;
-                var resourceLoader = ResourceLoader.GetForCurrentView();
-                ReadAloud.Label = resourceLoader.GetString("ReadAloudMute/Label");
-                ReadAloud.Icon = new SymbolIcon(Symbol.Mute);
             }
         }
 
@@ -402,11 +411,6 @@ namespace UWP
         private void MainTeachingTip_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             DownloadButton_Click(null, null);
-        }
-
-        private void MainTeachingTip_Closing(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosingEventArgs args)
-        {
-            ApplicationData.Current.LocalSettings.Values[TeachingFinishedKey] = true;
         }
     }
 }

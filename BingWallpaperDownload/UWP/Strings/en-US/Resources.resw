@@ -135,17 +135,35 @@
   <data name="Community.Content" xml:space="preserve">
     <value>Community</value>
   </data>
+  <data name="Contribute.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Control C</value>
+  </data>
   <data name="Contribute.Label" xml:space="preserve">
     <value>Contribute</value>
+  </data>
+  <data name="Contribute.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Shortcut key: Ctrl+C</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Download Bing image of the day and set it to your computer.</value>
   </data>
+  <data name="Download.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Control D</value>
+  </data>
   <data name="Download.Label" xml:space="preserve">
     <value>Download</value>
   </data>
+  <data name="Download.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Shortcut key: Ctrl+D</value>
+  </data>
+  <data name="Feedback.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Control F</value>
+  </data>
   <data name="Feedback.Label" xml:space="preserve">
     <value>Feedback</value>
+  </data>
+  <data name="Feedback.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Shortcut key: Ctrl+F</value>
   </data>
   <data name="Hint.BrowserLaunchedSpace" xml:space="preserve">
     <value>Browser launched </value>
@@ -189,32 +207,65 @@
   <data name="MainTeachingTip.ActionButtonContent" xml:space="preserve">
     <value>Download</value>
   </data>
+  <data name="MainTeachingTip.AutomationProperties.Name" xml:space="preserve">
+    <value>Download your first wallpaper. Set storage location, download and set wallpapers. Press Control D or find this button in more app bar button as well.</value>
+  </data>
   <data name="MainTeachingTip.Subtitle" xml:space="preserve">
-    <value>Set storage location, download and set wallpapers. You can find this button in See more as well.</value>
+    <value>Set storage location, download and set wallpapers. Press Ctrl + D or find this button in See more as well.</value>
   </data>
   <data name="MainTeachingTip.Title" xml:space="preserve">
     <value>Download your first wallpaper</value>
   </data>
+  <data name="OpenBing.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Control B</value>
+  </data>
   <data name="OpenBing.Label" xml:space="preserve">
     <value>Open Bing</value>
+  </data>
+  <data name="OpenBing.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Shortcut key: Ctrl+B</value>
+  </data>
+  <data name="OpenFolder.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Control O</value>
   </data>
   <data name="OpenFolder.Label" xml:space="preserve">
     <value>Open Folder</value>
   </data>
+  <data name="OpenFolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Shortcut key: Ctrl+O</value>
+  </data>
   <data name="PrivacyPolicy.Content" xml:space="preserve">
     <value>Privacy Policy</value>
+  </data>
+  <data name="ReadAloud.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Control R</value>
   </data>
   <data name="ReadAloud.Label" xml:space="preserve">
     <value>Read Aloud</value>
   </data>
+  <data name="ReadAloud.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Shortcut key: Ctrl+R</value>
+  </data>
   <data name="ReadAloudMute.Label" xml:space="preserve">
     <value>Stop read</value>
+  </data>
+  <data name="SetFolder.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Control M</value>
   </data>
   <data name="SetFolder.Label" xml:space="preserve">
     <value>Set Folder</value>
   </data>
+  <data name="SetFolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Shortcut key: Ctrl+M</value>
+  </data>
+  <data name="Settings.AutomationProperties.AcceleratorKey" xml:space="preserve">
+    <value>Control S</value>
+  </data>
   <data name="Settings.Label" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="Settings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Shortcut key: Ctrl+S</value>
   </data>
   <data name="StartupTask.Header" xml:space="preserve">
     <value>Run app at startup</value>

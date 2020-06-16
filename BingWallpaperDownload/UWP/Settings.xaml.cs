@@ -84,7 +84,7 @@ namespace UWP
 
         #region Private Set Tasks
 
-        private async Task<bool> RegisterStartupTaskAsync()
+        private static async Task<bool> RegisterStartupTaskAsync()
         {
             var isOn = false;
             StartupTask startupTask = await StartupTask.GetAsync(StartupTaskID); // Pass the task ID you specified in the appxmanifest file
@@ -123,7 +123,7 @@ namespace UWP
         /// <summary>
         /// Set background tasks.
         /// </summary>
-        private List<IBackgroundTaskRegistration> RegisterBackgroundTasks()
+        public static List<IBackgroundTaskRegistration> RegisterBackgroundTasks()
         {
             var result = new List<IBackgroundTaskRegistration>();
             result.Add(RegisterBackgroundTask(UserPresentBackgroundTaskName, BackgroundTaskEntryPoint,
@@ -144,7 +144,7 @@ namespace UWP
         /// <param name="taskEntryPoint">Entry point of the task</param>
         /// <param name="trigger">Trigger of the task</param>
         /// <returns>Successfully registered task or null</returns>
-        private IBackgroundTaskRegistration RegisterBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)
+        private static IBackgroundTaskRegistration RegisterBackgroundTask(string taskName, string taskEntryPoint, IBackgroundTrigger trigger)
         {
             var taskRegistered = false;
 
