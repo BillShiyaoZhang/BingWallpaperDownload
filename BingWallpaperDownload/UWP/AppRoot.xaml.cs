@@ -51,9 +51,6 @@ namespace UWP
                 case "Home":
                     ContentFrame.Navigate(typeof(MainPage));
                     break;
-                case "Community":
-                    ContentFrame.Navigate(typeof(JoinUs));
-                    break;
             }
         }
     }
