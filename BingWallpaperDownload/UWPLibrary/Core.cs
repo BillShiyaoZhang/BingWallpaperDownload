@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Windows.System.UserProfile;
 using Windows.Storage;
 using Windows.Graphics.Display;
+using System.Diagnostics;
 
 namespace UWPLibrary
 {
@@ -20,14 +21,18 @@ namespace UWPLibrary
     {
         #region Properties
 
-        private static string ImageUrl { get { return "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=" + LanguageCountryCode; } }
+        private static string GetImageUrl(string code)
+        {
+            return "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=" + code;
+        }
 
-        public static string LanguageCountryCode
+        public static string EnGbGeographicRegion { get { return "en-GB"; } }
+
+        public static string GeographicRegion
         {
             get
             {
-                return "en-GB";
-                //return GlobalizationPreferences.Languages[0];
+                return GlobalizationPreferences.Languages[0];
             }
         }
 
@@ -237,46 +242,64 @@ namespace UWPLibrary
 
         public static async void DownloadLearnMoreInformation()
         {
-            ApplicationDataContainer localSettings
-                = ApplicationData.Current.LocalSettings;
+
             try
             {
-                string learnMoreHref = new HtmlWeb().Load(@"https://www.bing.com/?cc=gb")
-                    .DocumentNode
-                    .SelectNodes("//a[@class='learn_more']")
-                    .FirstOrDefault()
-                    .Attributes["href"]
-                    .Value;
-                learnMoreHref = learnMoreHref
-                    .Replace("&amp;", "&")
-                    .Replace("&quot;", "\"");
-                if (!string.IsNullOrWhiteSpace(learnMoreHref))
-                    localSettings.Values[ImageTodayLearnMoreHrefKey] = learnMoreHref;
-
-                var uri = new Uri("https://www.bing.com" + learnMoreHref);
-                using (var httpClient = new Windows.Web.Http.HttpClient())
-                {
-                    string result = await httpClient.GetStringAsync(uri);
-
-                    var htmlDoc = new HtmlDocument();
-                    htmlDoc.LoadHtml(result);
-
-                    string imageTitle = htmlDoc.DocumentNode
-                        .SelectNodes("//h2[@class=' ency_imgTitle']")
-                        .FirstOrDefault()
-                        .InnerText;
-                    if (!string.IsNullOrWhiteSpace(imageTitle))
-                        localSettings.Values[ImageTodayTitleKey] = imageTitle;
-
-                    string imageDescription = htmlDoc.DocumentNode
-                        .SelectNodes("//div[@class='ency_desc']")
-                        .FirstOrDefault()
-                        .InnerText;
-                    if (!string.IsNullOrWhiteSpace(imageDescription))
-                        localSettings.Values[ImageTodayDescriptionKey] = imageDescription;
-                }
+                await DownloadLearnMoreInformationWithCountryCode(
+                    GlobalizationPreferences.HomeGeographicRegion);
             }
-            catch (Exception) { }
+            catch (ArgumentNullException)
+            {
+                try
+                {
+                    await DownloadLearnMoreInformationWithCountryCode("gb");
+
+                }
+                catch (Exception) { }
+            }
+        }
+
+        private static async Task DownloadLearnMoreInformationWithCountryCode(string countryCode)
+        {
+            ApplicationDataContainer localSettings
+                = ApplicationData.Current.LocalSettings;
+            string learnMoreHref = new HtmlWeb().Load(@"https://www.bing.com/?cc=" + countryCode)
+                   .DocumentNode
+                   .SelectNodes("//a[@class='learn_more']")
+                   .FirstOrDefault()
+                   .Attributes["href"]
+                   .Value;
+            learnMoreHref = learnMoreHref
+                .Replace("&amp;", "&")
+                .Replace("&quot;", "\"");
+            if (string.IsNullOrWhiteSpace(learnMoreHref))
+                throw new ArgumentNullException();
+            localSettings.Values[ImageTodayLearnMoreHrefKey] = learnMoreHref;
+
+            var uri = new Uri("https://www.bing.com" + learnMoreHref);
+            using (var httpClient = new Windows.Web.Http.HttpClient())
+            {
+                string result = await httpClient.GetStringAsync(uri);
+
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(result);
+
+                string imageTitle = htmlDoc.DocumentNode
+                    .SelectNodes("//h2[@class=' ency_imgTitle']")
+                    .FirstOrDefault()
+                    .InnerText;
+                if (string.IsNullOrWhiteSpace(imageTitle))
+                    throw new ArgumentNullException();
+                localSettings.Values[ImageTodayTitleKey] = imageTitle;
+
+                string imageDescription = htmlDoc.DocumentNode
+                    .SelectNodes("//div[@class='ency_desc']")
+                    .FirstOrDefault()
+                    .InnerText;
+                if (string.IsNullOrWhiteSpace(imageDescription))
+                    throw new ArgumentNullException();
+                localSettings.Values[ImageTodayDescriptionKey] = imageDescription;
+            }
         }
 
         /// <summary>
@@ -347,12 +370,11 @@ namespace UWPLibrary
         /// Download, from bing, JSON file which includes information of image address.
         /// </summary>
         /// <returns>Deserialized JSON file</returns>
-        private async Task<dynamic> DownloadJsonAsync()
+        private async Task<dynamic> DownloadJsonAsync(string geographicRegionCode)
         {
-            //            using (WebClient webClient = new WebClient())
             using (var client = new HttpClient())
             {
-                var uri = new Uri(ImageUrl);
+                var uri = new Uri(GetImageUrl(geographicRegionCode));
                 var jsonString = await client.GetStringAsync(uri);
                 return JsonConvert.DeserializeObject<dynamic>(jsonString);
             }
@@ -364,7 +386,12 @@ namespace UWPLibrary
         /// <returns>the URL base</returns>
         private async Task<string> GetBackgroundUrlBaseAsync()
         {
-            dynamic jsonObject = await DownloadJsonAsync();
+            dynamic jsonObject = await DownloadJsonAsync(GeographicRegion).ConfigureAwait(false);
+            if (jsonObject == null ||
+                string.IsNullOrWhiteSpace((string)jsonObject.images[0].urlbase))
+            {
+                jsonObject = await DownloadJsonAsync(EnGbGeographicRegion).ConfigureAwait(false);
+            }
             return "https://www.bing.com" + jsonObject.images[0].urlbase;
         }
 
@@ -381,7 +408,8 @@ namespace UWPLibrary
                 request.Method = "HEAD";
 
                 HttpWebResponse response
-                    = (HttpWebResponse)await request.GetResponseAsync();
+                    = (HttpWebResponse)await request.GetResponseAsync()
+                    .ConfigureAwait(false);
                 return response.StatusCode == HttpStatusCode.OK;
             }
             catch
@@ -398,7 +426,7 @@ namespace UWPLibrary
         private async Task<string> GetResolutionExtensionAsync(string url)
         {
             string potentialExtension = "_" + WidthByHeight + ".jpg";
-            if (await WebsiteExistsAsync(url + potentialExtension))
+            if (await WebsiteExistsAsync(url + potentialExtension).ConfigureAwait(false))
                 return potentialExtension;
             return DefaultResolutionExtension;
         }
