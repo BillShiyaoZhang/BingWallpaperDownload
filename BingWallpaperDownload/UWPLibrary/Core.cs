@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Windows.System.UserProfile;
 using Windows.Storage;
 using Windows.Graphics.Display;
-using System.Diagnostics;
 
 namespace UWPLibrary
 {
@@ -21,43 +20,37 @@ namespace UWPLibrary
     {
         #region Properties
 
-        private static string GetImageUrl(string code)
-        {
-            return "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=" + code;
-        }
+        private static string GetImageUrl(string code) =>
+            "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&cc=" + code;
 
-        public static string EnGbGeographicRegion { get { return "en-GB"; } }
+        public static string GbGeographicRegion => "gb";
 
-        public static string GeographicRegion
-        {
-            get
-            {
-                return GlobalizationPreferences.Languages[0];
-            }
-        }
+        public static string GeographicRegion => 
+            GlobalizationPreferences.HomeGeographicRegion;
 
-        public static string AutoReadKey { get { return "AutoReadKey"; } }
+        public static string AutoReadKey => "AutoReadKey";
 
         /// <summary>
         /// The key of last date stored in local settings.
         /// </summary>
-        public static string LastDateKey { get { return "lastDate"; } }
+        public static string LastDateKey => "lastDate"; 
 
-        public static string ImageTodayTitleKey { get { return "imageTodayTitle"; } }
+        public static string ImageTodayTitleKey => "imageTodayTitle";
 
-        public static string ImageTodayDescriptionKey { get { return "imageTodayDescription"; } }
+        public static string ImageTodayDescriptionKey => "imageTodayDescription";
 
-        public static string ImageTodayLearnMoreHrefKey { get { return "learnMoreHref"; } }
+        public static string ImageTodayLearnMoreHrefKey => "learnMoreHref";
 
         /// <summary>
         /// The default resolution extension for downloading image.
         /// </summary>
-        public static string DefaultResolutionExtension { get { return "_" + DefaultWidthByHeight + ".jpg"; } }
+        public static string DefaultResolutionExtension =>
+            "_" + DefaultWidthByHeight + ".jpg";
 
         /// <summary>
         /// Get string of today's DateTime
         /// </summary>
-        public static string DefaultDateString { get { return DateTime.Now.ToString("M-d-yyyy"); } }
+        public static string DefaultDateString => DateTime.Now.ToString("M-d-yyyy");
 
         /// <summary>
         /// Flag on if or not the resolutionExtension is set.  Use resolutionExtension if yes.
@@ -72,8 +65,8 @@ namespace UWPLibrary
         /// <summary>
         /// The token to pick folder which stores images.
         /// </summary>
-        private string PickFolderToken { get { return "PickedFolderToken"; } }
-        private static string DefaultWidthByHeight { get { return "1920x1080"; } }
+        private string PickFolderToken => "PickedFolderToken";
+        private static string DefaultWidthByHeight => "1920x1080"; 
 
         private string WidthByHeight
         {
@@ -90,21 +83,16 @@ namespace UWPLibrary
         /// <summary>
         /// Get the relevant path of file it should be today.
         /// </summary>
-        private string DefaultFilePath { get { return DateTime.Now.Year.ToString() + "\\" + DefaultFileName; } }
+        private string DefaultFilePath =>
+            DateTime.Now.Year.ToString() + "\\" + DefaultFileName;
 
         /// <summary>
         /// Get the name of file it should be today.
         /// </summary>
-        private string DefaultFileName { get { return DefaultDateString + ".bmp"; } }
+        private string DefaultFileName => DefaultDateString + ".bmp";
 
-        public static string LastDate
-        {
-            get
-            {
-                return (string)ApplicationData.Current.
-                    LocalSettings.Values[Core.LastDateKey];
-            }
-        }
+        public static string LastDate =>
+            (string)ApplicationData.Current.LocalSettings.Values[Core.LastDateKey];
 
         public bool IsUpdated
         {
@@ -163,23 +151,12 @@ namespace UWPLibrary
 
         #region Public Methods
 
-        public static string ImageAddressPrefix
-        {
-            get
-            {
-                return $"ms-appdata:///local/{DEFAULT_IMAGES_SUBDIRECTORY}";
-            }
-        }
+        public static string ImageAddressPrefix => 
+            $"ms-appdata:///local/{DEFAULT_IMAGES_SUBDIRECTORY}";
 
-        private string ImageAddress
-        {
-            get
-            {
-                return $"{ImageAddressPrefix}/{DefaultFileName}";
-            }
-        }
+        private string ImageAddress => $"{ImageAddressPrefix}/{DefaultFileName}";
 
-        public string RootFolderName { get { return "BWD images"; } }
+        public string RootFolderName => "BWD images";
 
         /// <summary>
         /// Download and set images from Bing as wallpapers.
@@ -263,7 +240,8 @@ namespace UWPLibrary
         {
             ApplicationDataContainer localSettings
                 = ApplicationData.Current.LocalSettings;
-            string learnMoreHref = new HtmlWeb().Load(@"https://www.bing.com/?cc=" + countryCode)
+            var htmlDocument = new HtmlWeb().Load(@"https://www.bing.com/?cc=" + countryCode);
+            string learnMoreHref = htmlDocument
                    .DocumentNode
                    .SelectNodes("//a[@class='learn_more']")
                    .FirstOrDefault()
@@ -386,11 +364,13 @@ namespace UWPLibrary
         /// <returns>the URL base</returns>
         private async Task<string> GetBackgroundUrlBaseAsync()
         {
-            dynamic jsonObject = await DownloadJsonAsync(GeographicRegion).ConfigureAwait(false);
+            dynamic jsonObject = await DownloadJsonAsync(GeographicRegion)
+                .ConfigureAwait(false);
             if (jsonObject == null ||
                 string.IsNullOrWhiteSpace((string)jsonObject.images[0].urlbase))
             {
-                jsonObject = await DownloadJsonAsync(EnGbGeographicRegion).ConfigureAwait(false);
+                jsonObject = await DownloadJsonAsync(GbGeographicRegion)
+                    .ConfigureAwait(false);
             }
             return "https://www.bing.com" + jsonObject.images[0].urlbase;
         }

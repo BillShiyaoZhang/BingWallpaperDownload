@@ -121,6 +121,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Core.cs" />
+    <Compile Include="LearnMoreSplit\LearnMoreSplit.cs" />
+    <Compile Include="LearnMoreSplit\LearnMoreSplitGb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DownloadAndSetWallpaperCode.cs" />
     <EmbeddedResource Include="Properties\BBCore.rd.xml" />
