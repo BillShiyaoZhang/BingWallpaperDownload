@@ -1,0 +1,2 @@
+* [Home](/)
+* [Contribute](contribute.md)
